@@ -21,7 +21,8 @@ int yylex();
 %%
 
 program:
-    statements { printf("wooohooo!\n"); }
+    function { printf("program\n"); }
+    | statements { printf("wooohooo!\n"); }
     ;
 
 function:
