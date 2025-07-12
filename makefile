@@ -28,15 +28,18 @@ ifdef CYGWIN
 	CXXFLAGS += -DCYGWIN
 endif
 
-all: 
-	$(YACC) $(YACCFLAGS) -d $(SRC)/parser.y -o $(BLD)/parser.tab.c
-	$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l 
-	$(CC) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/bcc
-
+all: $(BLD)/bcc
+	
 rebuild: clean all
 
-$(BLD)/bcc: ./$(OBJ)/parser.tab.c
-	 $(CC) $(CFLAGS) -o ./$(BLD)/bcc ./$(OBJ)/parser.tab.c 
+$(BLD)/bcc: $(BLD)/lexer.yy.c $(OBJ)/parser.tab.c
+	 $(CC) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/bcc
+
+$(BLD)/lexer.yy.c: $(SRC)/lexer.l 
+	$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l 
+
+$(BLD)/parser.tab.c: $(SRC)/parser.y
+	$(YACC) $(YACCFLAGS) -d $(SRC)/parser.y -o $(BLD)/parser.tab.c
 
 $(OBJ)/%.o: ./$(SRC)/%.c
 	$(CC) $(CCFLAGS) -c -o $@ $<
