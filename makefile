@@ -7,6 +7,9 @@ CXX=g++
 CC=gcc
 YACC=bison
 FLEX=flex
+#YACCFLAGS=-Wcounterexamples
+YACCFLAGS?=
+FLEXFLAGS?=
 CXXFLAGS=-Wall -std=c++20 -fPIC
 CCFLAGS=
 SRC=src
@@ -26,9 +29,9 @@ ifdef CYGWIN
 endif
 
 all: 
-	$(YACC) -d $(SRC)/parser.y -o $(BLD)/parser.tab.c
-	$(FLEX) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l 
-	$(CC) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/bcc
+	$(YACC) $(YACCFLAGS) -d $(SRC)/parser.y -o $(BLD)/parser.tab.c
+	$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l 
+	$(CC) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/bcc
 
 rebuild: clean all
 
@@ -40,10 +43,8 @@ $(OBJ)/%.o: ./$(SRC)/%.c
 
 .PHONY: clean
 clean:
-	-rm -f ./$(OBJ)/*.o
-	-rm -f ./$(BLD)/*.o
-	-rm -f ./$(BLD)/if_else_parser*
-
+	-rm -f ./$(OBJ)/*
+	
 .PHONY: help
 help:
 	@echo  '  all                        - build all'
