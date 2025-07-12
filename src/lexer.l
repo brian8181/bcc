@@ -1,10 +1,22 @@
 %{
 #include "parser.tab.h"
 #include <string.h>
+
+/*
+int yyerror(char *s);
+char *yytext;
+int yylex();
+int fileno(FILE *);
+*/
+
 %}
 
 digit   [0-9]
 id      [a-zA-Z_][a-zA-Z0-9_]*
+
+%x streaming
+%x escape
+%x comment
 
 %%
 
