@@ -8,7 +8,7 @@ CC=gcc
 YACC=bison
 FLEX=flex
 #YACCFLAGS=-Wcounterexamples
-YACCFLAGS?=
+YACCFLAGS=-d
 FLEXFLAGS?=
 CXXFLAGS=-Wall -std=c++20 -fPIC
 CCFLAGS=
@@ -32,16 +32,16 @@ all: $(BLD)/bcc
 	
 rebuild: clean all
 
-$(BLD)/bcc: $(BLD)/lexer.yy.c $(OBJ)/parser.tab.c
+$(BLD)/bcc: $(BLD)/lexer.yy.c $(BLD)/parser.tab.c
 	 $(CC) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/bcc
 
 $(BLD)/lexer.yy.c: $(SRC)/lexer.l 
-	$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l 
+	$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l   
 
 $(BLD)/parser.tab.c: $(SRC)/parser.y
-	$(YACC) $(YACCFLAGS) -d $(SRC)/parser.y -o $(BLD)/parser.tab.c
+	$(YACC) $(YACCFLAGS) $(SRC)/parser.y -o $(BLD)/parser.tab.c
 
-$(OBJ)/%.o: ./$(SRC)/%.c
+$(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CCFLAGS) -c -o $@ $<
 
 .PHONY: clean
@@ -52,5 +52,3 @@ clean:
 help:
 	@echo  '  all                        - build all'
 	@echo  '  clean                      - remove all files from build dir'
-	@echo  '  install                    - copy files to usr/local'
-	@echo  '  dist                       - create distribution, tar.gz'

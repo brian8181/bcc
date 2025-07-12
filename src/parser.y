@@ -17,12 +17,15 @@ int yylex();
 %token <str> IDENTIFIER
 %token INT FLOAT RETURN
 %token IF ELSE LPAREN RPAREN LBRACE RBRACE EQ
+%token END_OF_FILE
+/* %start <str> program */
 
 %%
 
 program:
-    function { printf("program\n"); }
-    | statements { printf("wooohooo!\n"); }
+    END_OF_FILE { printf("program:EOF\n"); }
+    | function { printf("program\n"); }
+    | statements END_OF_FILE { printf("program:statements\n"); }
     ;
 
 function:
@@ -32,11 +35,7 @@ function:
 statements:
     statements statement
     | statement
-    ;
-
-statement:
-    if_statement
-    | expr ';'
+    | if_statement
     ;
 
 if_statement:
@@ -52,9 +51,13 @@ if_statement:
             printf("IF_ELSE\n"); 
         }
     ;
+    
+statement:
+    expr ';'
+    ;
 
 expr:
-      expr '+' expr               { $$ = $1 + $3; }
+        expr '+' expr             { $$ = $1 + $3; }
     | expr '-' expr               { $$ = $1 - $3; }
     | expr '<' expr               { $$ = $1 < $3; }
     | expr '>' expr               { $$ = $1 > $3; }
