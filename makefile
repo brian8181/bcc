@@ -7,8 +7,8 @@ CXX=g++
 CC=gcc
 YACC=bison
 FLEX=flex
-#YACCFLAGS=-Wcounterexamples
-YACCFLAGS=-d
+YACCFLAGS=-d -Wcounterexamples
+BISONFLAGS=-Wcounterexamples --html --graph
 FLEXFLAGS?=
 CXXFLAGS=-Wall -std=c++20 -fPIC
 CCFLAGS=

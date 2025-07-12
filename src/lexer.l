@@ -21,6 +21,11 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 ";"         { return ';'; }
 "+"         { return '+'; }
 "-"         { return '-'; }
+"*"         { return '*'; }
+"/"         { return '/'; }
+"=="        { return EQ; }
+"<"         { return '<'; }
+">"         { return '>'; }
 {id}        { yylval.str = strdup(yytext); return IDENTIFIER; }
 {digit}+    { yylval.num = atoi(yytext); return NUMBER; }
 [ \t\n]+    { /* skip whitespace */ }
