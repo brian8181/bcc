@@ -27,6 +27,7 @@ program:
 lines:
     line
     | lines line
+    ;
 
 line: 
     expr ';'    { printf("line\n"); $$ = $1; }
