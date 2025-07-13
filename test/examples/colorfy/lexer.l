@@ -13,10 +13,11 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 "float"     { return FLOAT; }
 
 /* key words */
-"return"    { return RETURN; }
-"for"    { return FOR; }
-"while"    { return WHILE; }
-"break"    { return "break"; }
+"return"      { return RETURN; }
+"for"         { return FOR; }
+"while"       { return WHILE; }
+"do"          { return "do"; }
+"break"       { return "break"; }
 "continue"    { return "continue"; }
 
 /* symbols */
