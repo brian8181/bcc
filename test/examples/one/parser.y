@@ -36,7 +36,7 @@ line:
 expr:
     INT ID { printf("expr INT ID\n"); }
     | ID '=' expr           { $$ = $3; printf("expr ID = expr\n"); }
-    | RETURN expr ';'                     { printf("Returning %d\n", $2); }
+    | RETURN expr                    { printf("Returning %d\n", $2); }
     | NUMBER  { $$ = $1; printf("expr NUMBER = %i\n", $$); }
     ;
 
