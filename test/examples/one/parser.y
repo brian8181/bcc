@@ -30,11 +30,14 @@ lines:
     ;
 
 line: 
-    expr ';'    { printf("line\n"); $$ = $1; }
+    expr ';'    { printf("line: expr ;\n"); $$ = $1; }
     ;
 
 expr:
-    NUMBER  { $$ = $1; printf("expr = %i\n", $$); }
+    INT ID { printf("expr INT ID\n"); }
+    | ID '=' expr           { $$ = $3; printf("expr ID = expr\n"); }
+    | RETURN expr ';'                     { printf("Returning %d\n", $2); }
+    | NUMBER  { $$ = $1; printf("expr NUMBER = %i\n", $$); }
     ;
 
 %%

@@ -20,7 +20,7 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
-"int"       { return INT; }
+"int"       {  printf("lex:int\n"); return INT;}
 "float"     { return FLOAT; }
 "return"    { return RETURN; }
 "if"        { return IF; }
@@ -30,7 +30,7 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 "{"         { return LBRACE; }
 "}"         { return RBRACE; }
 "="         { return '='; }
-";"         { return ';'; }
+";"         { printf("lex:semi_colon\n"); return ';'; }
 "+"         { return '+'; }
 "-"         { return '-'; }
 "*"         { return '*'; }
@@ -38,7 +38,7 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 "=="        { return EQ; }
 "<"         { return '<'; }
 ">"         { return '>'; }
-{id}        { yylval.str = strdup(yytext); return IDENTIFIER; }
+{id}        { printf("lex:IDENTIFIER\n"); yylval.str = strdup(yytext); return IDENTIFIER; }
 {digit}+    { yylval.num = atoi(yytext); return NUMBER; }
 [ \t\n]+    { /* skip whitespace */ }
 <<EOF>>     { return END_OF_FILE; }

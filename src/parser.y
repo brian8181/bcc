@@ -84,7 +84,7 @@ int get_value(char* name) {
 */
 
 program:
-    function
+    statements
     ;
 
 function:
@@ -92,10 +92,10 @@ function:
     ;
 
 statements:
-    statements statement
-    | statements if_statement
-    | statement
+    statement
     | if_statement
+    | statements statement
+    | statements if_statement
     ;
 
 if_statement:
@@ -122,13 +122,15 @@ statement:
     ;
 
 expr:
-     expr '+' expr             { $$ = $1 + $3; }
+    INT IDENTIFIER ';'           { printf("expr:INT_IDENTIFIER\n"); } 
+    | expr '+' expr                { $$ = $1 + $3; }
     | expr '-' expr               { $$ = $1 - $3; }
     | expr '<' expr               { $$ = $1 < $3; }
     | expr '>' expr               { $$ = $1 > $3; }
     | expr EQ expr                { $$ = $1 == $3; }
+    | INT                         { printf("expr:INT\n"); }
     | NUMBER                      { $$ = $1; }
-    | IDENTIFIER                  { $$ = get_value($1); }
+    | IDENTIFIER                  { $$ = get_value($1); printf("expr:IDENTIFIER\n"); }
     ;
 
 %%
