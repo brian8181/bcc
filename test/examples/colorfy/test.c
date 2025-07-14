@@ -1,3 +1,3 @@
-float idx;
+int i;
 int a;
 
