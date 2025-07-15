@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "parser.y"
+#line 1 "src/parser.y"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,7 +76,7 @@
 int yylex(void);
 void yyerror(const char *msg);
 
-#line 80 "parser.tab.c"
+#line 80 "build/parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -446,7 +446,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  12
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   12
+#define YYLAST   11
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  10
@@ -455,7 +455,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  9
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  17
+#define YYNSTATES  16
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   262
@@ -548,7 +548,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 static const yytype_int8 yypact[] =
 {
       -1,    -6,    -1,    -7,     1,     3,    -1,    -7,     0,    -7,
-       4,    -1,    -7,    -7,    -7,    -7,    -7
+      -7,    -1,    -7,    -7,    -7,    -7
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -557,7 +557,7 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     9,     0,     0,     2,     3,     0,     6,
-       0,     0,     1,     4,     5,     8,     7
+       8,     0,     1,     4,     5,     7
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -577,14 +577,14 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      10,     9,     1,    12,     2,     3,     4,     0,    14,    16,
-      11,    13,    15
+      10,     9,     1,    12,     2,     3,     4,     0,    14,    15,
+      11,    13
 };
 
 static const yytype_int8 yycheck[] =
 {
        2,     7,     3,     0,     5,     6,     7,    -1,     8,    11,
-       9,     6,     8
+       9,     6
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -592,7 +592,7 @@ static const yytype_int8 yycheck[] =
 static const yytype_int8 yystos[] =
 {
        0,     3,     5,     6,     7,    11,    12,    13,    14,     7,
-      14,     9,     0,    13,     8,     8,    14
+      14,     9,     0,    13,     8,    14
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
@@ -604,7 +604,7 @@ static const yytype_int8 yyr1[] =
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1,     2,     2,     2,     3,     3,     1
+       0,     2,     1,     1,     2,     2,     2,     3,     2,     1
 };
 
 
@@ -1068,43 +1068,43 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: lines  */
-#line 24 "parser.y"
+#line 24 "src/parser.y"
             { printf("program\n"); }
-#line 1074 "parser.tab.c"
+#line 1074 "build/parser.tab.c"
     break;
 
   case 5: /* line: expr ';'  */
-#line 33 "parser.y"
+#line 33 "src/parser.y"
                 { printf("line: expr ;\n"); (yyval.num) = (yyvsp[-1].num); }
-#line 1080 "parser.tab.c"
+#line 1080 "build/parser.tab.c"
     break;
 
   case 6: /* expr: INT ID  */
-#line 37 "parser.y"
+#line 37 "src/parser.y"
            { printf("expr INT ID\n"); }
-#line 1086 "parser.tab.c"
+#line 1086 "build/parser.tab.c"
     break;
 
   case 7: /* expr: ID '=' expr  */
-#line 38 "parser.y"
+#line 38 "src/parser.y"
                             { (yyval.num) = (yyvsp[0].num); printf("expr ID = expr\n"); }
-#line 1092 "parser.tab.c"
+#line 1092 "build/parser.tab.c"
     break;
 
-  case 8: /* expr: RETURN expr ';'  */
-#line 39 "parser.y"
-                                          { printf("Returning %d\n", (yyvsp[-1].num)); }
-#line 1098 "parser.tab.c"
+  case 8: /* expr: RETURN expr  */
+#line 39 "src/parser.y"
+                                     { printf("Returning %d\n", (yyvsp[0].num)); }
+#line 1098 "build/parser.tab.c"
     break;
 
   case 9: /* expr: NUMBER  */
-#line 40 "parser.y"
+#line 40 "src/parser.y"
               { (yyval.num) = (yyvsp[0].num); printf("expr NUMBER = %i\n", (yyval.num)); }
-#line 1104 "parser.tab.c"
+#line 1104 "build/parser.tab.c"
     break;
 
 
-#line 1108 "parser.tab.c"
+#line 1108 "build/parser.tab.c"
 
       default: break;
     }
@@ -1297,7 +1297,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 43 "parser.y"
+#line 43 "src/parser.y"
 
 
 void yyerror(const char *msg) 

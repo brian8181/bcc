@@ -1,0 +1,21 @@
+Usage
+You can then run:
+
+bash
+Copy
+Edit
+./lexer_example
+and input text like:
+
+nginx
+Copy
+Edit
+foo 123 + bar
+Output:
+makefile
+Copy
+Edit
+IDENTIFIER: foo
+NUMBER: 123
+OPERATOR: +
+IDENTIFIER: bar
