@@ -12,6 +12,7 @@ using std::string;
 extern "C"
 
 // shell color constants
+const string FMT_RESET             = "\033[0m";
 const string FMT_RESET_BOLD        = "\033[21m";
 const string FMT_RESET_DIM         = "\033[22m";
 const string FMT_RESET_UNDERLINE   = "\033[24m";

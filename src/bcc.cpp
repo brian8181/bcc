@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include "bash_color.hpp"
+#include "bash_color.h"
 
 using std::string;
 using std::stringstream;
