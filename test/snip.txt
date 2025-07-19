@@ -1,0 +1,13 @@
+// # define  YYEOF 0                    /* "end of file"  */
+// # define YYerror 256                /* error  */
+// # define YYUNDEF 257                 /* "invalid token"  */
+// # define INT 258                     /* INT  */
+// # define FLOAT 259                   /* FLOAT  */
+// # define RETURN 260                  /* RETURN  */
+// # define NUMBER 261                  /* NUMBER  */
+// # define ID 62                       /* ID  */
+// # define WHILE 0x10
+// # define FOR 0x20  
+// # define DO 0x40
+// # define BREAK 0x80
+// # define CONTINUE 0x100
