@@ -29,14 +29,14 @@ ifdef CYGWIN
 endif
 
 all: $(BLD)/bcc
-	
+
 rebuild: clean all
 
 $(BLD)/bcc: $(BLD)/lexer.yy.c $(BLD)/parser.tab.c
 	 $(CC) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/bcc
 
-$(BLD)/lexer.yy.c: $(SRC)/lexer.l 
-	$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l   
+$(BLD)/lexer.yy.c: $(SRC)/lexer.l
+	$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l
 
 $(BLD)/parser.tab.c: $(SRC)/parser.y
 	$(YACC) $(YACCFLAGS) $(SRC)/parser.y -o $(BLD)/parser.tab.c
@@ -46,8 +46,10 @@ $(OBJ)/%.o: $(SRC)/%.c
 
 .PHONY: clean
 clean:
-	-rm -f ./$(OBJ)/*
-	
+	-rm -f $(BLD)/*
+	-rm -f $(OBJ)/*
+
+
 .PHONY: help
 help:
 	@echo  '  all                        - build all'
