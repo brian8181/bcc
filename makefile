@@ -1,8 +1,8 @@
-# File Name:  if_else_parser/makefile
+# File Name:  makefile
 # Build Date: Wed Apr 23 22:44:01 CDT 2025
 # Version:    0.1.1
 
-APP=if_else_parser
+APP=bcc
 CXX=g++
 CC=gcc
 YACC=bison

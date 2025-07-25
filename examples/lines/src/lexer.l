@@ -40,7 +40,7 @@ int main()
 
 int main(int argc, char** argv)
 {
-    if(argc > 1) 
+    if(argc > 1)
     {
         if(!(yyin = fopen(argv[1], "r")))
         {
@@ -52,3 +52,30 @@ int main(int argc, char** argv)
     return 0;
 }
 */
+
+int main(int argc, char* argv[])
+{
+   // skip exe path ...
+   argc--; argv++;
+   if (argc > 0)
+   {
+		FILE *file;
+		file = fopen(argv[0], "r");
+		if (!file)
+        {
+			fprintf(stderr,"could not open %s\n", argv[0]);
+			exit(1);
+		}
+		yyin = file;
+	}
+    else
+    {
+        fprintf(stderr, "\nMissing filename paramter, help ->\n");
+        fprintf(stderr, "lex [OPTION]... [FilE]...\n");
+        fprintf(stderr, "Interactive mode...\n\n");
+        yyin = stdin;
+    }
+
+    yyparse();
+    return 0;
+}

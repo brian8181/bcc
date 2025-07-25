@@ -17,15 +17,19 @@ BLD?=build
 OBJ?=build
 
 # lib settings
-LDFLAGS = -static -lcppunit -L/usr/local/lib/
-INCLUDES = -I/usr/local/include/cppunit/
+LIBS=-L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64
+INCLUDES=-I/usr/local/include/cppunit/
+LDFLAGS=$(INCLUDES) $(LIBS)
 
 ifdef DEBUG
-	CXXFLAGS +=-g -DDEBUG
+	CXXFLAGS += -DDEBUG
 endif
 
 ifdef CYGWIN
-	CXXFLAGS += -DCYGWIN
+	CXXFLAGS +=-DCYGWIN
+	LDFLAGS += -lfmt -lcppunit.dll
+else
+	LDFLAGS += -lfmt -lcppunit
 endif
 
 # all:

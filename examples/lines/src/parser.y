@@ -29,12 +29,12 @@ lines:
     | lines line
     ;
 
-line: 
+line:
     expr ';'    { printf("line: expr ;\n"); $$ = $1; }
     ;
 
 expr:
-    INT ID { printf("expr INT ID\n"); }
+    INT ID { printf("expr INT ID \"%s\"\n", $2); }
     | ID '=' expr           { $$ = $3; printf("expr ID = expr\n"); }
     | RETURN expr                    { printf("Returning %d\n", $2); }
     | NUMBER  { $$ = $1; printf("expr NUMBER = %i\n", $$); }
@@ -42,40 +42,12 @@ expr:
 
 %%
 
-void yyerror(const char *msg) 
+void yyerror(const char *msg)
 {
     fprintf(stderr, "Parse error: %s\n", msg);
 }
 
-int main() 
+/* int main()
 {
     return yyparse();
-}
-
-/*
-int main(int argc, char* argv[])
-{
-   if (argc > 1)
-   {
-		FILE *file;
-		file = fopen(argv[1], "r");
-		if (!file)
-        {
-			fprintf(stderr,"could not open %s\n",argv[1]);
-			exit(1);
-		}
-		yyin = file;
-	}
-    else
-    {
-        fprintf(stderr, "Missing filename paramter, help ->\n");
-        fprintf(stderr, "lex [OPTION]... [FilE]...\n");
-        fprintf(stderr, "Interactive mode...\n");
-        yyin = stdin;
-    }
-
-    yyparse();
-    return 0;
-}
-*/
-
+} */
