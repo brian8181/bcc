@@ -46,8 +46,8 @@ void yyerror(const char *msg)
 {
     fprintf(stderr, "Parse error: %s\n", msg);
 }
-
-/* int main()
+/*
+int main()
 {
     return yyparse();
 } */

@@ -6,10 +6,10 @@ APP=lines
 CXX=g++
 CC=gcc
 YACC=bison
-FLEX=flex
+FLEX=reflex
 YACCFLAGS=-d -Wcounterexamples
 BISONFLAGS=-Wcounterexamples --html --graph
-FLEXFLAGS?=
+FLEXFLAGS?=--flex
 CXXFLAGS=-Wall -std=c++20 -fPIC
 CCFLAGS=
 SRC=src
@@ -42,16 +42,17 @@ all: $(BLD)/lines
 rebuild: clean all
 
 $(BLD)/lines: $(BLD)/lexer.yy.c $(BLD)/parser.tab.c
-	 $(CC) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/lines
+	 $(CXX) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/lines
 
 $(BLD)/lexer.yy.c: $(SRC)/lexer.l
-	$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l
+#$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l
+	flex -o $(BLD)/lexer.yy.c $(SRC)/lexer.l
 
 $(BLD)/parser.tab.c: $(SRC)/parser.y
 	$(YACC) $(YACCFLAGS) $(SRC)/parser.y -o $(BLD)/parser.tab.c
 
 $(OBJ)/%.o: $(SRC)/%.c
-	$(CC) $(CCFLAGS) -c -o $@ $<
+	$(CXX) $(CCFLAGS) -c -o $@ $<
 
 .PHONY: clean
 clean:
