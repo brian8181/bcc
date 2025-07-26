@@ -21,17 +21,28 @@ CXXMFLAGS =
 # CXXMFLAGS =-DDEBUG
 CXXFLAGS  = $(CXXWFLAGS) $(CXXOFLAGS) $(CXXIFLAGS) $(CXXMFLAGS)
 
+
+CC=gcc
+BISON=bison
+LEX=flex
+BISONFLAGS= -y -d --html --graph
+
 LEX=reflex
 SRC=src
 BLD=build
 OBJ=build
 
-all: $(BLD)/lexer
-	 $(LEX) -o $(BLD)/lexer.l
-	 $(CXX) -std=c++17 -Wno-write-strings -o $(BLD)/lexer $(BLD)/lex.yy.c
+all: $(BLD)/lexer $(BLD)/lexer.yy.c
 
-$(BLD)/lexer: $(BLD)/lexer.yy.c 
-	 $(CXX) -std=c++17 -Wno-write-strings $(BLD)/lexer.yy.c -o $(BLD)/hlc
+$(BLD)/lexer: $(BLD)/lexer.yy.c $(BLD)/parser.tab.cpp
+	$(CXX) -std=c++17 -Wno-write-strings $(BLD)/lexer.yy.c $(BLD)/parser.tab.cpp -o $(BLD)/hlc
 
-$(BLD)/lexer.yy.c: $(SRC)/lexer.l 
-	$(LEX) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l   
+$(BLD)/parser.tab.cpp: $(SRC)/parser.yy
+	$(BISON) -y $(BISONFLAGS) $(SRC)/parser.yy -o $(BLD)/parser.tab.cpp
+
+$(BLD)/lexer.yy.c: $(SRC)/lexer.l
+	$(LEX) --flex --bison -o $(BLD)/lexer.yy.c $(SRC)/lexer.l
+
+clean:
+	-rm -f $(BLD)/*
+	-rm -f $(OBJ)/*

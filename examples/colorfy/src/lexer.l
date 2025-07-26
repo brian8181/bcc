@@ -1,5 +1,5 @@
 %{
-#include "parser.tab.h"
+#include "build/parser.tab.hpp"
 #include <string.h>
 #include "bash_color.h"
 
@@ -12,7 +12,7 @@
 // # define NUMBER 261                  /* NUMBER  */
 // # define ID 62                       /* ID  */
 // # define WHILE 0x10
-// # define FOR 0x20  
+// # define FOR 0x20
 // # define DO 0x40
 // # define BREAK 0x80
 // # define CONTINUE 0x100
@@ -33,7 +33,7 @@ int yywrap(void) { return 1; }
 
 int main(int argc, char** argv)
 {
-    if(argc > 1) 
+    if(argc > 1)
     {
         if(!(yyin = fopen(argv[1], "r")))
         {
