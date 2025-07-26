@@ -5,12 +5,10 @@
 APP=lines
 CXX=g++
 CC=gcc
-YACC=bison
-FLEX=reflex
-YACCFLAGS=-d -Wcounterexamples
-BISONFLAGS=-Wcounterexamples --html --graph
-FLEXFLAGS?=--flex
-CXXFLAGS=-Wall -std=c++20 -fPIC
+BISON=bison
+LEX=flex
+BISONFLAGS= -y -d --html --graph
+CXXFLAGS=-Wall -std=c++17 -fPIC
 CCFLAGS=
 SRC=src
 BLD?=build
@@ -32,27 +30,30 @@ else
 	LDFLAGS += -lfmt -lcppunit
 endif
 
-# all:
-# 	$(BISON) $(YYFLAGS) -o$(BLD)/parser.tab.c -d $(SRC)/parser.y
-# 	$(LEX) $(LFLAGS) -o$(BLD)/lexer.yy.c $(SRC)/lexer.l
-# 	g++ $(CXXFLAGS) -o $(BLD)/parser $(BLD)/parser.tab.c $(BLD)/lexer.yy.c
-
-all: $(BLD)/lines
+all: $(BLD)/lines $(BLD)/reflexer.yy.cpp $(BLD)/parser.tab.cpp # $(BLD)/parser
 
 rebuild: clean all
 
 $(BLD)/lines: $(BLD)/lexer.yy.c $(BLD)/parser.tab.c
-	 $(CXX) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/lines
+	 $(CC) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/lines
+
+$(BLD)/parser: $(BLD)/reflexer.yy.cpp $(BLD)/parser.tab.cpp
+	 $(CXX) $(CXXFLAGS) $(BLD)/parser.tab.cpp $(BLD)/reflexer.yy.cpp -o $(BLD)/parser
 
 $(BLD)/lexer.yy.c: $(SRC)/lexer.l
-#$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l
-	flex -o $(BLD)/lexer.yy.c $(SRC)/lexer.l
+	$(LEX) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l
+
+$(BLD)/reflexer.yy.cpp: $(SRC)/reflexer.ll
+	reflex --flex -o $(BLD)/reflexer.yy.cpp $(SRC)/reflexer.ll
+
+$(BLD)/parser.tab.cpp: $(SRC)/parser.yy
+	$(BISON) -y $(BISONFLAGS) $(SRC)/parser.yy -o $(BLD)/parser.tab.cpp
 
 $(BLD)/parser.tab.c: $(SRC)/parser.y
-	$(YACC) $(YACCFLAGS) $(SRC)/parser.y -o $(BLD)/parser.tab.c
+	$(BISON) -y $(BISONFLAGS) $(SRC)/parser.y -o $(BLD)/parser.tab.c
 
 $(OBJ)/%.o: $(SRC)/%.c
-	$(CXX) $(CCFLAGS) -c -o $@ $<
+	$(CC) $(CCFLAGS) -c -o $@ $<
 
 .PHONY: clean
 clean:
