@@ -52,7 +52,7 @@ int main(int argc, char** argv)
     return 0;
 }
 */
-
+/*
 int main(int argc, char* argv[])
 {
     // #ifdef DEBUG
@@ -81,4 +81,4 @@ int main(int argc, char* argv[])
     // #endif
 
     return 0;
-}
+} */
