@@ -21,14 +21,37 @@ void yyerror(const char *msg);
 %token <str> ESCAPE
 %token <str> NUMBER
 %token <str> ID
+%type <str> program
+%type <str> files
+%type <str> file
+%type <str> scopes
+%type <str> scope
+%type <str> lines
 %type <str> line
 %type <str> expr
+
 
 %%
 
 program:
-    lines   { printf("program\n"); }
+    files          { printf("program( files )\n"); $$ = $1; }
     ;
+
+files:
+    file           { printf("files( file )\n"); $$ = $1; }
+    | files file   { printf("files( files )\n"); $$ = $1; }
+
+file:
+    scopes         { printf("file( scopes )\n"); $$ = $1; }
+
+scopes:
+    scope          { printf("scopes( scope )\n"); $$ = $1; }
+    | scopes scope { printf("scopes( scopes )\n"); $$ = $1; }
+
+scope:
+    lines          { printf("scope( lines )\n"); $$ = $1; }
+    |
+    '{' lines '}'  { printf("scope( '{' lines '}' )\n"); $$ = $2; }
 
 lines:
     line
@@ -36,7 +59,7 @@ lines:
     ;
 
 line:
-    expr ';'    { printf("line: expr ;\n"); $$ = $1; }
+    expr ';'    { printf("line( expr )\n"); $$ = $1; }
     ;
 
 expr:
@@ -44,6 +67,7 @@ expr:
     | ID '=' expr           { $$ = $3; printf("expr ID = expr\n"); }
     | NUMBER  { $$ = $1; printf("expr NUMBER = %s\n", $$); }
     | IF '(' expr ')' expr { printf("if(%s) %s\n", $3, $5); }
+    | IF '(' expr ')' '{' expr ';' '}' { printf("if(%s) %s\n", $3, $6); }
     ;
 
 /* terminal:
