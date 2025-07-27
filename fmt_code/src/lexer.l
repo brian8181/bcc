@@ -14,18 +14,17 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 "return"    { return RETURN; }
 "if"        { return IF; }
 "else"      { return ELSE; }
-"do"      { return DO; }
-"while"      { return WHILE; }
-"for"      { return FOR; }
-"continue"      { return CONTINUE; }
-"switch"      { return SWITCH; }
+"do"        { return DO; }
+"while"     { return WHILE; }
+"for"       { return FOR; }
+"continue"  { return CONTINUE; }
+"switch"    { return SWITCH; }
 "case"      { return CASE; }
-"break"      { return BREAK; }
+"break"     { return BREAK; }
 "goto"      { return GOTO; }
-"default"      { return DEFAULT; }
+"default"   { return DEFAULT; }
 "void"      { return VOID; }
 "private"   { return PRIVATE; }
-
 "="         { return '='; }
 ";"         { return ';'; }
 "("         { return '('; }
@@ -37,12 +36,10 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 ","         { return ','; }
 "["         { return '['; }
 "]"         { return ']'; }
-":"         { return SCOPE_RESOLUTION; }
-
+"::"        { return SCOPE_RESOLUTION; }
+":"         { return ':'; }
 {id}        { yylval.str = strdup(yytext); return ID; }
 {digit}+    { yylval.str = strdup(yytext); return NUMBER; }
-
-
 [ \t\n]+    ; // Skip whitespace
 .           { printf("Unexpected character: %s\n", yytext); }
 

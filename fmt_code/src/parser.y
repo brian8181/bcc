@@ -21,6 +21,8 @@ void yyerror(const char *msg);
 %token <str> ESCAPE
 %token <str> NUMBER
 %token <str> ID
+%token <str> COLON
+%token <str> SPACE
 %type <str> program
 %type <str> files
 %type <str> file
@@ -34,40 +36,40 @@ void yyerror(const char *msg);
 %%
 
 program:
-    files          { printf("program( files )\n"); $$ = $1; }
+    files           { printf("program( files )\n"); $$ = $1; }
     ;
 
 files:
-    file           { printf("files( file )\n"); $$ = $1; }
-    | files file   { printf("files( files )\n"); $$ = $1; }
+    file            { printf("files( file )\n"); $$ = $1; }
+    | files file    { printf("files( files )\n"); $$ = $1; }
 
 file:
-    scopes         { printf("file( scopes )\n"); $$ = $1; }
+    scopes          { printf("file( scopes )\n"); $$ = $1; }
 
 scopes:
-    scope          { printf("scopes( scope )\n"); $$ = $1; }
-    | scopes scope { printf("scopes( scopes )\n"); $$ = $1; }
+    scope           { printf("scopes( scope )\n"); $$ = $1; }
+    | scopes scope  { printf("scopes( scopes )\n"); $$ = $1; }
 
 scope:
-    lines          { printf("scope( lines )\n"); $$ = $1; }
+    lines           { printf("scope( lines )\n"); $$ = $1; }
     |
-    '{' lines '}'  { printf("scope( '{' lines '}' )\n"); $$ = $2; }
+    '{' lines '}'   { printf("scope( '{' lines() '}' )\n"); $$ = $2; }
 
 lines:
-    line
-    | lines line
+    line            { printf("lines( line )\n"); $$ = $1; }
+    | lines line    { printf("lines( lines( line ) )\n"); $$ = $1; }
     ;
 
 line:
-    expr ';'    { printf("line( expr )\n"); $$ = $1; }
+    expr ';'        { printf("line( expr )\n"); $$ = $1; }
     ;
 
 expr:
-    INT ID { printf("expr INT ID \"%s\"\n", $2); }
-    | ID '=' expr           { $$ = $3; printf("expr ID = expr\n"); }
-    | NUMBER  { $$ = $1; printf("expr NUMBER = %s\n", $$); }
-    | IF '(' expr ')' expr { printf("if(%s) %s\n", $3, $5); }
-    | IF '(' expr ')' '{' expr ';' '}' { printf("if(%s) %s\n", $3, $6); }
+    INT ID                              { printf("expr( INT ID )\"%s\"\n", $2); }
+    | ID '=' expr                       { $$ = $3; printf("expr( ID = expr )\n"); }
+    | NUMBER                            { $$ = $1; printf("expr( NUMBER = %s )\n", $$); }
+    | IF '(' expr ')' expr              { printf("expr( IF( (%s) (%s) )\n", $3, $5); }
+    | IF '(' expr ')' '{' expr ';' '}'  { printf("expr( IF( (%s) %s ) )\n", $3, $6); }
     ;
 
 /* terminal:
