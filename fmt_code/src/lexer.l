@@ -5,12 +5,15 @@
 
 digit   [0-9]
 id      [a-zA-Z_][a-zA-Z0-9_]*
+type    int|float|char
+ref     '&'
+point   '*'
 
 %%
 
-
 "int"       { return INT; }
 "float"     { return FLOAT; }
+"char"      { return CHAR; }
 "return"    { return RETURN; }
 "if"        { return IF; }
 "else"      { return ELSE; }
@@ -38,6 +41,8 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 "]"         { return ']'; }
 "::"        { return SCOPE_RESOLUTION; }
 ":"         { return ':'; }
+"&"         { return REFERENCE; }
+"*"         { return POINTER; }
 {id}        { yylval.str = strdup(yytext); return ID; }
 {digit}+    { yylval.str = strdup(yytext); return NUMBER; }
 [ \t\n]+    ; // Skip whitespace

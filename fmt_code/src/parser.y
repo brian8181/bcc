@@ -12,7 +12,9 @@ void yyerror(const char *msg);
     char* str;
 }
 
-%token <str> INT FLOAT RETURN
+%token <str> INT FLOAT CHAR
+%token <str> REFERENCE POINTER
+%token <str> RETURN
 %token <str> IF ELSE FOR DO WHILE CONTINUE BREAK SWITCH CASE GOTO DEFAULT VOID
 %token <str> PRIVATE PROTECTED PUBLIC
 %token <str> STATIC CONST UNSIGNED VOLATILE MUTABLE REGISTER
@@ -65,11 +67,19 @@ line:
     ;
 
 expr:
-    INT ID                              { printf("expr( INT ID )\"%s\"\n", $2); }
+    type ID                             { printf("expr( type ID )\"%s\"\n", $2); }
     | ID '=' expr                       { $$ = $3; printf("expr( ID = expr )\n"); }
     | NUMBER                            { $$ = $1; printf("expr( NUMBER = %s )\n", $$); }
     | IF '(' expr ')' expr              { printf("expr( IF( (%s) (%s) )\n", $3, $5); }
     | IF '(' expr ')' '{' expr ';' '}'  { printf("expr( IF( (%s) %s ) )\n", $3, $6); }
+    ;
+
+type:
+    INT
+    | FLOAT
+    | CHAR
+    | type REFERENCE
+    | type POINTER
     ;
 
 /* terminal:
