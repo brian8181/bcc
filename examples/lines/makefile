@@ -52,6 +52,9 @@ $(BLD)/parser.tab.cpp: $(SRC)/parser.yy
 $(BLD)/parser.tab.c: $(SRC)/parser.y
 	$(BISON) $(BISONFLAGS) $(SRC)/parser.y -o $(BLD)/parser.tab.c
 
+$(OBJ)/main.obj: $(SRC)/main.cpp
+	$(CXX) $(CXXFLAGS) -c $(SRC)/main.cpp -o $(OBJ)/main.obj
+
 $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CCFLAGS) -c -o $@ $<
 

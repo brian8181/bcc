@@ -22,7 +22,6 @@ void yyerror(const char *msg);
 %token <str> NUMBER
 %token <str> ID
 %type <str> line
-%type <str> terminal
 %type <str> expr
 
 %%
@@ -41,14 +40,10 @@ line:
     ;
 
 expr:
-    IF { $$ = "if";  printf("token: %s", $$); }
-    |
     INT ID { printf("expr INT ID \"%s\"\n", $2); }
     | ID '=' expr           { $$ = $3; printf("expr ID = expr\n"); }
-    | RETURN expr                    { printf("Returning %d\n", $2); }
     | NUMBER  { $$ = $1; printf("expr NUMBER = %s\n", $$); }
-    | IF '(' expr ')' line { printf("%s(%s)\n\t%s", $1, $3, $5); }
-    | IF '(' expr ')' '{' expr ';' '}' { printf("%s(%s)\n\t{ %s; }", $1, $3, $6); }
+    | IF '(' expr ')' expr { printf("if(%s) %s\n", $3, $5); }
     ;
 
 /* terminal:

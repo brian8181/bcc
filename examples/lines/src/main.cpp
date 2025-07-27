@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
-#include "build/parser.tab.hpp"
+#include "../build/parser.tab.hpp"
 
 int main(int argc, char* argv[])
 {

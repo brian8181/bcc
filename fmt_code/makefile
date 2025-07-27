@@ -30,12 +30,12 @@ else
 	LDFLAGS += -lfmt -lcppunit
 endif
 
-all: $(BLD)/lines $(BLD)/reflexer.yy.cpp $(BLD)/parser.tab.cpp # $(BLD)/parser
+all: $(BLD)/fmt $(BLD)/reflexer.yy.cpp $(BLD)/parser.tab.cpp # $(BLD)/parser
 
 rebuild: clean all
 
-$(BLD)/lines: $(BLD)/lexer.yy.c $(BLD)/parser.tab.c
-	 $(CC) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/lines
+$(BLD)/fmt: $(BLD)/lexer.yy.c $(BLD)/parser.tab.c
+	 $(CC) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/fmt
 
 $(BLD)/parser: $(BLD)/reflexer.yy.cpp $(BLD)/parser.tab.cpp
 	 $(CXX) $(CXXFLAGS) $(BLD)/parser.tab.cpp $(BLD)/reflexer.yy.cpp -o $(BLD)/parser
