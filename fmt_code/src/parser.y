@@ -108,7 +108,7 @@ type_modifier:
     | CONST                             { printf("type_modifier: CONST\n"); }
     | UNSIGNED                          { printf("type_modifier: VOID\n"); }
     | VOLATILE                          { printf("type_modifier: VOLATILE\n"); }
-| MUTABLE                               { printf("type_modifier: MUTABLE\n"); }
+    | MUTABLE                           { printf("type_modifier: MUTABLE\n"); }
     | REGISTER                          { printf("type_modifier: REGISTER\n"); }
     | RESTRICT                          { printf("type_modifier: RESTRICT\n"); }
     ;
@@ -129,8 +129,3 @@ void yyerror(const char *msg)
 {
     fprintf(stderr, "Parse error: %s\n", msg);
 }
-/*
-int main()
-{
-    return yyparse();
-} */

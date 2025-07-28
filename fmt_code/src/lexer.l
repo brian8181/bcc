@@ -61,30 +61,10 @@ __{id}      { yylval.str = strdup(yytext); return ARG; }
 
 %%
 
-int yywrap(void) { return 1; }
-
-/*
-int main()
+int yywrap(void)
 {
-    while (yylex() != 0) ;
-    return 0;
+    return 1;
 }
-
-
-int main(int argc, char** argv)
-{
-    if(argc > 1)
-    {
-        if(!(yyin = fopen(argv[1], "r")))
-        {
-            perror(argv[1]);
-            return (1);
-        }
-    }
-    yylex();
-    return 0;
-}
-*/
 
 int main(int argc, char* argv[])
 {
