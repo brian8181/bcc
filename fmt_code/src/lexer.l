@@ -28,6 +28,11 @@ point   '*'
 "default"   { return DEFAULT; }
 "void"      { return VOID; }
 "private"   { return PRIVATE; }
+"static"    { return STATIC; }
+"const"     { return CONST; }
+"UNSIGNED"  { return UNSIGNED; }
+"volatile"  { return VOLATILE; }
+"register"  { return REGISTER; }
 "="         { return '='; }
 ";"         { return ';'; }
 "("         { return '('; }

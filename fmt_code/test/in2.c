@@ -1,1 +1,2 @@
-if;
+int a;
+int foo();

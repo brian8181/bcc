@@ -28,69 +28,86 @@ void yyerror(const char *msg);
 %type <str> program
 %type <str> files
 %type <str> file
+%type <str> function
 %type <str> scopes
 %type <str> scope
 %type <str> lines
 %type <str> line
+%type <str> declaration
+%type <str> type
 %type <str> expr
 
 
 %%
 
 program:
-    files           { printf("program( files )\n"); $$ = $1; }
+    files           { printf("program( files )\n"); }
     ;
 
 files:
-    file            { printf("files( file )\n"); $$ = $1; }
-    | files file    { printf("files( files )\n"); $$ = $1; }
+    file            { printf("files( file )\n"); }
+    | files file    { printf("files( files )\n"); }
+    ;
 
 file:
-    scopes          { printf("file( scopes )\n"); $$ = $1; }
+    scopes          { printf("file( scopes )\n"); }
+    ;
 
 scopes:
-    scope           { printf("scopes( scope )\n"); $$ = $1; }
-    | scopes scope  { printf("scopes( scopes )\n"); $$ = $1; }
+    scope           { printf("scopes( scope )\n"); }
+    | scopes scope  { printf("scopes( scopes )\n"); }
+    ;
 
 scope:
-    lines           { printf("scope( lines )\n"); $$ = $1; }
+    lines           { printf("scope( lines )\n"); }
     |
-    '{' lines '}'   { printf("scope( '{' lines() '}' )\n"); $$ = $2; }
+    '{' lines '}'   { printf("scope( '{' lines() '}' )\n");  }
+    ;
 
 lines:
-    line            { printf("lines( line )\n"); $$ = $1; }
-    | lines line    { printf("lines( lines( line ) )\n"); $$ = $1; }
+    line            { printf("lines( line )\n"); }
+    | lines line    { printf("lines( lines( line ) )\n"); }
     ;
 
 line:
-    expr ';'        { printf("line( expr )\n"); $$ = $1; }
+    expr ';'        { printf("line( expr )\n"); }
     ;
 
 expr:
-    type ID                             { printf("expr( type ID )\"%s\"\n", $2); }
-    | ID '=' expr                       { $$ = $3; printf("expr( ID = expr )\n"); }
-    | NUMBER                            { $$ = $1; printf("expr( NUMBER = %s )\n", $$); }
+    declaration                         { printf("expr( declaration )\"%s\"\n", $1); }
+    | function                          { printf("expr( function )\"%s\"\n", $1); }
+    | ID '=' expr                       { printf("expr( ID = expr )\n"); }
+    | NUMBER                            { printf("expr( NUMBER = %s )\n", $$); }
     | IF '(' expr ')' expr              { printf("expr( IF( (%s) (%s) )\n", $3, $5); }
     | IF '(' expr ')' '{' expr ';' '}'  { printf("expr( IF( (%s) %s ) )\n", $3, $6); }
     ;
 
-type:
-    INT
-    | FLOAT
-    | CHAR
-    | type REFERENCE
-    | type POINTER
+function:
+    declaration '(' ')'      { printf("function( declaration )\n"); }
     ;
 
-/* terminal:
-    IF { printf("token: %s", $1); }
-    |   ELSE { printf("token: %s", $1); }
-    |   DO { printf("token: %s", $1); }
-    |   WHILE { printf("token: %s", $1); }
-    |   FOR { printf("token: %s", $1); }
-    |   BREAK { printf("token: %s", $1); }
-    |   CONTINUE { printf("token: %s", $1); }
-    ; */
+declaration:
+    type ID                      { printf("declaration( type ID )\n"); }
+    | type_modifier type ID  { printf("declaration( type_modifier type ID )\n"); }
+    ;
+
+type_modifier:
+    STATIC                        { printf("type_modifier( STATIC )\n"); }
+    | CONST
+    | UNSIGNED
+    | VOLATILE
+    | MUTABLE
+    | REGISTER
+    ;
+
+type:
+    INT               { printf("type( INT )\n"); }
+    | FLOAT           { printf("type( FLOAT )\n"); }
+    | CHAR            { printf("type( CHAR )\n"); }
+    | type REFERENCE  { printf("type( type REFERENCE )\n"); }
+    | type POINTER    { printf("type( type POINTER )\n"); }
+    ;
+
 
 %%
 
