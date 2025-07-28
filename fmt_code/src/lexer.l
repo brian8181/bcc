@@ -5,6 +5,7 @@
 
 digit   [0-9]
 id      [a-zA-Z_][a-zA-Z0-9_]*
+
 type    int|float|char
 ref     '&'
 point   '*'
@@ -48,6 +49,7 @@ point   '*'
 ":"         { return ':'; }
 "&"         { return REFERENCE; }
 "*"         { return POINTER; }
+__{id}      { yylval.str = strdup(yytext); return ARG; }
 {id}        { yylval.str = strdup(yytext); return ID; }
 {digit}+    { yylval.str = strdup(yytext); return NUMBER; }
 [ \t\n]+    ; // Skip whitespace

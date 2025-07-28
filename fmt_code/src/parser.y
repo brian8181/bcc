@@ -42,67 +42,68 @@ void yyerror(const char *msg);
 %%
 
 program:
-    files           { printf("program( files )\n"); }
+    files           { printf("program: files\n"); }
     ;
 
 files:
-    file            { printf("files( file )\n"); }
-    | files file    { printf("files( files )\n"); }
+    file            { printf("files: file\n"); }
+    | files file    { printf("files: files file\n"); }
     ;
 
 file:
-    scopes          { printf("file( scopes )\n"); }
+    scopes          { printf("file: scopes\n"); }
     ;
 
 scopes:
-    scope           { printf("scopes( scope )\n"); }
-    | scopes scope  { printf("scopes( scopes )\n"); }
+    scope           { printf("scopes: scope\n"); }
+    | scopes scope  { printf("scopes: scopes scope\n"); }
     ;
 
 scope:
-    lines           { printf("scope( lines )\n"); }
-    | '{' lines '}'   { printf("scope( '{' lines() '}' )\n");  }
+    lines           { printf("scope: lines\n"); }
+    | '{' lines '}'   { printf("scope: '{' lines() '}'\n");  }
     ;
 
 lines:
-    line            { printf("lines( line )\n"); }
-    | lines line    { printf("lines( lines( line ) )\n"); }
+    line            { printf("lines: line\n"); }
+    | lines line    { printf("lines: lines line\n"); }
     ;
 
 line:
-    expr ';'        { printf("line( expr )\n"); }
+    expr ';'        { printf("line: expr\n"); }
     ;
 
 expr:
-    declaration                         { printf("expr( declaration )\"%s\"\n", $1); }
-    | function                          { printf("expr( function )\"%s\"\n", $1); }
-    | ID '=' expr                       { printf("expr( ID = expr )\n"); }
-    | NUMBER                            { printf("expr( NUMBER = %s )\n", $$); }
-    | IF '(' expr ')' expr              { printf("expr( IF( (%s) (%s) )\n", $3, $5); }
-    | IF '(' expr ')' '{' expr ';' '}'  { printf("expr( IF( (%s) %s ) )\n", $3, $6); }
+    declaration                         { printf("expr: declaration=\"%s\"\n", $1); }
+    | function                          { printf("expr: function=\"%s\"\n", $1); }
+    | ID '=' expr                       { printf("expr: ID '=' expr\n"); }
+    | NUMBER                            { printf("expr: NUMBER=\"%s\"\n", $$); }
+    | IF '(' expr ')' expr              { printf("expr: IF '(' expr=\"%s\" ')' expr=\"%s\"\n", $3, $5); }
+    | IF '(' expr ')' '{' expr ';' '}'  { printf("expr: IF '(' expr=\"%s\" ')' '{' expr=\"%s\" ';' '}'\n", $3, $6); }
     ;
 
 function:
-    declaration '(' ')'      { printf("function( declaration )\n"); }
+    declaration '(' ')'                 { printf("function: declaration '(' ')'\n"); }
+    | declaration '(' params ')'        { printf("function: declaration '(' params ')' )\n"); }
     ;
 
 declaration:
-    type ID                      { printf("declaration( type ID )\n"); }
-    | type_modifier type ID  { printf("declaration( type_modifier type ID )\n"); }
+    type ID                             { printf("declaration: type ID\n"); }
+    | type_modifier type ID             { printf("declaration: type_modifier type ID\n"); }
     ;
 
 
 params:
-    param
-    | params ',' param
+    param                               { printf("params: param \n"); }
+    | params ',' param                  { printf("params: params ',' param\n"); }
     ;
 
 param:
-    ARG
+    ARG                                 { printf("param: ARG\n"); }
     ;
 
 type_modifier:
-    STATIC                        { printf("type_modifier( STATIC )\n"); }
+    STATIC                        { printf("type_modifier: STATIC\n"); }
     | CONST
     | UNSIGNED
     | VOLATILE
@@ -111,11 +112,11 @@ type_modifier:
     ;
 
 type:
-    INT               { printf("type( INT )\n"); }
-    | FLOAT           { printf("type( FLOAT )\n"); }
-    | CHAR            { printf("type( CHAR )\n"); }
-    | type REFERENCE  { printf("type( type REFERENCE )\n"); }
-    | type POINTER    { printf("type( type POINTER )\n"); }
+    INT               { printf("type: INT\n"); }
+    | FLOAT           { printf("type: FLOAT\n"); }
+    | CHAR            { printf("type: CHAR\n"); }
+    | type REFERENCE  { printf("type: type REFERENCE\n"); }
+    | type POINTER    { printf("type: type POINTER\n"); }
     ;
 
 
