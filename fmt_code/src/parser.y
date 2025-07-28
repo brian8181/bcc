@@ -26,7 +26,6 @@ void yyerror(const char *msg);
 %token <str> ARG
 %token <str> COLON
 %token <str> SPACE
-%type <str> program
 %type <str> files
 %type <str> file
 %type <str> function
@@ -38,6 +37,7 @@ void yyerror(const char *msg);
 %type <str> type
 %type <str> type_modifier
 %type <str> expr
+%start <str> program
 
 
 %%
