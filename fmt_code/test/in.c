@@ -1,6 +1,6 @@
 int x;
 int abc;
-static int x;
+static int y;
 x = 2;
 abc = 10;
 if(0) 2;

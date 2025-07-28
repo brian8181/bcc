@@ -1,38 +1,20 @@
 %{
-#include "ptest1.tab.h"
+#include "parser.tab.h"
 #include <string.h>
 %}
 
 digit   [0-9]
 id      [a-zA-Z_][a-zA-Z0-9_]*
-type    int|float|char
-ref     '&'
-point   '*'
 
 %%
 
 "int"       { return INT; }
 "float"     { return FLOAT; }
-"char"      { return CHAR; }
 "return"    { return RETURN; }
-"if"        { return IF; }
-"else"      { return ELSE; }
-"do"        { return DO; }
-"while"     { return WHILE; }
-"for"       { return FOR; }
-"continue"  { return CONTINUE; }
-"switch"    { return SWITCH; }
-"case"      { return CASE; }
-"break"     { return BREAK; }
-"goto"      { return GOTO; }
-"default"   { return DEFAULT; }
-"void"      { return VOID; }
-"private"   { return PRIVATE; }
-"static"    { return STATIC; }
-"const"     { return CONST; }
-"UNSIGNED"  { return UNSIGNED; }
-"volatile"  { return VOLATILE; }
-"register"  { return REGISTER; }
+
+{id}        { yylval.str = strdup(yytext); return ID; }
+{digit}+    { yylval.num = atoi(yytext); return NUMBER; }
+
 "="         { return '='; }
 ";"         { return ';'; }
 "("         { return '('; }
@@ -41,15 +23,6 @@ point   '*'
 "}"         { return '}'; }
 "+"         { return '+'; }
 "-"         { return '-'; }
-","         { return ','; }
-"["         { return '['; }
-"]"         { return ']'; }
-"::"        { return SCOPE_RESOLUTION; }
-":"         { return ':'; }
-"&"         { return REFERENCE; }
-"*"         { return POINTER; }
-{id}        { yylval.str = strdup(yytext); return ID; }
-{digit}+    { yylval.str = strdup(yytext); return NUMBER; }
 [ \t\n]+    ; // Skip whitespace
 .           { printf("Unexpected character: %s\n", yytext); }
 

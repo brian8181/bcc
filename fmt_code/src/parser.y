@@ -12,12 +12,12 @@ void yyerror(const char *msg);
     char* str;
 }
 
-%token <str> INT FLOAT CHAR
+%token <str> INT FLOAT CHAR VOID
 %token <str> REFERENCE POINTER
 %token <str> RETURN
-%token <str> IF ELSE FOR DO WHILE CONTINUE BREAK SWITCH CASE GOTO DEFAULT VOID
-%token <str> PRIVATE PROTECTED PUBLIC
-%token <str> STATIC CONST UNSIGNED VOLATILE MUTABLE REGISTER
+%token <str> IF ELSE FOR DO WHILE CONTINUE BREAK SWITCH CASE GOTO DEFAULT
+%token <str> PRIVATE PROTECTED PUBLIC INLINE
+%token <str> STATIC CONST UNSIGNED VOLATILE MUTABLE REGISTER RESTRICT
 %token <str> SCOPE_RESOLUTION SHIFT_LEFT SHIFT_RIGHT MODULUS
 %token <str> BIT_AND BIT_OR BIT_XOR BIT_NOT
 %token <str> ESCAPE
@@ -36,41 +36,42 @@ void yyerror(const char *msg);
 %type <str> line
 %type <str> declaration
 %type <str> type
+%type <str> type_modifier
 %type <str> expr
 
 
 %%
 
 program:
-    files           { printf("program: files\n"); }
+    files                               { printf("program: files\n"); }
     ;
 
 files:
-    file            { printf("files: file\n"); }
-    | files file    { printf("files: files file\n"); }
+    file                                { printf("files: file\n"); }
+    | files file                        { printf("files: files file\n"); }
     ;
 
 file:
-    scopes          { printf("file: scopes\n"); }
+    scopes                              { printf("file: scopes\n"); }
     ;
 
 scopes:
-    scope           { printf("scopes: scope\n"); }
-    | scopes scope  { printf("scopes: scopes scope\n"); }
+    scope                               { printf("scopes: scope\n"); }
+    | scopes scope                      { printf("scopes: scopes scope\n"); }
     ;
 
 scope:
-    lines           { printf("scope: lines\n"); }
-    | '{' lines '}'   { printf("scope: '{' lines() '}'\n");  }
+    lines                               { printf("scope: lines=\"%s\"\n", $1); }
+    | '{' lines '}'                     { printf("scope: '{' lines=\"%s\" '}'\n", $2);  }
     ;
 
 lines:
-    line            { printf("lines: line\n"); }
-    | lines line    { printf("lines: lines line\n"); }
+    line                                { printf("lines: line=\"%s\"\n", $1); }
+    | lines line                        { printf("lines: lines=\"%s\" line\"%s\"\n", $1, $2); }
     ;
 
 line:
-    expr ';'        { printf("line: expr\n"); }
+    expr ';'                            { printf("line: expr=\"%s\"\n", $1); }
     ;
 
 expr:
@@ -88,8 +89,8 @@ function:
     ;
 
 declaration:
-    type ID                             { printf("declaration: type ID\n"); }
-    | type_modifier type ID             { printf("declaration: type_modifier type ID\n"); }
+    type ID                             { printf("declaration: type=\"%s\" ID=\"%s\"\n", $1, $2); $$=$1; }
+    | type_modifier type ID             { printf("declaration: type_modifier=\"%s\" type=\"%s\" ID=\"%s\"\n", $1, $2, $3); $$=$1; }
     ;
 
 
@@ -103,20 +104,22 @@ param:
     ;
 
 type_modifier:
-    STATIC                        { printf("type_modifier: STATIC\n"); }
-    | CONST
-    | UNSIGNED
-    | VOLATILE
-    | MUTABLE
-    | REGISTER
+    STATIC                              { printf("type_modifier: STATIC\n"); }
+    | CONST                             { printf("type_modifier: CONST\n"); }
+    | UNSIGNED                          { printf("type_modifier: VOID\n"); }
+    | VOLATILE                          { printf("type_modifier: VOLATILE\n"); }
+| MUTABLE                               { printf("type_modifier: MUTABLE\n"); }
+    | REGISTER                          { printf("type_modifier: REGISTER\n"); }
+    | RESTRICT                          { printf("type_modifier: RESTRICT\n"); }
     ;
 
 type:
-    INT               { printf("type: INT\n"); }
-    | FLOAT           { printf("type: FLOAT\n"); }
-    | CHAR            { printf("type: CHAR\n"); }
-    | type REFERENCE  { printf("type: type REFERENCE\n"); }
-    | type POINTER    { printf("type: type POINTER\n"); }
+    INT                                 { printf("type: INT\n"); }
+    | FLOAT                             { printf("type: FLOAT\n"); }
+    | CHAR                              { printf("type: CHAR\n"); }
+    | VOID                              { printf("type: VOID\n"); }
+    | type REFERENCE                    { printf("type: type REFERENCE\n"); }
+    | type POINTER                      { printf("type: type POINTER\n"); }
     ;
 
 

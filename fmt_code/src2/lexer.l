@@ -12,9 +12,9 @@ point   '*'
 
 %%
 
-"int"       { yylval.str = strdup(yytext); return INT; }
-"float"     { yylval.str = strdup(yytext); return FLOAT; }
-"char"      { yylval.str = strdup(yytext); return CHAR; }
+"int"       { return INT; }
+"float"     { return FLOAT; }
+"char"      { return CHAR; }
 "return"    { return RETURN; }
 "if"        { return IF; }
 "else"      { return ELSE; }
@@ -28,16 +28,12 @@ point   '*'
 "goto"      { return GOTO; }
 "default"   { return DEFAULT; }
 "void"      { return VOID; }
-"private"   { yylval.str = strdup(yytext); return PRIVATE; }
-"protected"   { yylval.str = strdup(yytext); return PROTECTED; }
-"public"   { yylval.str = strdup(yytext); return PUBLIC; }
-"inline"   { yylval.str = strdup(yytext); return INLINE; }
-"static"    { yylval.str = strdup(yytext); return STATIC; }
-"const"     { yylval.str = strdup(yytext); return CONST; }
-"unsigned"  { yylval.str = strdup(yytext); return UNSIGNED; }
-"volatile"  { yylval.str = strdup(yytext); return VOLATILE; }
-"register"  { yylval.str = strdup(yytext); return REGISTER; }
-"restrict"  { yylval.str = strdup(yytext); return RESTRICT; }
+"private"   { return PRIVATE; }
+"static"    { return STATIC; }
+"const"     { return CONST; }
+"UNSIGNED"  { return UNSIGNED; }
+"volatile"  { return VOLATILE; }
+"register"  { return REGISTER; }
 "="         { return '='; }
 ";"         { return ';'; }
 "("         { return '('; }
