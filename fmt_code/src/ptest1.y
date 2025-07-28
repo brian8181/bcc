@@ -23,7 +23,6 @@ void yyerror(const char *msg);
 %token <str> ESCAPE
 %token <str> NUMBER
 %token <str> ID
-%token <str> ARG
 %token <str> COLON
 %token <str> SPACE
 %type <str> program
@@ -61,7 +60,8 @@ scopes:
 
 scope:
     lines           { printf("scope( lines )\n"); }
-    | '{' lines '}'   { printf("scope( '{' lines() '}' )\n");  }
+    |
+    '{' lines '}'   { printf("scope( '{' lines() '}' )\n");  }
     ;
 
 lines:
@@ -89,16 +89,6 @@ function:
 declaration:
     type ID                      { printf("declaration( type ID )\n"); }
     | type_modifier type ID  { printf("declaration( type_modifier type ID )\n"); }
-    ;
-
-
-params:
-    param
-    | params ',' param
-    ;
-
-param:
-    ARG
     ;
 
 type_modifier:
