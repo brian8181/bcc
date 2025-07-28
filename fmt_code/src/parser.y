@@ -37,7 +37,7 @@ void yyerror(const char *msg);
 %type <str> type
 %type <str> type_modifier
 %type <str> expr
-%start <str> program
+%start program
 
 
 %%
