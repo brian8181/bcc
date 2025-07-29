@@ -7,3 +7,5 @@ if(0) 2;
 int* p;
 int& r;
 int foo();
+2 + 3;
+5 - 3;
