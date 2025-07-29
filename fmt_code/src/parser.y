@@ -41,6 +41,7 @@ void yyerror(const char *msg);
 %type <str> type_modifier
 %type <str> numeric_expr
 %type <str> expr
+%type <str> statement
 %start program
 
 %%
@@ -74,7 +75,11 @@ lines:
     ;
 
 line:
-    expr ';'                            { printf("line: expr=\"%s\"\n", $1); }
+    statement ';'                       { printf("line: statement=\"%s\"\n", $1); }
+    ;
+
+statement:
+    expr                                { printf("statement: expr=\"%s\"\n", $1); }
     ;
 
 expr:
