@@ -36,9 +36,9 @@ void yyerror(const char *msg);
 %type <str> declaration
 %type <str> type
 %type <str> type_modifier
+%type <str> binary_op
 %type <str> expr
 %start program
-
 
 %%
 
@@ -78,9 +78,27 @@ expr:
     declaration                         { printf("expr: declaration=\"%s\"\n", $1); }
     | function                          { printf("expr: function=\"%s\"\n", $1); }
     | ID '=' expr                       { printf("expr: ID '=' expr\n"); }
-    | NUMBER                            { printf("expr: NUMBER=\"%s\"\n", $$); }
+    | binary_op                         { printf("expr: binary_op=\"%s\"\n", $$); }
     | IF '(' expr ')' expr              { printf("expr: IF '(' expr=\"%s\" ')' expr=\"%s\"\n", $3, $5); }
     | IF '(' expr ')' '{' expr ';' '}'  { printf("expr: IF '(' expr=\"%s\" ')' '{' expr=\"%s\" ';' '}'\n", $3, $6); }
+    ;
+
+binary_op:
+    NUMBER                              { printf("binary_op: NUMBER=\"%s\"\n", $1); $$ = $1; }
+    | binary_op '+' binary_op           {
+                                            // snprintf(str, sizeof(str), "%d", num);
+                                            char buffer[32];
+                                            int i = atoi($1) + atoi($3);
+                                            snprintf(buffer, sizeof(buffer), "%d", i);
+                                            $$ = buffer;
+                                        }
+    | binary_op '-' binary_op           {
+                                            // snprintf(str, sizeof(str), "%d", num);
+                                            char buffer[32];
+                                            int i = atoi($1) + atoi($3);
+                                            snprintf(buffer, sizeof(buffer), "%d", i);
+                                            $$ = buffer;
+                                        }
     ;
 
 function:
