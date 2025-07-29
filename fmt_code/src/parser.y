@@ -15,18 +15,19 @@ void yyerror(const char *msg);
 
 %token <str> INT FLOAT CHAR VOID
 %token <str> REFERENCE POINTER
-%token <str> RETURN
-%token <str> IF ELSE FOR DO WHILE CONTINUE BREAK SWITCH CASE GOTO DEFAULT
-%token <str> PRIVATE PROTECTED PUBLIC INLINE
-%token <str> STATIC CONST UNSIGNED VOLATILE MUTABLE REGISTER RESTRICT
-%token <str> SCOPE_RESOLUTION SHIFT_LEFT SHIFT_RIGHT MODULUS
-%token <str> BIT_AND BIT_OR BIT_XOR BIT_NOT
-%token <str> ESCAPE
+%token <str> DIRECT_MEMBER_SELECTOR INDIRECT_MEMBER_SELECTOR DEREFERENCE ADDRESS_OF SCOPE_RESOLUTION
+%token <str> LEFT_BRACE RIGHT_BRACE LEFT_CURLY RIGHT_CURLY LEFT_PAREN RIGHT_PAREN
+%token <str> COMMA SEMICOLON COLON DOUBLE_QUOTE SINGLE_QUOTE QUESTION_MARK DOT AT_SYMBOL
+%token <str> IF ELSE FOR DO WHILE CONTINUE BREAK SWITCH CASE GOTO DEFAULT RETURN
+%token <str> PRIVATE PROTECTED PUBLIC
+%token <str> STATIC CONST UNSIGNED VOLATILE MUTABLE REGISTER RESTRICT INLINE
+%token <str> SHIFT_LEFT SHIFT_RIGHT MODULUS
+%token <str> BIT_AND BIT_OR BIT_XOR BIT_NOT LOGICAL_NOT LOGICAL_AND LOGICAL_OR
+%token <str> PLUS MINUS ASTRICK FORWARD_SLASH BACKWARD_SLASH LESS_THAN GREATER_THAN
 %token <str> NUMBER
 %token <str> ID
 %token <str> ARG
-%token <str> COLON
-%token <str> SPACE
+%token <str> SPACE TAB NEWLINE END_OF_FILE
 %type <str> files
 %type <str> file
 %type <str> function
@@ -39,6 +40,7 @@ void yyerror(const char *msg);
 %type <str> param
 %type <str> type
 %type <str> type_modifier
+%type <str> access_specifier
 %type <str> numeric_expr
 %type <str> expr
 %type <str> statement
@@ -123,6 +125,12 @@ param:
     ARG                                 { printf("param: ARG=\"%s\"\n", $1); }
     ;
 
+access_specifier:
+        PUBLIC
+        | PROTECTED
+        | PRIVATE
+        ;
+
 type_modifier:
     STATIC                              { printf("type_modifier: STATIC\n"); }
     | CONST                             { printf("type_modifier: CONST\n"); }
@@ -131,6 +139,7 @@ type_modifier:
     | MUTABLE                           { printf("type_modifier: MUTABLE\n"); }
     | REGISTER                          { printf("type_modifier: REGISTER\n"); }
     | RESTRICT                          { printf("type_modifier: RESTRICT\n"); }
+    | INLINE
     ;
 
 type:
@@ -140,6 +149,48 @@ type:
     | VOID                              { printf("type: VOID\n"); }
     | type REFERENCE                    { printf("type: type REFERENCE\n"); }
     | type POINTER                      { printf("type: type POINTER\n"); }
+    ;
+
+flow_control:
+    FOR
+    | WHILE
+    | DO
+    | BREAK
+    | CONTINUE
+    | IF
+    | ELSE
+    | SWITCH
+    | CASE
+    | GOTO
+    | DEFAULT
+    | RETURN
+    ;
+
+space:
+    SPACE
+    | TAB
+    | NEWLINE
+    | END_OF_FILE
+    ;
+
+operator:
+    PLUS
+    | MINUS
+    | ASTRICK
+    | FORWARD_SLASH
+    | BACKWARD_SLASH
+    | LESS_THAN
+    | GREATER_THAN
+    | BIT_AND
+    | BIT_OR
+    | BIT_XOR
+    | BIT_NOT
+    | LOGICAL_NOT
+    | LOGICAL_AND
+    | LOGICAL_OR
+    | SHIFT_LEFT
+    | SHIFT_RIGHT
+    | MODULUS
     ;
 
 
