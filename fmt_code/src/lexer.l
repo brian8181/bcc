@@ -1,14 +1,12 @@
 %{
+
 #include "parser.tab.h"
 #include <string.h>
+
 %}
 
 digit   [0-9]
 id      [a-zA-Z_][a-zA-Z0-9_]*
-
-type    int|float|char
-ref     '&'
-point   '*'
 
 %%
 
@@ -29,9 +27,9 @@ point   '*'
 "default"   { return DEFAULT; }
 "void"      { return VOID; }
 "private"   { yylval.str = strdup(yytext); return PRIVATE; }
-"protected"   { yylval.str = strdup(yytext); return PROTECTED; }
-"public"   { yylval.str = strdup(yytext); return PUBLIC; }
-"inline"   { yylval.str = strdup(yytext); return INLINE; }
+"protected" { yylval.str = strdup(yytext); return PROTECTED; }
+"public"    { yylval.str = strdup(yytext); return PUBLIC; }
+"inline"    { yylval.str = strdup(yytext); return INLINE; }
 "static"    { yylval.str = strdup(yytext); return STATIC; }
 "const"     { yylval.str = strdup(yytext); return CONST; }
 "unsigned"  { yylval.str = strdup(yytext); return UNSIGNED; }
@@ -72,7 +70,6 @@ int yywrap(void)
 
 int main(int argc, char* argv[])
 {
-    // #ifdef DEBUG
     // skip exe path ...
    argc--; argv++;
    if (argc > 0)
@@ -95,7 +92,5 @@ int main(int argc, char* argv[])
     }
 
     yyparse();
-    // #endif
-
     return 0;
 }

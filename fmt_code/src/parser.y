@@ -56,39 +56,31 @@ void yyerror(const char *msg);
 program:
     files                               { printf("program: files\n"); }
     ;
-
 files:
     file                                { printf("files: file\n"); }
     | files file                        { printf("files: files file\n"); }
     ;
-
 file:
     scopes                              { printf("file: scopes\n"); }
     ;
-
 scopes:
     scope                               { printf("scopes: scope\n"); }
     | scopes scope                      { printf("scopes: scopes scope\n"); }
     ;
-
 scope:
     lines                               { printf("scope: lines=\"%s\"\n", $1); }
     | '{' lines '}'                     { printf("scope: '{' lines=\"%s\" '}'\n", $2);  }
     ;
-
 lines:
     line                                { printf("lines: line=\"%s\"\n", $1); }
     | lines line                        { printf("lines: lines=\"%s\" line\"%s\"\n", $1, $2); }
     ;
-
 line:
     statement ';'                       { printf("line: statement=\"%s\"\n", $1); }
     ;
-
 statement:
     expr                                { printf("statement: expr=\"%s\"\n", $1); }
     ;
-
 expr:
     declaration                         { printf("expr: declaration=\"%s\"\n", $1); }
     | function                          { printf("expr: function=\"%s\"\n", $1); }
@@ -97,7 +89,6 @@ expr:
     | IF '(' expr ')' expr              { printf("expr: IF '(' expr=\"%s\" ')' expr=\"%s\"\n", $3, $5); }
     | IF '(' expr ')' '{' expr ';' '}'  { printf("expr: IF '(' expr=\"%s\" ')' '{' expr=\"%s\" ';' '}'\n", $3, $6); }
     ;
-
 numeric_expr:
     NUMBER                              { printf("binary_op: NUMBER=\"%s\"\n", $1); }
     | numeric_expr '+' numeric_expr     {
@@ -110,32 +101,27 @@ numeric_expr:
                                             sprintf(buffer, "%s - %s", $1, $3);
                                             printf("%s\n", buffer);
                                         }
+    ;
 function:
     declaration '(' ')'                 { printf("function: declaration '(' ')'\n"); }
     | declaration '(' params ')'        { printf("function: declaration '(' params ')' )\n"); }
     ;
-
 declaration:
     type ID                             { printf("declaration: type=\"%s\" ID=\"%s\"\n", $1, $2); }
     | type_modifier type ID             { printf("declaration: type_modifier=\"%s\" type=\"%s\" ID=\"%s\"\n", $1, $2, $3); }
     ;
-
-
 params:
     param                               { printf("params: param=\"%s\" \n", $1); }
     | params ',' param                  { printf("params: params=\"%s\" , param=\"%s\"\n", $1, $3); }
     ;
-
 param:
     ARG                                 { printf("param: ARG=\"%s\"\n", $1); }
     ;
-
 access_specifier:
         PUBLIC
         | PROTECTED
         | PRIVATE
         ;
-
 type_modifier:
     STATIC                              { printf("type_modifier: STATIC\n"); }
     | CONST                             { printf("type_modifier: CONST\n"); }
@@ -146,7 +132,6 @@ type_modifier:
     | RESTRICT                          { printf("type_modifier: RESTRICT\n"); }
     | INLINE
     ;
-
 type:
     INT                                 { printf("type: INT\n"); }
     | FLOAT                             { printf("type: FLOAT\n"); }
@@ -155,7 +140,6 @@ type:
     | type REFERENCE                    { printf("type: type REFERENCE\n"); }
     | type POINTER                      { printf("type: type POINTER\n"); }
     ;
-
 flow_control:
     FOR
     | WHILE
@@ -170,14 +154,12 @@ flow_control:
     | DEFAULT
     | RETURN
     ;
-
 space:
     SPACE
     | TAB
     | NEWLINE
     | END_OF_FILE
     ;
-
 operator:
     ADDITION
     | SUBTRACTION
@@ -212,12 +194,10 @@ operator:
     | ADDRESS_OF
     | SCOPE_RESOLUTION
     ;
-
 member_select:
     DIRECT_MEMBER_SELECT
     | INDIRECT_MEMBER_SELECT
     ;
-
 pointer_to_member:
     INDIRECT_TO_POINTER
     | DIRECT_TO_POINTER
