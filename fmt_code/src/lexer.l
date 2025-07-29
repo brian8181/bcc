@@ -53,6 +53,10 @@ point   '*'
 ":"         { return ':'; }
 "&"         { return REFERENCE; }
 "*"         { return POINTER; }
+"."         { yylval.str = strdup(yytext); return DIRECT_MEMBER_SELECT; }
+"->"        { yylval.str = strdup(yytext); return INDIRECT_MEMBER_SELECT; }
+".*"        { yylval.str = strdup(yytext); return INDIRECT_TO_POINTER; }
+"->*"       { yylval.str = strdup(yytext); return DIRECT_TO_POINTER; }
 __{id}      { yylval.str = strdup(yytext); return ARG; }
 {id}        { yylval.str = strdup(yytext); return ID; }
 {digit}+    { yylval.str = strdup(yytext); return NUMBER; }
