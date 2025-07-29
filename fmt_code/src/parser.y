@@ -86,20 +86,20 @@ expr:
 binary_op:
     NUMBER                              { printf("binary_op: NUMBER=\"%s\"\n", $1); $$ = $1; }
     | binary_op '+' binary_op           {
-                                            // snprintf(str, sizeof(str), "%d", num);
+                                            // convert all to char*
                                             char buffer[32];
                                             int i = atoi($1) + atoi($3);
                                             snprintf(buffer, sizeof(buffer), "%d", i);
                                             $$ = buffer;
                                         }
     | binary_op '-' binary_op           {
-                                            // snprintf(str, sizeof(str), "%d", num);
+                                            // convert all to char*
                                             char buffer[32];
                                             int i = atoi($1) + atoi($3);
                                             snprintf(buffer, sizeof(buffer), "%d", i);
                                             $$ = buffer;
                                         }
-    ;
+                                        ;
 
 function:
     declaration '(' ')'                 { printf("function: declaration '(' ')'\n"); }
