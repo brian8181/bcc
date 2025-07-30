@@ -63,11 +63,47 @@ int get_value(char* name) {
     char* str;
 }
 
+%token <str> INT FLOAT CHAR VOID
+%token <str> REFERENCE POINTER
+%token <str> ASSIGNMENT
+%token <str> ARG
+%token <str> SPACE TAB NEWLINE END_OF_FILE
+%token <str> LBRACE RBRACE LCURLY RCURLY LPAREN RPAREN
+%token <str> STATIC CONST UNSIGNED VOLATILE MUTABLE REGISTER RESTRICT INLINE
+%token <str> SHIFT_LEFT SHIFT_RIGHT MODULUS
+%token <str> EQUALS LOGICAL_NOT LOGICAL_AND LOGICAL_OR BIT_AND BIT_OR BIT_XOR BIT_NOT
+%token <str> ADDITION SUBTRACTION MUTIPLICATION DIVISION
+%token <str> LESS_THAN GREATER_THAN
+%token <str> COMMA SEMICOLON COLON DOUBLE_QUOTE SINGLE_QUOTE QUESTION_MARK DOT AT_SYMBOL
+%token <str> PRIVATE PROTECTED PUBLIC
+%token <str> ADDRESS_OF SCOPE_RESOLUTION
+%token <str> DIRECT_TO_POINTER INDIRECT_TO_POINTER
+%token <str> DIRECT_MEMBER_SELECT INDIRECT_MEMBER_SELECT
+%token <str> IF ELSE FOR DO WHILE CONTINUE BREAK SWITCH CASE GOTO DEFAULT RETURN
+%type <str> files
+%type <str> file
+%type <str> function
+%type <str> scopes
+%type <str> scope
+%type <str> lines
+%type <str> line
+%type <str> declaration
+%type <str> params
+%type <str> param
+%type <str> type
+%type <str> type_modifier
+%type <str> pointer_to_member
+%type <str> member_select
+%type <str> access_specifier
+%type <str> numeric_expr
+//%type <str> expr
+%type <str> statement
+%start program
+
+
 %type <num> expr
 %token <num> NUMBER
-%token <str> IDENTIFIER
-%token INT FLOAT RETURN
-%token IF ELSE LPAREN RPAREN LBRACE RBRACE
+%token <str> ID
 %left '<' '>' EQ
 %left "+" "-";
 %left "*" "/";
@@ -83,7 +119,7 @@ int get_value(char* name) {
     ;
 */
 
-program:
+/* program:
     statements
     ;
 
@@ -99,30 +135,30 @@ statements:
     ;
 
 if_statement:
-    IF LPAREN expr RPAREN LBRACE statement RBRACE 
-        { 
+    IF LPAREN expr RPAREN LBRACE statement RBRACE
+        {
             char* p = "0";
             int r = atoi(p);
             printf("result=%i\n", r);
-            if(r) { printf("IF_TRUE\n"); } else { printf("IF_FALSE\n"); } 
+            if(r) { printf("IF_TRUE\n"); } else { printf("IF_FALSE\n"); }
         }
-    | IF LPAREN expr RPAREN LBRACE statement RBRACE ELSE LBRACE statement RBRACE 
-        { 
+    | IF LPAREN expr RPAREN LBRACE statement RBRACE ELSE LBRACE statement RBRACE
+        {
             char* p = "0";
             int r = atoi(p);
             printf("result=%i\n", r);
-             if(r) { printf("IF_ELSE_TRUE\n"); } else { printf("IF_ELSE_FALSE\n"); } 
+             if(r) { printf("IF_ELSE_TRUE\n"); } else { printf("IF_ELSE_FALSE\n"); }
         }
-    ;
-    
+    /* ;
+
 statement:
     INT IDENTIFIER ';'                    { declare($2); }
     | IDENTIFIER '=' expr ';'             { assign($1, $3); }
     | RETURN expr ';'                     { printf("Returning %d\n", $2); }
     ;
-
+/*
 expr:
-    INT IDENTIFIER ';'           { printf("expr:INT_IDENTIFIER\n"); } 
+    INT IDENTIFIER ';'           { printf("expr:INT_IDENTIFIER\n"); }
     | expr '+' expr                { $$ = $1 + $3; }
     | expr '-' expr               { $$ = $1 - $3; }
     | expr '<' expr               { $$ = $1 < $3; }
@@ -131,6 +167,26 @@ expr:
     | INT                         { printf("expr:INT\n"); }
     | NUMBER                      { $$ = $1; }
     | IDENTIFIER                  { $$ = get_value($1); printf("expr:IDENTIFIER\n"); }
+    ; */
+
+program:
+    lines   { printf("program\n"); }
+    ;
+
+lines:
+    line
+    | lines line
+    ;
+
+line:
+    expr ';'    { printf("line: expr ;\n"); $$ = $1; }
+    ;
+
+expr:
+    INT ID { printf("expr INT ID \"%s\"\n", $2); }
+    | ID '=' expr           { $$ = $3; printf("expr ID = expr\n"); }
+    | RETURN expr                    { printf("Returning %d\n", $2); }
+    | NUMBER  { $$ = $1; printf("expr NUMBER = %i\n", $$); }
     ;
 
 %%
@@ -148,10 +204,10 @@ void yyerror(const char *s)
     fprintf(stderr, "Parse error: %s\n", s);
 }
 
-int main() 
+/* int main()
 {
     return yyparse();
-}
+} */
 
 /*
 int main(int argc, char* argv[])
