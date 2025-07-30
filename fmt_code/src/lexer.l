@@ -45,21 +45,37 @@ id      [a-zA-Z_][a-zA-Z0-9_]*
 "volatile"  { yylval.str = strdup(yytext); return VOLATILE; }
 "register"  { yylval.str = strdup(yytext); return REGISTER; }
 "restrict"  { yylval.str = strdup(yytext); return RESTRICT; }
+"!"         { yylval.str = strdup(yytext); return LOGICAL_NOT; }
+"=="        { yylval.str = strdup(yytext); return EQUALS; }
+"&&"        { yylval.str = strdup(yytext); return LOGICAL_AND; }
+"||"        { yylval.str = strdup(yytext); return LOGICAL_OR; }
 "="         { return '='; }
 ";"         { return ';'; }
+"+"         { return '+'; }
+"-"         { return '-'; }
+","         { return ','; }
 "("         { return '('; }
 ")"         { return ')'; }
 "{"         { return '{'; }
 "}"         { return '}'; }
-"+"         { return '+'; }
-"-"         { return '-'; }
-","         { return ','; }
 "["         { return '['; }
 "]"         { return ']'; }
-"::"        { return SCOPE_RESOLUTION; }
+"<"         { return '<'; }
+">"         { return '>'; }
+"#"         { return '#'; }
+"$"         { return '$'; }
+"%"         { return '%'; }
+"^"         { return '^'; }
+"\""        { return '"'; }
+"'"         { return '\'';}
+"\\"        { return '\\'; }
+"/"         { return '/'; }
+"~"         { return '~'; }
+"_"         { return '_'; }
 ":"         { return ':'; }
-"&"         { return REFERENCE; }
-"*"         { return POINTER; }
+"&"         { yylval.str = strdup(yytext); return REFERENCE; }
+"*"         { yylval.str = strdup(yytext); return POINTER; }
+"::"        { yylval.str = strdup(yytext); return SCOPE_RESOLUTION; }
 "."         { yylval.str = strdup(yytext); return DIRECT_MEMBER_SELECT; }
 "->"        { yylval.str = strdup(yytext); return INDIRECT_MEMBER_SELECT; }
 ".*"        { yylval.str = strdup(yytext); return INDIRECT_TO_POINTER; }
