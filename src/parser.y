@@ -67,7 +67,7 @@ int get_value(char* name) {
 %token <str> REFERENCE POINTER
 %token <str> ASSIGNMENT
 %token <str> ARG
-%token <str> SPACE TAB NEWLINE END_OF_FILE
+%token <str> SPACE TAB NEWLINE
 %token <str> LBRACE RBRACE LCURLY RCURLY LPAREN RPAREN
 %token <str> STATIC CONST UNSIGNED VOLATILE MUTABLE REGISTER RESTRICT INLINE
 %token <str> SHIFT_LEFT SHIFT_RIGHT MODULUS
@@ -187,6 +187,101 @@ expr:
     | ID '=' expr           { $$ = $3; printf("expr ID = expr\n"); }
     | RETURN expr                    { printf("Returning %d\n", $2); }
     | NUMBER  { $$ = $1; printf("expr NUMBER = %i\n", $$); }
+    ;
+
+params:
+    param                               { printf("params: param=\"%s\" \n", $1); }
+    | params ',' param                  { printf("params: params=\"%s\" , param=\"%s\"\n", $1, $3); }
+    ;
+param:
+    ARG                                 { printf("param: ARG=\"%s\"\n", $1); }
+    ;
+access_specifier:
+        PUBLIC
+        | PROTECTED
+        | PRIVATE
+        ;
+type_modifier:
+    STATIC                              { printf("type_modifier: STATIC\n"); }
+    | CONST                             { printf("type_modifier: CONST\n"); }
+    | UNSIGNED                          { printf("type_modifier: VOID\n"); }
+    | VOLATILE                          { printf("type_modifier: VOLATILE\n"); }
+    | MUTABLE                           { printf("type_modifier: MUTABLE\n"); }
+    | REGISTER                          { printf("type_modifier: REGISTER\n"); }
+    | RESTRICT                          { printf("type_modifier: RESTRICT\n"); }
+    | INLINE
+    ;
+type:
+    INT                                 { printf("type: INT\n"); }
+    | FLOAT                             { printf("type: FLOAT\n"); }
+    | CHAR                              { printf("type: CHAR\n"); }
+    | VOID                              { printf("type: VOID\n"); }
+    | type REFERENCE                    { printf("type: type REFERENCE\n"); }
+    | type POINTER                      { printf("type: type POINTER\n"); }
+    ;
+flow_control:
+    FOR
+    | WHILE
+    | DO
+    | BREAK
+    | CONTINUE
+    | IF
+    | ELSE
+    | SWITCH
+    | CASE
+    | GOTO
+    | DEFAULT
+    | RETURN
+    ;
+space:
+    SPACE
+    | TAB
+    | NEWLINE
+    | END_OF_FILE
+    ;
+operator:
+    ASSIGNMENT
+    | ADDITION
+    | SUBTRACTION
+    | MUTIPLICATION
+    | DIVISION
+    | LESS_THAN
+    | EQUALS
+    | GREATER_THAN
+    | BIT_AND
+    | BIT_OR
+    | BIT_XOR
+    | BIT_NOT
+    | LOGICAL_NOT
+    | LOGICAL_AND
+    | LOGICAL_OR
+    | SHIFT_LEFT
+    | SHIFT_RIGHT
+    | MODULUS
+    | LBRACE
+    | LCURLY
+    | LPAREN
+    | RBRACE
+    | RCURLY
+    | RPAREN
+    | COMMA
+    | COLON
+    | SEMICOLON
+    | DOUBLE_QUOTE
+    | SINGLE_QUOTE
+    | QUESTION_MARK
+    | DOT
+    | AT_SYMBOL
+    | ADDRESS_OF
+    | SCOPE_RESOLUTION
+    ;
+member_select:
+    DIRECT_MEMBER_SELECT
+    | INDIRECT_MEMBER_SELECT
+    ;
+pointer_to_member:
+    INDIRECT_TO_POINTER
+    | DIRECT_TO_POINTER
     ;
 
 %%

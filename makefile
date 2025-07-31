@@ -10,11 +10,13 @@ FLEX=flex
 YACCFLAGS=-d
 BISONFLAGS=-y --html --graph
 FLEXFLAGS?=
-CXXFLAGS=-Wall -std=c++20 -fPIC
+CXXFLAGS=-std=c++17 -fPIC
 CCFLAGS=
 SRC=src
 BLD?=build
-OBJ?=build
+OBJ?=$(BLD)
+LEXER_NAME=lexer
+PARSER_NAME=parser
 
 # lib settings
 LDFLAGS = -static -lcppunit -L/usr/local/lib/
@@ -28,18 +30,24 @@ ifdef CYGWIN
 	CXXFLAGS += -DCYGWIN
 endif
 
-all: $(BLD)/bcc
+all: $(BLD)/$(APP) $(BLD)/lex
 
 rebuild: clean all
 
-$(BLD)/bcc: $(BLD)/lexer.yy.c $(BLD)/parser.tab.c
-	 $(CC) $(CCFLAGS) $(BLD)/parser.tab.c $(BLD)/lexer.yy.c -o $(BLD)/bcc
+$(BLD)/$(APP): $(BLD)/$(LEXER_NAME).yy.c $(BLD)/$(PARSER_NAME).tab.c
+	 $(CC) $(CCFLAGS) $(BLD)/$(PARSER_NAME).tab.c $(BLD)/$(LEXER_NAME).yy.c -o $(BLD)/$(APP)
 
-$(BLD)/lexer.yy.c: $(SRC)/lexer.l
-	$(FLEX) $(FLEXFLAGS) -o $(BLD)/lexer.yy.c $(SRC)/lexer.l
+$(BLD)/$(LEXER_NAME).yy.c: $(SRC)/$(LEXER_NAME).l
+	$(FLEX) $(FLEXFLAGS) -o $(BLD)/$(LEXER_NAME).yy.c $(SRC)/$(LEXER_NAME).l
 
-$(BLD)/parser.tab.c: $(SRC)/parser.y
-	$(YACC) $(YACCFLAGS) $(SRC)/parser.y -o $(BLD)/parser.tab.c
+$(BLD)/$(PARSER_NAME).tab.c: $(SRC)/$(PARSER_NAME).y
+	$(YACC) $(YACCFLAGS) $(SRC)/$(PARSER_NAME).y -o $(BLD)/$(PARSER_NAME).tab.c
+
+$(BLD)/lexer.cpp: $(SRC)/lexer_ex.l
+	reflex --flex -o $(BLD)/lexer.cpp $(SRC)/lexer_ex.l
+
+$(BLD)/lex: $(BLD)/lexer.cpp
+	$(CXX) $(CXXFLAGS) $(BLD)/lexer.cpp -o $(BLD)/lex
 
 $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CCFLAGS) -c -o $@ $<
