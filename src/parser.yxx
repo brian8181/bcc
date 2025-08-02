@@ -62,7 +62,7 @@
 
 %token <std::string> IDENTIFIER "identifier"
 %token <int> NUMBER "number"
-%token <int> exp
+%type <int> exp
 
 %left "+" "-";
 %left "*" "/";
@@ -111,7 +111,6 @@ void  yy::parser::report_syntax_error (const context& ctx)
                         std::cerr << i == 0 ? ": expected " : " or " << symbol_name (expected[i]);
                 }
         }
-{
         // Report the unexpected token.
         symbol_kind_type lookahead = ctx.token ();
         if (lookahead != symbol_kind::S_YYEMPTY)

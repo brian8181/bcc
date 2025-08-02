@@ -9,6 +9,17 @@
 //      0 1 2 3 4 5 6 7 8 9
 //      _ { } [ ] # ( ) < > % : ; . ? * + - / ˆ & | ˜ ! = , \ " ’
 
+// # include <cerrno>
+// # include <climits>
+// # include <cstdlib>
+// # include <cstring> // strerror
+// # include <string>
+// # include "driver.hh"
+// # include "parser.hh"
+
+#define _GNU_SOURCE
+#include <stdio.h>
+/*#include "ptypes.h"*/
 #include "parser.tab.h"
 #include <string.h>
 
@@ -20,6 +31,19 @@ int fileno(FILE *);
 */
 
 %}
+
+%{
+    static void print_token (yytoken_kind_t token, YYSTYPE val);
+%}
+
+/* Generate the parser description file. */
+%verbose
+/* Enable run-time traces (yydebug). */
+%define parse.trace
+/* Formatting semantic values. */
+%printer { fprintf (yyo, "%s", $$->name); } VAR;
+%printer { fprintf (yyo, "%s()", $$->name); } FUN;
+%printer { fprintf (yyo, "%g", $$); } <double>;
 
 digit   [0-9]
 id      [a-zA-Z_][a-zA-Z0-9_]*
@@ -96,6 +120,13 @@ __{id}      { yylval.str = strdup(yytext); return ARG; }
 [ \t\n]+    { /* skip whitespace */ }
 <<EOF>>     { return END_OF_FILE; }
 .           { printf("Unexpected character: %s\n", yytext); }
+
+%precedence THEN
+%precedence ELSE
+
+%left '<' '>' '=' "!=" "<=" ">="
+%left '+' '-'
+%left '*' '/'
 
 %%
 

@@ -30,7 +30,7 @@ ifdef CYGWIN
 	CXXFLAGS += -DCYGWIN
 endif
 
-all: $(BLD)/$(APP) $(BLD)/lex $(BLD)/$(PARSER_NAME).tab.cpp
+all: $(BLD)/$(APP) $(BLD)/$(PARSER_NAME).tab.cpp
 
 rebuild: clean all
 
@@ -48,7 +48,8 @@ $(BLD)/$(PARSER_NAME).tab.cpp: $(SRC)/$(PARSER_NAME).yxx
 	bison -d -o $(BLD)/$(PARSER_NAME).tab.cpp $(SRC)/$(PARSER_NAME).yxx
 
 $(BLD)/lexer.cpp: $(SRC)/lexer_ex.l
-	reflex --flex -o $(BLD)/lexer.cpp $(SRC)/lexer_ex.l
+	#reflex --flex -o $(BLD)/lexer.cpp $(SRC)/lexer_ex.l
+	flex  $(BLD)/lexer.yxx
 
 $(BLD)/lex: $(BLD)/lexer.cpp
 	$(CXX) $(CXXFLAGS) $(BLD)/lexer.cpp -o $(BLD)/lex
