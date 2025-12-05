@@ -13,7 +13,7 @@ FLEXFLAGS?=
 CXXFLAGS=-std=c++17 -fPIC
 CCFLAGS=
 SRC=src
-BLD?=build
+BLD=build
 OBJ?=$(BLD)
 LEXER_NAME=lexer
 PARSER_NAME=parser
@@ -44,8 +44,8 @@ $(BLD)/$(PARSER_NAME).tab.c: $(SRC)/$(PARSER_NAME).y
 	$(YACC) $(YACCFLAGS) $(SRC)/$(PARSER_NAME).y -o $(BLD)/$(PARSER_NAME).tab.c
 
 
-$(BLD)/$(PARSER_NAME).tab.cpp: $(SRC)/$(PARSER_NAME).yxx
-	bison -d -o $(BLD)/$(PARSER_NAME).tab.cpp $(SRC)/$(PARSER_NAME).yxx
+$(BLD)/$(PARSER_NAME).tab.cpp: $(SRC)/$(PARSER_NAME).yy
+	bison -d -o $(BLD)/$(PARSER_NAME).tab.cpp $(SRC)/$(PARSER_NAME).yy
 
 $(BLD)/lexer.cpp: $(SRC)/lexer_ex.l
 	#reflex --flex -o $(BLD)/lexer.cpp $(SRC)/lexer_ex.l

@@ -18,17 +18,17 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef DRIVER_HH
-# define DRIVER_HH
-# include <string>
-# include <map>
-# include "parser.hpp"
+#define DRIVER_HH
+
+#include <string>
+#include <map>
+#include "parser.hpp"
 
 // give flex the prototype of yylex we want
-# define YY_DECL \
-  yy::parser::symbol_type yylex(driver& drv)
-YY_DECL; // and declare it for the parser's sake.
+# define YY_DECL yy::parser::symbol_type yylex(driver& drv)
+YY_DECL; // declare it for the parser's sake
 
-// conducting the whole scanning and parsing
+// conduct scanning and parsing
 class driver
 {
 public:
@@ -39,10 +39,11 @@ public:
 
 public:
     std::map<std::string, int> variables;
-    int result;             // Run the parser on file F.  Return 0 on success.
-    std::string file;       // The name of the file being parsed.
-    bool trace_parsing;     // Whether to generate parser debug traces.
-    bool trace_scanning;    // Whether to generate scanner debug traces.
-    yy::location location;  // The token's location used by the scanner.
+    int result;             // run the parser on file F, return 0 on success
+    std::string file;       // file being parsed
+    bool trace_parsing;     // generate parser debug traces
+    bool trace_scanning;    // generate scanner debug traces
+    yy::location location;  // token's location used by the scanner
 };
+
 #endif // ! DRIVER_HH
