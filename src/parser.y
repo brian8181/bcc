@@ -192,7 +192,7 @@ statement:
     expr SEMI_COLON                                                 {
                                                                         printf("parser:statement: expr SEMI_COLON: [ %s ]\n" , $1);
                                                                         //statement stmt;
-                                                                        //$$ = $1;
+                                                                        $$ = $1;
                                                                     }
     | function SEMI_COLON                                           {
                                                                         printf("parser:statement: function SEMI_COLON\n");
@@ -328,8 +328,9 @@ expr:
                                                                     }
     | expr MULTIPLICATION expr                                      {
                                                                         printf("parser:expr: expr MULTIPLICATION expr: %s * %s", $1, $3);
-                                                                        //$$ = multiply($1, $3);
-                                                                        $$ = "6"; //debug
+                                                                        char* out;
+                                                                        multiply($1, $3, &out);
+                                                                        $$ = out;
                                                                     }
     | ID DIVISION ID                                                {
                                                                         printf("parser:expr: ID DIVISION ID : " , $1 , " / " , $3);
