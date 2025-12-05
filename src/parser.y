@@ -12,6 +12,7 @@
     //#include "file.hpp"
 
     int yylex(void);
+    int yyrestart(FILE* f);
     int yyerror(char* s);
 
     /**
@@ -599,17 +600,40 @@ int yyerror(char *s)
     return 0;
 };
 
+// int main(int argc, char** argv)
+// {
+//     printf("parsing ...\n");
+//     extern FILE *yyin;
+//     if ( argc > 0 )
+//     {
+//         yyin = fopen( argv[1], "r" );
+//     }
+//     else
+//     {
+//         yyin = stdin;
+//     };
+//     yyparse();
+// };
+
 int main(int argc, char** argv)
 {
-    printf("parsing ...\n");
-    extern FILE *yyin;
-    if ( argc > 0 )
+    if(argc < 2)
     {
-        yyin = fopen( argv[1], "r" );
+        /* just read stdin */
+        yyparse();
+        return 0;
     }
-    else
+    for(int i = 1; i < argc; i++)
     {
-        yyin = stdin;
-    };
-    yyparse();
-};
+        FILE *f = fopen(argv[i], "r");
+        if(!f)
+        {
+            perror(argv[i]);
+            return (1);
+        }
+        yyrestart(f);
+        yyparse();
+        fclose(f);
+    }
+    return 0;
+}

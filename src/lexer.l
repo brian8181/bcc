@@ -1,3 +1,5 @@
+%option noyywrap
+
 %{
 
 #include <stdio.h>
@@ -331,6 +333,7 @@ WHITE_SPACE            [ \t\n]
 {NUMBER}                    {
                                 printf( "lexer: NUMBER\n");
                                 printf("lexer [ %s ]\n", yytext);
+                                yylval.sval = yytext;
                                 return NUMBER;
                             }
 {ID}                        {
@@ -366,10 +369,10 @@ WHITE_SPACE            [ \t\n]
 .                           {   printf( "lexer: unknown character: [ %s ]\n", yytext); }
 %%
 
-int yywrap(void)
+/* int yywrap(void)
 {
     return 1;
-}
+} */
 
 #ifdef MAIN
 int main(int argc, char** argv)
@@ -387,7 +390,6 @@ int main(int argc, char** argv)
 #endif
 
 #ifdef MAIN2
-
 static int process (const char *file)
 {
     int is_stdin = !file || (strcmp (file, "-") == 0);
@@ -408,38 +410,6 @@ static int process (const char *file)
     }
 
     return status;
-}
-
-int main (int argc, char **argv)
-{
-    if (getenv ("YYDEBUG"))
-        yydebug = 1;
-
-    int ran = 0;
-    for (int i = 1; i < argc; ++i)
-    {
-        // Enable parse traces on option -p.
-        if (strcmp (argv[i], "-p") == 0)
-        {
-            yydebug = 1;
-        }
-        else
-        {
-            int status = process (argv[i]);
-            ran = 1;
-            if (!status)
-                return status;
-        }
-    }
-
-    if (!ran)
-    {
-        int status = process (NULL);
-        if (!status)
-            return status;
-    }
-
-    return 0;
 }
 #endif
 
@@ -493,5 +463,4 @@ include         BEGIN(incl);
                 include_stack[include_stack_ptr] );
             }
         }
-
 #endif
