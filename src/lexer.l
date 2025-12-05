@@ -58,6 +58,7 @@ RESTRICT               "restrict"
 SEMI_COLON             ";"
 COMMA                  ","
 SINGLE_QUOTE           "'"
+DOUBLE_QUOTE           "\""
 EQUALS                 "=="
 EQUAL                  "="
 ASSIGNMENT             "="
@@ -85,8 +86,9 @@ COUT                   "<<"
 NUMBER                 [-+]?[0-9]+
 ID                     [a-zA-Z_][a-zA-Z0-9_]*
 WHITE_SPACE            [ \t\n]
-%x comment
-%x cout
+%x STRING
+%x COMMENT
+%x LOG
 
 %%
 
@@ -342,12 +344,14 @@ WHITE_SPACE            [ \t\n]
                             }
 #.* ;
 "--"[ \t].* ;
-{COUT}[ ]?                  { BEGIN cout; }
-<cout>[^;]*                 { printf("%s\n", yytext); }
-<cout>{SEMI_COLON}          { BEGIN INITIAL; }
-"/*"                        { BEGIN comment; printf("lexer: BEGIN C comment\n"); }
-<comment>"*/"               { BEGIN INITIAL; printf("lexer: END C comment\n"); }
-<comment>.|\n ;
+{DOUBLE_QUOTE}              { BEGIN STRING; }
+<STRING>[^"]* ;             // todo
+{COUT}[ ]?                  { BEGIN LOG; }
+<LOG>[^;]*                  { printf("%s\n", yytext); }
+<LOG>{SEMI_COLON}           { BEGIN INITIAL; }
+"/*"                        { BEGIN COMMENT; printf("lexer: BEGIN C COMMENT\n"); }
+<COMMENT>"*/"               { BEGIN INITIAL; printf("lexer: END C COMMENT\n"); }
+<COMMENT>.|\n ;
 {WHITE_SPACE}               {
                                 /*ignore white space*/
                             }
