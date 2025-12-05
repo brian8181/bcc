@@ -291,7 +291,7 @@ expr:
                                                                         //$$ = modulo($1, $3);
                                                                     }
     | ID ADDITION ID                                                {
-                                                                        printf("parser:expr: ID ADDITION ID: %s + %s\n" , $1 , $3);
+                                                                        printf("parser:expr: ID q ID: %s + %s\n" , $1 , $3);
                                                                         //$$ = add($1, $3);
                                                                     }
     | ID ADDITION expr                                              {
@@ -327,8 +327,9 @@ expr:
                                                                         // $$ = multiply($1, $3);
                                                                     }
     | expr MULTIPLICATION expr                                      {
-                                                                        printf("parser:expr: expr MULTIPLICATION expr: %s", $3);
+                                                                        printf("parser:expr: expr MULTIPLICATION expr: %s * %s", $1, $3);
                                                                         //$$ = multiply($1, $3);
+                                                                        $$ = "6"; //debug
                                                                     }
     | ID DIVISION ID                                                {
                                                                         printf("parser:expr: ID DIVISION ID : " , $1 , " / " , $3);

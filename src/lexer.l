@@ -85,7 +85,7 @@ INDIRECT_MEMBER_SELECT "\-\>"
 INDIRECT_TO_POINTER    "\-\>\*"
 DIRECT_TO_POINTER      "\.\*"
 COUT                   "<<"
-NUMBER                 [-+]?[0-9]+
+NUMBER                 [0-9]+
 ID                     [a-zA-Z_][a-zA-Z0-9_]*
 WHITE_SPACE            [ \t\n]
 %x STRING
@@ -339,22 +339,13 @@ WHITE_SPACE            [ \t\n]
 {ID}                        {
                                 printf( "lexer: ID\n");
                                 printf("lexer: ID: [ %s ]\n", yytext);
+
                                 return ID;
                             }
 {SEMI_COLON}                {
                                 printf("lexer: SEMI_COLON: [ %s ]\n", yytext);
                                 return SEMI_COLON;
                             }
-#.* ;
-"--"[ \t].* ;
-{DOUBLE_QUOTE}              { BEGIN STRING; }
-<STRING>[^"]* ;             // todo
-{COUT}[ ]?                  { BEGIN LOG; }
-<LOG>[^;]*                  { printf("%s\n", yytext); }
-<LOG>{SEMI_COLON}           { BEGIN INITIAL; }
-"/*"                        { BEGIN COMMENT; printf("lexer: BEGIN C COMMENT\n"); }
-<COMMENT>"*/"               { BEGIN INITIAL; printf("lexer: END C COMMENT\n"); }
-<COMMENT>.|\n ;
 {WHITE_SPACE}               {
                                 /*ignore white space*/
                             }
@@ -369,12 +360,27 @@ WHITE_SPACE            [ \t\n]
 .                           {   printf( "lexer: unknown character: [ %s ]\n", yytext); }
 %%
 
+
+//#.* ;
+//"--"[ \t].* ;
+//{DOUBLE_QUOTE}              { BEGIN STRING; }
+//<STRING>[^"]* ;             // todo
+//{COUT}[ ]?                  { BEGIN LOG; }
+//<LOG>[^;]*                  { printf("%s\n", yytext); }
+//<LOG>{SEMI_COLON}           { BEGIN INITIAL; }
+//"/*"                        { BEGIN COMMENT; printf("lexer: BEGIN C COMMENT\n"); }
+//<COMMENT>"*/"               { BEGIN INITIAL; printf("lexer: END C COMMENT\n"); }
+//<COMMENT>.|\n ;
+
+
 /* int yywrap(void)
 {
     return 1;
 } */
 
 #ifdef MAIN
+
+
 int main(int argc, char** argv)
 {
     if ( argc > 1 )
