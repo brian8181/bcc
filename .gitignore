@@ -1,1 +1,11 @@
-build/*
+
+**/build/**
+**/build_debug/**
+**/cbuild/**
+**/cmake/**
+**/.vscode/**
+**/.vs/**
+**/out/**
+**/debug/**
+**/release/**
+**/Debug/**

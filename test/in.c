@@ -1,2 +1,4 @@
-int x;
-x = 1;
+<< testing ...;
+2
+<< testing 2 ..
+3

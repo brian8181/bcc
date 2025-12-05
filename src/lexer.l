@@ -85,7 +85,6 @@ COUT                   "<<"
 NUMBER                 [-+]?[0-9]+
 ID                     [a-zA-Z_][a-zA-Z0-9_]*
 WHITE_SPACE            [ \t\n]
-%x start
 %x comment
 %x cout
 
@@ -343,11 +342,11 @@ WHITE_SPACE            [ \t\n]
                             }
 #.* ;
 "--"[ \t].* ;
-{COUT}                      { BEGIN cout; printf("lexer: BEGIN C cout\n"); }
-<cout>{SEMI_COLON}          { BEGIN YY_START; printf("lexer: END C cout\n");}
-<cout>.|\n ;
+{COUT}[ ]?                  { BEGIN cout; }
+<cout>[^;]*                 { printf("%s\n", yytext); }
+<cout>{SEMI_COLON}          { BEGIN INITIAL; }
 "/*"                        { BEGIN comment; printf("lexer: BEGIN C comment\n"); }
-<comment>"*/"               { BEGIN YY_START; printf("lexer: END C comment\n");}
+<comment>"*/"               { BEGIN INITIAL; printf("lexer: END C comment\n"); }
 <comment>.|\n ;
 {WHITE_SPACE}               {
                                 /*ignore white space*/
@@ -462,7 +461,7 @@ include         BEGIN(incl);
 <incl>[ \t]*    /* eat the whitespace */
 
 <incl>[^ \t\n]+
-        { 
+        {
             /* got the include file name */
             if ( include_stack_ptr >= MAX_INCLUDE_DEPTH )
             {
