@@ -1,0 +1,8 @@
+%{
+Prologue section
+%}
+Declarations section
+%%
+Grammar rules section
+%%
+Epilogue sectio

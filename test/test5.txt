@@ -1,0 +1,8 @@
+{include file="test/test6.txt"}
+$a={$a|capitalize:1:2:2:4:5:6:7:8:9}
+{$x="hello this is a double quote"}
+$b={$b}
+$c={$c}
+{$a|capitalize:3:2:1}
+${$b|capitalize}
+my pussy is {$pussy}.

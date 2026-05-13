@@ -1,49 +1,51 @@
-/* Driver for calc++.   -*- C++ -*-
+/**
+ * @file driver.hpp
+ * @brief Header file for driver.cpp
+ * @version 1.0
+ * @date 2024-06-01
+ */
+#ifndef SCANNER_HPP_
+#define SCANNER_HPP_
+#define YYDEBUG 1
 
-   Copyright (C) 2005-2015, 2018-2021 Free Software Foundation, Inc.
+#include "fileio.hpp"
+#include "pparser.tab.hpp"
 
-   This file is part of Bison, the GNU Compiler Compiler.
+static string g_config_file = "default.conf";
+static string g_output_dir = "./test/build";
+static string g_output_file = "out.obj";
+static string g_input_file = "in.txt";
 
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+/**
+ * @brief parse command line options
+ * @param argc
+ * @param argv
+ * @return
+ */
+int parse_options(int argc, char* argv[]);
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+/**
+ * @brief check if stdin is ready for reading
+ * @param filedes
+ * @return
+ */
+int stdin_ready (int filedes);
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+#ifndef _TEST123_
+/**
+ * @brief driver entry point for the application
+ * @param argc
+ * @param argv
+ * @return
+ */
+int main(int argc, char* argv[]);
+#endif
 
-#ifndef DRIVER_HH
-#define DRIVER_HH
+/**
+ * @brief
+ * @param
+ */
 
-#include <string>
-#include <map>
-#include "parser.hpp"
+yy::parser::symbol_type lex();
 
-// give flex the prototype of yylex we want
-# define YY_DECL yy::parser::symbol_type yylex(driver& drv)
-YY_DECL; // declare it for the parser's sake
-
-// conduct scanning and parsing
-class driver
-{
-public:
-    driver();
-    int parse(const std::string& f);
-    void scan_begin();
-    void scan_end();
-
-public:
-    std::map<std::string, int> variables;
-    int result;             // run the parser on file F, return 0 on success
-    std::string file;       // file being parsed
-    bool trace_parsing;     // generate parser debug traces
-    bool trace_scanning;    // generate scanner debug traces
-    yy::location location;  // token's location used by the scanner
-};
-
-#endif // ! DRIVER_HH
+#endif // SCANNER_HPP_

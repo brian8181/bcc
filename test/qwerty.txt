@@ -1,0 +1,61 @@
+[upper]
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z
+(A)|(B)|(C)|(D)|(E)|(F)|(G)|(H)|(I)|(J)|(K)|(L)|(M)|(N)|(O)|(P)|(Q)|(R)|(S)|(T)|(U)|(V)|(W)|(X)|(Y)|(Z)
+
+[lower]
+abcefghijklmnopqrstuvwxyz
+a|b|c|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z
+(a)|(b)|(c)|(e)|(f)|(g)|(h)|(i)|(j)|(k)|(l)|(m)|(n)|(o)|(p)|(q)|(r)|(s)|(t)|(u)|(v)|(w)|(x)|(y)|(z)
+
+[digit]
+0123456789
+
+[order1]
+~!@#$%^&*()_+{}|:"<>?`-=[]\;',./
+~|!|@|#|$|%|^|&|*|(|)|_|+|{|}|||:|"|<|>|?|`|-|=|[|]|\|;|'|,|.|/
+(~)|(!)|(@)|(#)|($)|(%)|(^)|(&)|(*)|(()|())|(_)|(+)|({)|(})|(|)|(:)|(")|(<)|(>)|(?)|(`)|(-)|(=)|([)|(])|(\)|(;)|(')|(,)|(.)|(/)
+`~!@#$%^&*()-_=+[{]}\|;:'",<.>/?
+
+[all order1]
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890~!@#$%^&*()_+{}|:"<>?`-=[]\;',./
+
+[order2]
+`~!@#$%^&*()-_=+[{]}\|;:",<.>/?
+`|~|!|@|#|$|%|^|&|*|(|)|-|_|=|+|[|{|]|}|\|||;|:|"|,|<|.|>|/|?
+(`)|(~)|(!)|(@)|(#)|($)|(%)|(^)|(&)|(*)|(()|())|(-)|(_)|(=)|(+)|([)|({)|(])|(})|(\)|(|)|(;)|(:)|(")|(,)|(<)|(.)|(>)|(/)|(?)
+
+
+[misc]
+R"(~)"|R"(!)"|R"(@)"|R"(#)"|R"($)"|R"(%)"|R"(^)"|R"(&)"|R"(*)"|R"(()"|R"())"|R"(_)"|R"(+)"|R"({)"|R"(})"|R"(|)"|R"(:)"|R"(")"|R"(<)"|R"(>)"|R"(?)"|R"(`)"|R"(-)"|R"(=)"|R"([)"|R"(])"|R"(\)"|R"(;)"|R"(')"|R"(,)"|R"(.)"|R"(/)"
+R"(`)"|R"(~)"|R"(!)"|R"(@)"|R"(#)"|R"($)"|R"(%)"|R"(^)"|R"(&)"|R"(*)"|R"(()"|R"())"|R"(-)"|R"(_)"|R"(=)"|R"(+)"|R"([)"|R"({)"|R"(])"|R"(})"|R"(\)"|R"(|)"|R"(;)"|R"(:)"|R"(')"|R"(")"|R"(,)"|R"(<)"|R"(.)"|R"(>)"|R"(/)"|R"(?)"
+sed -E "s/[@#$%^&*()-_=+]/ x /g"
+
+echo "][-@#$%^&*()_+{}|:<>?='" | sed -E "s/[][-@#$%^&*()_+{}|:<>?=']/ x /g"
+  echo "-[]@#$%^&*()_+{}|:<>?=\;',./'" | sed -E "s~[-[@#$%^&*()_+{}:<>?=\;',./]~ x ~g"
+
+
+
+// match ever symbol on keyboard besides closing brace ']' !!
+
+echo "][~@#$%^&*()_+{}|:\"<>?=\;',.\/-" | sed -E 's/[][~@#$%^&*()_+{}|:\"<>?=\;',./-]/ x /g'
+
+
+echo "-[@#$%^&*()_+{}|:\"<>?=\;',.\/[-" | sed -E  "s/[]~@#$%^&*()_+{}|:\"<>?=\;',.\/[-]/xxx/g"
+
+ echo "][-@#$%^&*()_+{}|:<>?='"         | sed -E "s/[][~@#$%^&*()_+{}|:<>?='-]/ x /g"
+
+
+// match ever symbol on keyboard
+echo "][~@#$%^&*()_+{}|:<>?=\\;',./-" | sed -E "s/[][~@#$%^&*()_+{}|:<>?=\;',./-]/ x /g"
+
+order based on bracket expression 
+]ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890[~@#$%^&*()_+{}|:<>?=\;',./-
+
+// match ever symbol on keyboard including letters & digits
+echo "]ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890[~@#$%^&*()_+{}|:<>?=\;',./-" | sed -E "s/[]ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890[~@#$%^&*()_+{}|:<>?=\;',./-]/ . /g"
+
+# with output
+echo "]ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890[~@#$%^&*()_+{}|:<>?=\;',./-" && echo "]ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890[~@#$%^&*()_+{}|:<>?=\;',./-" | sed -E "s/[]ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890[~@#$%^&*()_+{}|:<>?=\;',./-]/./g"
+]ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890[~@#$%^&*()_+{}|:<>?=\;',./-
+..........................................................................................

@@ -1,0 +1,7 @@
+
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+0123456789
+"\a\b\t\n\v\f\r !\"#%&’()*+,-./:;<=>?[\\]^_{|}~"
+
+52+10+37
+99 characters in set ...

@@ -1,11 +1,7 @@
+build/**
+build2/**
+cbuild/**
+debug*.txt
+out.txt
+settings.json
 
-**/build/**
-**/build_debug/**
-**/cbuild/**
-**/cmake/**
-**/.vscode/**
-**/.vs/**
-**/out/**
-**/debug/**
-**/release/**
-**/Debug/**
