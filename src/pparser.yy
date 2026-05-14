@@ -170,6 +170,7 @@
 %left ASTERISK SLASH PERCENT_SIGN
 %right COLON
 %right VBAR 
+%type <std::string> expr
 %type <std::string> intregal_type
 %type <std::string> decel
 %type <std::string> compiler
@@ -250,20 +251,31 @@ stmts[result]:
                                                                 ;
 
 stmt:
-    decel SEMI_COLON                                           { 
+    decel SEMI_COLON                                            { 
                                                                     INFO("stmt: | decel SEMI_COLON"); 
                                                                 }
+    | decel EQUAL_SIGN expr SEMI_COLON                          { 
+                                                                    INFO("stmt: decel EQUAL_SIGN NUMERIC_LITERAL"); 
+                                                                    symbol_table[$1] = $3;
+                                                                }
+    | IDENTIFIER EQUAL_SIGN expr SEMI_COLON                     { 
+                                                                    INFO("stmt: IDENTIFIER EQUAL_SIGN IDENTIFIER"); 
+                                                                    symbol_table[$1] = $3;
+                                                                }
     ;
+    
 /**
  * @brief Numerical / logical exprssions
  */
 expr[result]:
-	expr[lhs] PLUS[op] expr[rhs]                              {
+    NUMERIC_LITERAL                                             { $result=$1; }
+    | IDENTIFIER                                                { $result=$1; }
+    | expr[lhs] PLUS[op] expr[rhs]                              {
 																	INFO("PARSER expr: | expr PLUS_SIGN expr");
-																	// stringstream ss;
-                                                                    // ss << (std::atoi($lhs.c_str()) + std::atoi($rhs.c_str()));
-                                                                    // $result = ss.str();
-                                                                    // INFO("$result=" << $result);
+																	stringstream ss;
+                                                                    ss << (std::atoi($lhs.c_str()) + std::atoi($rhs.c_str()));
+                                                                    $result = ss.str();
+                                                                    INFO("$result=" << $result);
 																}
     | expr[lhs] MINUS[op] expr[rhs]                             {
 																	INFO("PARSER expr: | expr MINUS expr");
@@ -315,6 +327,9 @@ expr[result]:
 decel:
     intregal_type IDENTIFIER                                    {
                                                                     INFO("decel: | type IDENTIFIER");
+                                                                    // __symbol s = {$2, $1, 0, 0};
+                                                                    // tab[$2] = s;
+                                                                    symbol_table[$2] = "empty";
                                                                     $decel = $2;
                                                                 }
 

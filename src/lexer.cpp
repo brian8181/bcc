@@ -6,6 +6,7 @@
  */
 
 #define _GNU_SOURCE
+
 #include <iostream>
 #include <iomanip>
 #include <map>
@@ -258,9 +259,7 @@ void lexer::read_istream( const string& file, /*out*/ string& s )
 		stringstream ss;
 		char c;
 		while( stream.get( c ) )
-		{
 			ss << c;
-		}
 		s = ss.str();
 		stream.close();
 	}
@@ -341,14 +340,14 @@ parser::symbol_type lexer::get_token()
  */
 void lexer::print_smatch(token_t t, boost::smatch m)
 {
-	INFO("match.pos:" << m.position() << " - match.sz:"  << m.str().size() \ 
-									  << " - prefix.sz:" << m.prefix().str().size() \ 
-									  << " - suffix.sz:" << m.suffix().str().size()	 );
+	INFO(	"match.pos:" << m.position()   << " - match.sz:"  << m.str().size()
+									       << " - prefix.sz:" << m.prefix().str().size()
+									       << " - suffix.sz:" << m.suffix().str().size()	);
 
-	INFO("match[ " << t.index << " : " << t.name << " ] "\
-			<< "[ " 		 << FMT_RESET << FMT_FG_WHITE << "\"" << esc_nl( m.str()    ).get_val() << "\""    << FMT_RESET << FMT_ITALIC << FMT_FG_GREEN << " ]"\
-			<< " - prefix[ " << FMT_RESET << FMT_FG_WHITE << "\"" << esc_nl( m.prefix() ).get_val() << "\"" << FMT_RESET << FMT_ITALIC << FMT_FG_GREEN << " ]"\
-			<< " - suffix[ " << FMT_RESET << FMT_FG_WHITE << "\"" << esc_nl( m.suffix() ).get_val() << "\"" << FMT_RESET << FMT_ITALIC << FMT_FG_GREEN << " ]"	);
+    INFO(	"match" 								      << FMT_FG_WHITE << "[ " << t.index << " : " << t.name                     << " ] "\
+												          << FMT_FG_WHITE << "[ " << "\"" << esc_nl( m.str()    ).get_val() << "\"" << " ]" << FMT_RESET \
+			<< FMT_ITALIC << FMT_FG_GREEN <<  " - prefix" << FMT_FG_WHITE << "[ " << "\"" << esc_nl( m.prefix() ).get_val() << "\"" << " ]" << FMT_RESET \
+			<< FMT_ITALIC << FMT_FG_GREEN <<  " - suffix" << FMT_FG_WHITE << "[ " << "\"" << esc_nl( m.suffix() ).get_val() << "\"" << " ]" << FMT_RESET		);
 }
 
 /**
@@ -417,7 +416,7 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_NUMERIC_LITERAL( match );
 		case STRING_LITERAL:
 			return parser::make_STRING_LITERAL( match );
-		// case DOUBLE_QUOTE:
+		//case DOUBLE_QUOTE:
 		// 	set_state( &DOUBLE_QUOTED );
 		// 	return get_token();
 		case NEWLINE:

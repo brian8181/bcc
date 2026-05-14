@@ -1,8 +1,8 @@
 int x;
 int y;
-int z;
-float fx;
+int z = 5;
+float fx 2
 float fy;
 float fz;
-char c;
+char c = 3;
 char c1;
