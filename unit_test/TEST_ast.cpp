@@ -56,8 +56,23 @@ void TEST_ast::test_literal()
     long n = 42;
 	ast::literal<long> e2(&n);
 	long* r = e2.eval<long>();
-
     CPPUNIT_ASSERT(*r == n);
+}
+
+void TEST_ast::test_multiply_literals()
+{
+    long a = 3;
+    ast::literal<long> e1(&a);
+    e1.eval<long>();
+
+    long b = 2;
+    ast::literal<long> e2(&b);
+    e2.eval<long>();
+
+    ast::multiply_operation<long> ex(&e1, &e2);
+    long* result = ex.eval();
+
+    CPPUNIT_ASSERT(*result == 6);
 }
 
 void TEST_ast::execute()

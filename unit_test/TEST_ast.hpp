@@ -13,6 +13,7 @@ class TEST_ast : public CppUnit::TestFixture
 private:
     CPPUNIT_TEST_SUITE(TEST_ast);
 	CPPUNIT_TEST(test_literal);
+    CPPUNIT_TEST(test_multiply_literals);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -25,6 +26,7 @@ public:
 
 protected:
 	void test_literal();
+    void test_multiply_literals();
 
 private:
     int m_argc;
