@@ -107,6 +107,7 @@ $(OBJ)/scoped_ptr.o \
 $(OBJ)/utility.o \
 $(OBJ)/symtab.o \
 $(OBJ)/lexer.o \
+$(OBJ)/ast.o \
 $(OBJ)/TEST_lex.o \
 $(OBJ)/TEST_general.o \
 $(OBJ)/TEST_symbol_table.o \

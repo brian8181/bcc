@@ -21,6 +21,7 @@
 #include <string.h>
 #include "TEST_ast.hpp"
 #include "bash_color.hpp"
+#include "ast.hpp"
 
 
 using namespace CppUnit;
@@ -52,33 +53,12 @@ void TEST_ast::tearDown()
 
 void TEST_ast::test_literal()
 {
-	CPPUNIT_ASSERT(1 == 1);
+    long n = 42;
+	ast::literal<long> e2(&n);
+	long* r = e2.eval<long>();
+
+    CPPUNIT_ASSERT(*r == n);
 }
-
-// void TEST_ast::testNoOptions()
-// {
-//     CPPUNIT_ASSERT(1 == 1);
-// }
-
-// void TEST_ast::testOptionHelp()
-// {
-//     CPPUNIT_ASSERT(1 == 1);
-// }
-
-// void TEST_ast::testOptionHelpLong()
-// {
-//     CPPUNIT_ASSERT(1 == 1);
-// }
-
-// void TEST_ast::testOptionVerbose()
-// {
-//     CPPUNIT_ASSERT(1 == 1);
-// }
-
-// void TEST_ast::testOptionVerboseLong()
-// {
-//    CPPUNIT_ASSERT(1 == 1);
-// }
 
 void TEST_ast::execute()
 {
