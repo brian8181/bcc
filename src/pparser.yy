@@ -139,11 +139,14 @@
 
 %token SKIP_TOKEN UNDEFINED
 %token <std::string> TEST_TOKEN 
+%left EQUAL
 %left PLUS MINUS 
 %left MULT DIV
 %token END_OF_FILES
 %token END_OF_FILE 0
 
+%token <std::string> CONST VOLATILE STATIC
+%token <std::string> UNSIGNED SIGNED INLINE
 %token INT FLOAT CHAR
 %token INCLUDE
 %token IF ELSE ELSEIF DO WHILE FOREACH BREAK CONTINUE
@@ -171,6 +174,8 @@
 %right COLON
 %right VBAR 
 %type <std::string> expr
+%type <std::string> access_modfiers
+%type <std::string> access_modfier
 %type <std::string> intregal_type
 %type <std::string> decel
 %type <std::string> compiler
@@ -332,11 +337,25 @@ decel:
                                                                     symbol_table[$2] = "empty";
                                                                     $decel = $2;
                                                                 }
+                                                                ;
 
 intregal_type:
-    INT                                                         { INFO("intergal_type: | INT"); $$="int"; }
-    | FLOAT                                                     { INFO("intergal_type: | FLOAT"); $$="float"; }
-    | CHAR                                                      { INFO("intergal_type: | CHAR"); $$="char"; }
+    INT                                                                         { INFO("intergal_type: | INT"); $$="int"; }
+    | FLOAT                                                                     { INFO("intergal_type: | INT"); $$="int"; }
+    | CHAR                                                                      { INFO("intergal_type: | INT"); $$="int"; }
+    | access_modfier INT                                                        { INFO("intergal_type: | access_modfier INT"); $$="int"; }
+    | access_modfier FLOAT                                                      { INFO("intergal_type: | access_modfier FLOAT"); $$="float"; }
+    | access_modfier CHAR                                                       { INFO("intergal_type: | access_modfier CHAR"); $$="char"; }
+    ;
+
+access_modfiers:
+    '%' '#' '$'
+    ;
+
+access_modfier:
+    CONST
+    | VOLATILE
+    | STATIC 
     ;
 %%
 
