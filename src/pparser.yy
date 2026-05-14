@@ -144,6 +144,8 @@
 %token END_OF_FILES
 %token END_OF_FILE 0
 
+%token INT FLOAT CHAR
+%token INCLUDE
 %token IF ELSE ELSEIF DO WHILE FOREACH BREAK CONTINUE
 %token <std::string> INDIRECT_MEMBER ARRAY
 %token <std::string> IDENTIFIER 
@@ -156,7 +158,6 @@
 %type < std::vector< std::string > > files
 %type <std::string> stmt
 %type < std::vector< std::string > > stmts
-%type <std::string> assign_stmt sub_proc
 /*
 %type <std::string> block
 %type < std::vector< std::string > > blocks
@@ -169,7 +170,8 @@
 %left ASTERISK SLASH PERCENT_SIGN
 %right COLON
 %right VBAR 
-%type <std::string> symbol
+%type <std::string> intregal_type
+%type <std::string> decel
 %type <std::string> compiler
 %start compiler
 
@@ -181,7 +183,7 @@ compiler:
     TEST_TOKEN                                                  {
                                                                             INFO("complier: | TEST_TOKEN=" << $1);
                                                                 }  
-    | files  END_OF_FILES                                       {
+   | files  END_OF_FILES                                       {
 																	INFO("compiler: files.size=" << $1.size() << " END_OF_FILES");
 
 																	cout << "processed files ..." << endl;
@@ -236,7 +238,10 @@ file:
  */
 stmts[result]:
     /* %empty */
-    stmt[lhs]                                                   { INFO("stmts: | stmt"); }
+    stmt[lhs]                                                   { 
+                                                                    INFO("stmts: | stmt"); 
+                                                      				$result.push_back($lhs);
+                                                                }
     | stmts[lhs] stmt[rhs]			                            {
 																	INFO("stmts: | stmts stmt");
 																	$lhs.push_back($rhs);
@@ -245,36 +250,15 @@ stmts[result]:
                                                                 ;
 
 stmt:
-    symbol SEMI_COLON                                           { INFO("stmt: | symbol SEMI_COLON"); }
+    decel SEMI_COLON                                           { 
+                                                                    INFO("stmt: | decel SEMI_COLON"); 
+                                                                }
     ;
 /**
- * @name assign_stmt
- */
-assign_stmt:
-    symbol EQUAL_SIGN NUMERIC_LITERAL                           {
-                                                                    WARN("assign_stmt: | symbol EQUAL_SIGN NUMERIC_LITERAL=" << $3);
-                                                                    set_value($1, $3);
-                                                                    $assign_stmt = $3;
-                                                                }
-    | symbol EQUAL_SIGN STRING_LITERAL                          {
-                                                                    WARN("assign_stmt: | symbol EQUAL_SIGN STRING_LITERAL\"" << $3 << "\"");
-                                                                    set_value($1, $3);
-                                                                    $assign_stmt = $3;
-                                                                }
-                                                                ;
- /**
- * @name expr
  * @brief Numerical / logical exprssions
  */
 expr[result]:
-	symbol[lhs] PLUS[op] NUMERIC_LITERAL[rhs]                   {
-																	INFO("expr: |symbol PLUS_SIGN NUMERIC_LITERAL");
-                                                                    // stringstream ss;
-                                                                    // ss << (std::atoi($lhs.c_str()) + std::atoi($rhs.c_str()));
-                                                                    // $result = ss.str();
-                                                                    // INFO("$result=" << $result);
-																}
-    | expr[lhs] PLUS[op] expr[rhs]                              {
+	expr[lhs] PLUS[op] expr[rhs]                              {
 																	INFO("PARSER expr: | expr PLUS_SIGN expr");
 																	// stringstream ss;
                                                                     // ss << (std::atoi($lhs.c_str()) + std::atoi($rhs.c_str()));
@@ -328,55 +312,17 @@ expr[result]:
 																	INFO("PARSER expr: | LPAREN expr RPAREN");
 																}
                                                                 ;
-/**
- * @name sub_proc
- */
-sub_proc:
-    symbol LPAREN params RPAREN                                 {
-                                                                    INFO("sub_proc: | symbol LPAREN params RPAREN" << "");
-                                                                    $$=$1;
+decel:
+    intregal_type IDENTIFIER                                    {
+                                                                    INFO("decel: | type IDENTIFIER");
+                                                                    $decel = $2;
                                                                 }
-                                                                ;
-/**
- * @name params
- * @brief params (i.e. $x, $y, $x)
- */
-params:
-    param                                                       {
-																	INFO("PARSER params: | param");
-																}
-    | params symbol  '@'                                        {
-																	INFO("qualafied_id: | params COMMA symbol");
-																}
-                                                                ;
-/**
- * @name param
- * @brief param (i.e. $x, )
- */
-param:
-        symbol COMMA                                            {
-																	INFO("param: | symbol");
-																}
-                                                                ;
-/**
- * @name symbol
- */
-symbol:
-		DOLLAR_SIGN IDENTIFIER								    {
-																	INFO("symbol: | DOLLAR_SIGN IDENTIFIER=");
-																	$$ = $2;
-																}
-		| HASH_MARK IDENTIFIER HASH_MARK					    {
-																	INFO("symbol: | HASH_MARK IDENTIFIER" << $2);
-																	$$ = $2;
-																}
-		| symbol DOT IDENTIFIER		                            {
-																	string s = $1 + "." + $3;
-																	ATTN("symbol: | symbol DOT SYMBOL=" << s);
-																	$$ = s;
-																}
-																;
 
+intregal_type:
+    INT                                                         { INFO("intergal_type: | INT"); $$="int"; }
+    | FLOAT                                                     { INFO("intergal_type: | FLOAT"); $$="float"; }
+    | CHAR                                                      { INFO("intergal_type: | CHAR"); $$="char"; }
+    ;
 %%
 
 #undef PARSER_LOG

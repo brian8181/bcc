@@ -365,8 +365,17 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 	{
 		case TEST_TOKEN:
 			return parser::make_TEST_TOKEN( match );
+		case INT:
+			return parser::make_INT();
+		case FLOAT:
+			return parser::make_FLOAT();
+		case CHAR:
+			return parser::make_CHAR();
+		case SEMI_COLON:
+			return parser::make_SEMI_COLON();
+		case INCLUDE:
+			return parser::make_INCLUDE();
 		case CLOSE_BRACE:
-			set_state( &INITIAL );
 			return parser::make_CLOSE_BRACE();
 		case CLOSE_BRACKET:
 			return parser::make_CLOSE_BRACKET();
@@ -411,6 +420,10 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 		// case DOUBLE_QUOTE:
 		// 	set_state( &DOUBLE_QUOTED );
 		// 	return get_token();
+		case NEWLINE:
+			m_line++;
+			m_fstream << "// line:" << m_line << endl; 
+			return get_token();
 		case WHITESPACE:
 			TRACE();
 		case SKIP_TOK:

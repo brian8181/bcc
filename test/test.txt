@@ -1,1 +1,8 @@
-@@@
+int x;
+int y;
+int z;
+float fx;
+float fy;
+float fz;
+char c;
+char c1;

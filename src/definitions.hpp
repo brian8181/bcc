@@ -220,19 +220,25 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define MODIFIER 180ul
 #define BLOCK 190ul
 #define BLOCKS 200ul
-#define BUILT_IN 210ul
 #define OFFSET 1000ul
-#define FILES   			(OFFSET+ __LINE__)
-#define FILE   				(OFFSET+ __LINE__)
-#define ASSIGN_STMT   		(OFFSET+ __LINE__)
-#define EXPR   				(OFFSET+ __LINE__)
+#define FILES   			1003ul
+#define FILE   				1006ul
+#define ASSIGN_STMT   		1006ul
+#define EXPR   				1012ul
 #define SUB_PROC   			(OFFSET+ __LINE__)
 #define PARAM   			(OFFSET+ __LINE__)
 #define PARAMS   			(OFFSET+ __LINE__)
 #define COMPILER   			(OFFSET+ __LINE__)
+#define INT					5003ul
+#define FLOAT				5006ul
+#define CHAR				5009ul
+#define UNSIGNED			5012ul
+#define SIGNED				5016ul
+#define PTR					5019ul
+#define REF					5022ul
 #define END_OF_FILE   		2003ul
 #define END_OF_FILES   		2006ul
-#define IDENTIFIER_CHARS    (OFFSET+ __LINE__)
+#define IDENTIFIER_CHARS    2009ul
 #define VAR_OPER   			1003ul
 #define CONST_VAR_OPER 		1006ul
 #define TEST_TOKEN          777ul
@@ -297,6 +303,7 @@ inline map<unsigned long, token> g_tokens =
 	{SLASH,             token{"SLASH", S_TYPE, R"(/)", __LINE__}},
 	{GREATER_THAN_EQUAL,token{"GREATER_THAN_EQUAL", S_TYPE, R"(>=)", __LINE__}},
 	{LESS_THAN_EQUAL,   token{"LESS_THAN_EQUAL", S_TYPE, R"(<=)", __LINE__}},
+	{INCLUDE,           token{"INCLUDE", S_TYPE, R"(include)", __LINE__}},
 	{IF,                token{"IF", S_TYPE, R"(if)", __LINE__}},
 	{ELSE,              token{"ELSE", S_TYPE, R"(else)", __LINE__}},
 	{ELSEIF,            token{"ELSEIF", S_TYPE, R"(elseif)", __LINE__}},
@@ -304,8 +311,12 @@ inline map<unsigned long, token> g_tokens =
 	{ASSIGN,            token{"ASSIGN", S_TYPE, R"(assign)", __LINE__}},
 	{BREAK,             token{"BREAK", S_TYPE, R"(break)", __LINE__}},
 	{REQUIRE,           token{"REQUIRE", S_TYPE, R"(require)", __LINE__}},
-	{INCLUDE,           token{"INCLUDE", S_TYPE, R"(include)", __LINE__}},
-	{UNDEFINED,         token{"UNDEFINED", S_TYPE, R"(.)", __LINE__}},
+	{PTR,               token{"PTR", S_TYPE, R"(*)", __LINE__}},
+	{REF,               token{"PTR", S_TYPE, R"(&)", __LINE__}},
+	{INT,               token{"INT", S_TYPE, R"(\<int\>)", __LINE__}},
+	{FLOAT,             token{"FLOAT", S_TYPE, R"(\<float\>)", __LINE__}},
+	{CHAR,              token{"CHAR", S_TYPE, R"(\<char\>)", __LINE__}},
+	{UNDEFINED,         token{"UNDEFINED", S_TYPE, R"(.)", __LINE__}}
 };
 
 /**
@@ -345,8 +356,8 @@ inline vector<state_t> states__ = { INITIAL, COMMENTING, DOUBLE_QUOTED, SINGLE_Q
 /**
  * @brief token list -> by state
  */
-inline vector<unsigned long> INITIAL_TOKENS = { TEST_TOKEN, CLOSE_BRACE, OPEN_BRACKET, IF, ELSE, INCLUDE, ASSIGN, STRING_LITERAL, NUMERIC_LITERAL, EQUAL_SIGN,
-												 VBAR, COMMA, COLON, DOT, SLASH, IDENTIFIER, VAR_OPER, CONST_VAR_OPER, PLUS_SIGN, WHITESPACE  };
+inline vector<unsigned long> INITIAL_TOKENS = { TEST_TOKEN, INT, FLOAT, CHAR, SEMI_COLON, NEWLINE, WHITESPACE, CLOSE_BRACE, OPEN_BRACKET, IF, ELSE, INCLUDE, ASSIGN, STRING_LITERAL, NUMERIC_LITERAL, EQUAL_SIGN,
+												 VBAR, COMMA, COLON, DOT, SLASH, IDENTIFIER, VAR_OPER, CONST_VAR_OPER, PLUS_SIGN };
 
 inline vector<unsigned long> COMMENTING_TOKENS = { OPEN_BRACE, COMMENT, ANYTHING };
 inline vector<unsigned long> DOUBLE_QUOTED_TOKENS = { DOUBLE_QUOTE, VALID_CHAR };
