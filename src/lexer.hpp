@@ -205,6 +205,11 @@ public:
 		m_fstream << s;
 	}
 
+	inline fstream& out_strm()
+	{
+		return m_fstream;
+	} 
+
 	/**
 	 * @name  print_smatch
 	 * @brief print token to stdout
@@ -243,6 +248,7 @@ private:
 	string m_buffer{};
 	string m_match{};
 	fstream m_fstream{};
+	//fstream ostrm;
 	int m_line = 0;
 	int m_file_count = 0;
 	state_t* p_state = &INITIAL;

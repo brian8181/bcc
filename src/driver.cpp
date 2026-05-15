@@ -116,6 +116,12 @@ int parse_options(const int argc, char *argv[])
     string x = strmy.get_map_vars()["x"];
     string y = strmy.get_map_vars()["y"];
     strmy.display("test/templates/test_vars.tpl"); 
+
+    for (const auto& [key, value] : g_tokens) 
+    {
+        token_t tok = value;
+        std::cout << "key:" << key << " { name:" << tok.name << ", index:" << tok.index << " }\n";
+    }
            
     const int offset = optind + SRC_IDX_OFFSET-1;
 	lexer::instance().init(argc-offset-1, argv+offset+1);

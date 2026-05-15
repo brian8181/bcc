@@ -139,9 +139,7 @@
 
 %token SKIP_TOKEN UNDEFINED
 %token <std::string> TEST_TOKEN 
-%left EQUAL
-%left PLUS MINUS 
-%left MULT DIV
+
 %token END_OF_FILES
 %token END_OF_FILE 0
 
@@ -153,8 +151,8 @@
 %token <std::string> INDIRECT_MEMBER ARRAY
 %token <std::string> IDENTIFIER 
 %token <std::string> STRING_LITERAL NUMERIC_LITERAL
-%token CARROT OPEN_PAREN CLOSE_PAREN DASH BACKSLASH QUESTION_MARK SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE BACK_SLASH AT AMPERSAND AND OR NOT
-%token DOLLAR_SIGN COMMA HASH_MARK OPEN_BRACKET CLOSE_BRACKET OPEN_BRACE CLOSE_BRACE LPAREN RPAREN DOT
+%token CARROT DASH BACKSLASH QUESTION_MARK SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE BACK_SLASH AT AMPERSAND AND OR NOT
+%token COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_BRACE CLOSE_BRACE OPEN_PAREN CLOSE_PAREN DOT
 
 
 %type <std::string> file
@@ -168,11 +166,10 @@
 
 %nonassoc IFX
 %nonassoc ELSE ELSEIF IF WHILE BREAK
-%left GREATER_THAN_EQUAL LESS_THAN_EQUAL EQUAL_SIGN NOT_EQUAL LESS_THAN GREATER_THAN COMMA
-%left PLUS_SIGN MINUS_SIGN
-%left ASTERISK SLASH PERCENT_SIGN
-%right COLON
-%right VBAR 
+%left EQUAL EQUALS
+%left GREATER_THAN_EQUAL LESS_THAN_EQUAL  NOT_EQUAL LESS_THAN GREATER_THAN COMMA
+%left PLUS MINUS
+%left MULTIPLY DIVIDE MODULUS
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
 %type <std::string> access_modfier
@@ -256,15 +253,29 @@ stmts[result]:
                                                                 ;
 
 stmt:
-    decel SEMI_COLON                                            { 
+    expr  SEMI_COLON                                            {
+                                                                    INFO("stmt: | expr SEMI_COLON");
+                                                                    WARN("expr: not an l-side"); 
+                                                                }
+    | decel SEMI_COLON                                          { 
                                                                     INFO("stmt: | decel SEMI_COLON"); 
                                                                     stringstream ss;
                                                                     ss << "// " << ";"; 
                                                                     lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
-    | decel EQUAL_SIGN expr SEMI_COLON                          { 
-                                                                    INFO("stmt: decel EQUAL_SIGN NUMERIC_LITERAL"); 
+    | decel EQUAL IDENTIFIER SEMI_COLON                          { 
+                                                                    INFO("stmt: | decel EQUAL IDENTIFIER SEMI_COLONL"); 
+                                                                    symbol_table[$1] = $3;
+                                                                    stringstream ss;
+                                                                    ss << "// " << " = " << $IDENTIFIER << ";"; 
+                                                                    lexer::instance().write_ostream(ss.str());
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                    // testing lexer stream operator overload !
+                                                                    cout << lexer::instance();
+                                                                }
+    | decel EQUAL expr SEMI_COLON                          { 
+                                                                    INFO("stmt: | decel EQUAL expr SEMI_COLON"); 
                                                                     symbol_table[$1] = $3;
                                                                     stringstream ss;
                                                                     ss << "// " << " = " << $expr << ";"; 
@@ -273,8 +284,28 @@ stmt:
                                                                     // testing lexer stream operator overload !
                                                                     cout << lexer::instance();
                                                                 }
-    | IDENTIFIER EQUAL_SIGN expr SEMI_COLON                     { 
-                                                                    INFO("stmt: IDENTIFIER EQUAL_SIGN IDENTIFIER"); 
+     | IDENTIFIER EQUAL IDENTIFIER SEMI_COLON                   { 
+                                                                    INFO("stmt: IDENTIFIER EQUAL IDENTIFIER SEMI_COLON"); 
+                                                                    if(symbol_table.find($1) != symbol_table.end())
+                                                                    {
+                                                                        ERROR("UNDEFINED symbol, \"$1\"");
+                                                                        return -1;
+                                                                    }
+
+                                                                    // symbol_table[$1] = $3;
+                                                                    //  stringstream ss;
+                                                                    // ss << "// " << $IDENTIFIER << " = " << $expr << ";"; 
+                                                                    // lexer::instance().write_ostream(ss.str());
+                                                                    // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                }                                           
+    | IDENTIFIER EQUAL expr SEMI_COLON                          { 
+                                                                    INFO("stmt: IDENTIFIER EQUAL expr SEMI_COLON"); 
+                                                                    if(symbol_table.find($IDENTIFIER) != symbol_table.end())
+                                                                    {
+                                                                        ERROR("UNDEFINED symbol, \"$IDENTIFIER\"");
+                                                                        return -1;
+                                                                    }
+
                                                                     symbol_table[$1] = $3;
                                                                      stringstream ss;
                                                                     ss << "// " << $IDENTIFIER << " = " << $expr << ";"; 
@@ -288,9 +319,8 @@ stmt:
  */
 expr[result]:
     NUMERIC_LITERAL                                             { $result=$NUMERIC_LITERAL; }
-    | IDENTIFIER                                                { $result=$IDENTIFIER; }
     | expr[lhs] PLUS[op] expr[rhs]                              {
-																	INFO("PARSER expr: | expr PLUS_SIGN expr");
+																	INFO("PARSER expr: | expr PLUS expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) + std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
@@ -303,18 +333,30 @@ expr[result]:
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] MULT[op] expr[rhs]                              {
-																	INFO("PARSER expr: | expr ASTERISK expr");
+    | expr[lhs] MULTIPLY[op] expr[rhs]                              {
+																	INFO("PARSER expr: | expr MULTIPLY expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) * std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] DIV[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr SLASH expr");
+    | expr[lhs] DIVIDE[op] expr[rhs]                               {
+																	INFO("PARSER expr: | expr DIVIDE expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) / std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
+                                                                    INFO("$result=" << $result);
+																}
+    | expr[lhs] MODULUS[op] expr[rhs]                           {
+																	INFO("PARSER expr: | expr MODULUS expr");
+																	stringstream ss;
+                                                                    ss << (std::atoi($lhs.c_str()) % std::atoi($rhs.c_str()));
+                                                                    $result = ss.str();
+                                                                    INFO("$result=" << $result);
+																}
+    | expr[lhs] EQUALS[op] expr[rhs]                         {
+																	INFO("PARSER expr: | expr EQUALS expr");
+																	$result = (std::atoi($lhs.c_str()) == std::atoi($rhs.c_str()));
                                                                     INFO("$result=" << $result);
 																}
     | expr[lhs] LESS_THAN[op] expr[rhs]                         {
@@ -324,7 +366,7 @@ expr[result]:
 																}
     | expr[lhs] GREATER_THAN[op] expr[rhs]                      {
 																	INFO("PARSER expr: | expr GREATER_THAN expr");
-																	$result = (std::atoi($lhs.c_str()) > std::atoi($rhs.c_str()));
+																	$result = (std::atoi($lhs.c_str()) > std::atoi($rhs.c_str()));  
                                                                     INFO("$result=" << $result);
 																}
     | expr[lhs] GREATER_THAN_EQUAL[op] expr[rhs]                {
@@ -339,8 +381,9 @@ expr[result]:
 																	INFO("PARSER expr: | expr NOT_EQUAL expr");
 																	$result = (std::atoi($lhs.c_str()) != std::atoi($rhs.c_str()));
 																}
-    | LPAREN expr[exp] RPAREN                                   {
-																	INFO("PARSER expr: | LPAREN expr RPAREN");
+    | OPEN_PAREN expr[exp] CLOSE_PAREN                          {
+																	INFO("PARSER expr: | OPEN_PAREN expr CLOSE_PAREN");
+                                                                    $result = $exp;
 																}
                                                                 ;
 decel:

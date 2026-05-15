@@ -129,7 +129,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define CARROT 11ul
 #define AMPERSAND 12ul
 #define ASTERISK 13ul
-#define MULTI 5513ul
+#define MULTIPLY 5513ul
 #define OPEN_PAREN 14ul
 #define CLOSE_PAREN 15ul
 #define DASH 16ul
@@ -143,7 +143,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define OPEN_BRACKET 21ul
 #define CLOSE_BRACE 22ul
 #define CLOSE_BRACKET 23ul
-#define VBAR 24ul
+#define VBAR 5524ul
 #define BACKSLASH 25ul
 #define COLON 26ul
 #define SEMI_COLON 27ul
@@ -270,7 +270,11 @@ inline map<unsigned long, token> g_tokens =
 	{CLOSE_PAREN,       token{"RPAREN", S_TYPE, R"(\))", __LINE__}},
 	{MINUS,             token{"MINUS", S_TYPE, R"([-])", __LINE__}},
 	{PLUS,              token{"PLUS", S_TYPE, R"([+])", __LINE__}},
+	{MULTIPLY,          token{"MULTIPLY", S_TYPE, R"([*])", __LINE__}},
+	{DIVIDE,            token{"DIVIDE", S_TYPE, R"([/])", __LINE__}},
+	{MODULUS,           token{"MODULUS", S_TYPE, R"([%])", __LINE__}},
 	{EQUAL,             token{"EQUAL", S_TYPE, R"([=])", __LINE__}},
+	{EQUALS,            token{"EQUALS", S_TYPE, R"(==)", __LINE__}},
 	{DASH,              token{"DASH", S_TYPE, R"([-])", __LINE__}},
 	{PLUS_SIGN,         token{"PLUS_SIGN", S_TYPE, R"([+])", __LINE__}},
 	{EQUAL_SIGN,        token{"EQUAL_SIGN", S_TYPE, R"([=])", __LINE__}},
@@ -339,8 +343,9 @@ inline vector<state_t> states__ = { INITIAL, COMMENTING, DOUBLE_QUOTED, SINGLE_Q
 /**
  * @brief token list -> by state
  */
-inline vector<unsigned long> INITIAL_TOKENS = { TEST_TOKEN, INT, FLOAT, CHAR, SEMI_COLON, NEWLINE, WHITESPACE, CLOSE_BRACE, OPEN_BRACKET, STRING_LITERAL, NUMERIC_LITERAL, EQUAL_SIGN,
-												 VBAR, COMMA, COLON, DOT, SLASH, IDENTIFIER, PLUS_SIGN };
+inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, INT, FLOAT, CHAR, SEMI_COLON, NEWLINE, WHITESPACE, STRING_LITERAL, NUMERIC_LITERAL, EQUALS, EQUAL,
+												 MULTIPLY, DIVIDE, IDENTIFIER, PLUS, MODULUS, 
+												 OPEN_PAREN, CLOSE_PAREN, OPEN_BRACE, CLOSE_BRACE, OPEN_BRACKET, CLOSE_BRACKET	};
 
 inline vector<unsigned long> COMMENTING_TOKENS = { OPEN_BRACE, COMMENT, ANYTHING };
 inline vector<unsigned long> DOUBLE_QUOTED_TOKENS = { DOUBLE_QUOTE, VALID_CHAR };

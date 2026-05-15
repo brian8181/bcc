@@ -374,40 +374,42 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_SEMI_COLON();
 		case INCLUDE:
 			return parser::make_INCLUDE();
+		case OPEN_BRACE:
+			return parser::make_OPEN_BRACE();
 		case CLOSE_BRACE:
 			return parser::make_CLOSE_BRACE();
-		case CLOSE_BRACKET:
-			return parser::make_CLOSE_BRACKET();
 		case OPEN_BRACKET:
 			return parser::make_OPEN_BRACKET();
+		case CLOSE_BRACKET:
+			return parser::make_CLOSE_BRACKET();
+		case OPEN_PAREN:
+			return parser::make_OPEN_PAREN();
+		case CLOSE_PAREN:
+			return parser::make_CLOSE_PAREN();
 		case IF:
 			//set_state( &IF_BLOCK );
 			return parser::make_IF();
 		case ELSE:
 			//set_state( &IF_BLOCK );
 			return parser::make_ELSE();
-			case IDENTIFIER:
+		case IDENTIFIER:
 			return parser::make_IDENTIFIER( match );
-		case PERCENT_SIGN:
-			return parser::make_PERCENT_SIGN();
-		case PLUS_SIGN:
+		case MODULUS:
+			return parser::make_MODULUS();
+		case PLUS:
 			return parser::make_PLUS();
 		case DASH:
 			return parser::make_DASH();
 		case DOT:
 			return parser::make_DOT();
-		case HASH_MARK:
-			return parser::make_HASH_MARK();
-		case COLON:
-			return parser::make_COLON();
 		case COMMA:
 			return parser::make_COMMA();
-		case VBAR:
-			return parser::make_VBAR();
-		case SLASH:
-			return parser::make_SLASH();
-		case EQUAL_SIGN:
-			return parser::make_EQUAL_SIGN();
+		case DIVIDE:
+			return parser::make_DIVIDE();
+		case EQUAL:
+			return parser::make_EQUAL();
+		case EQUALS:
+			return parser::make_EQUALS();
 		case NUMERIC_LITERAL:
 			return parser::make_NUMERIC_LITERAL( match );
 		case STRING_LITERAL:

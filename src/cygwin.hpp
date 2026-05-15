@@ -1,4 +1,4 @@
-#ifndef _CYGWIN_HPP_
+    #ifndef _CYGWIN_HPP_
 #define _CYGWIN_HPP_
 
 #ifndef CYGWIN
