@@ -372,8 +372,6 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_CHAR();
 		case SEMI_COLON:
 			return parser::make_SEMI_COLON();
-		case INCLUDE:
-			return parser::make_INCLUDE();
 		case OPEN_BRACE:
 			return parser::make_OPEN_BRACE();
 		case CLOSE_BRACE:

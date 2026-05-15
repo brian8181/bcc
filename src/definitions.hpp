@@ -195,10 +195,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define CONTINUE 70ul
 #define TRY 71ul
 #define CATCH 72ul
-#define INCLUDE 579ul
 #define VALID_CHAR 113ul
-#define FIRST_CHAR 114ul
-#define ID 115ul
 #define IDENTIFIER 1009ul
 #define SYMBOL 117ul
 #define CONST_SYMBOL 118ul
@@ -209,8 +206,6 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define HAS_SIGN 123ul
 #define NEWLINE 124ul
 #define SKIP_TOK 125ul
-#define SCAN_EOF 128ul
-#define ANYTHING 130
 #define MATCH 140
 #define UNDEFINED 150
 #define EMPTY_STRING 160ul
@@ -230,15 +225,16 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define VAR_OPER   			1003ul
 #define CONST_VAR_OPER 		1006ul
 #define TEST_TOKEN          777ul
+#define _IF					6000ul				
+#define _INCLUDE             6003ul
+#define _DEFINE              6006ul
+#define _IFDEF               6009ul
+#define _IFNDEF	            6012ul
+#define _ENDIF               6015ul
+#define _ELSE               6018ul
+#define _ELSEIF             6021ul
 #define S_TYPE "string"
 
-
-
-#define isodigit(x) ((x) >= '0' && (x) <= '7')
-#define hextoint(x) (isdigit((x)) ? (x) - '0' : ((x) - 'A') + 10)
-
-// hex (x|X)[0-9a-fA-F]{1,2}
-// oct [0-7]{1,3}
 
 /**
  * @name g_tokens
@@ -262,12 +258,11 @@ inline map<unsigned long, token> g_tokens =
 	{TILDE,             token{"TILDE", S_TYPE, R"(~)", __LINE__}},
 	{EXCLAMATION,       token{"EXCLAMATION", S_TYPE, R"([!])", __LINE__}},
 	{AT_SYMBOL,         token{"AT_SYMBOL", S_TYPE, R"([@])", __LINE__}},
-	{TIC_MARK,          token{"TIC_MARK", S_TYPE, R"([`])", __LINE__}},
 	{CARROT,            token{"CARROT", S_TYPE, R"(\^)", __LINE__}},
 	{AMPERSAND,         token{"AMPERSAND", S_TYPE, R"(&)", __LINE__}},
 	{ASTERISK,          token{"ASTERISK", S_TYPE, R"(\*)", __LINE__}},
-	{OPEN_PAREN,        token{"LPAREN", S_TYPE, R"(\()", __LINE__}},
-	{CLOSE_PAREN,       token{"RPAREN", S_TYPE, R"(\))", __LINE__}},
+	{OPEN_PAREN,        token{"OPEN_PAREN", S_TYPE, "\\(", __LINE__}},
+	{CLOSE_PAREN,       token{"CLOSE_PAREN", S_TYPE, "\\)", __LINE__}},
 	{MINUS,             token{"MINUS", S_TYPE, R"([-])", __LINE__}},
 	{PLUS,              token{"PLUS", S_TYPE, R"([+])", __LINE__}},
 	{MULTIPLY,          token{"MULTIPLY", S_TYPE, R"([*])", __LINE__}},
@@ -294,7 +289,6 @@ inline map<unsigned long, token> g_tokens =
 	{SLASH,             token{"SLASH", S_TYPE, R"(/)", __LINE__}},
 	{GREATER_THAN_EQUAL,token{"GREATER_THAN_EQUAL", S_TYPE, R"(>=)", __LINE__}},
 	{LESS_THAN_EQUAL,   token{"LESS_THAN_EQUAL", S_TYPE, R"(<=)", __LINE__}},
-	{INCLUDE,           token{"INCLUDE", S_TYPE, R"((?<=#)include)", __LINE__}},
 	{IF,                token{"IF", S_TYPE, R"(if)", __LINE__}},
 	{ELSE,              token{"ELSE", S_TYPE, R"(else)", __LINE__}},
 	{ELSEIF,            token{"ELSEIF", S_TYPE, R"(elseif)", __LINE__}},
@@ -302,10 +296,17 @@ inline map<unsigned long, token> g_tokens =
 	{BREAK,             token{"BREAK", S_TYPE, R"(break)", __LINE__}},
 	{PTR,               token{"PTR", S_TYPE, R"(*)", __LINE__}},
 	{REF,               token{"PTR", S_TYPE, R"(&)", __LINE__}},
-	{INT,               token{"INT", S_TYPE, R"(\<int\>)", __LINE__}},
-	{FLOAT,             token{"FLOAT", S_TYPE, R"(\<float\>)", __LINE__}},
-	{CHAR,              token{"CHAR", S_TYPE, R"(\<char\>)", __LINE__}},
-	{UNDEFINED,         token{"UNDEFINED", S_TYPE, R"(.)", __LINE__}}
+	{INT,               token{"INT", S_TYPE, R"((^|\s)\s+\<int\>\s+)", __LINE__}},
+	{FLOAT,             token{"FLOAT", S_TYPE, R"((^|\s)\s*\<float\>\s+)", __LINE__}},
+	{CHAR,              token{"CHAR", S_TYPE, R"((^|\s)\s*\<char\>\s+s)", __LINE__}},
+	{_IF,               token{"_IF", S_TYPE, R"(^\s(#if|#IF)\>\s+)", __LINE__}},
+	{_DEFINE,           token{"_DEFINE", S_TYPE, R"(^\s(#define|#DEFINE)\>\s+)", __LINE__}},
+	{_IFDEF,            token{"_IFDEF", S_TYPE, R"(^\s*(#ifdef|#IFDEF)\>\s+)", __LINE__}},
+	{_IFNDEF,           token{"_IFNDEF", S_TYPE, R"(^\s*(#ifndef|#IFNDEF)\>\s+)", __LINE__}},
+	{_ELSE,             token{"_ELSE", S_TYPE, R"(^\s*(#else|#ELSE)\>\s+)", __LINE__}},
+	{_ELSEIF,           token{"_ELSEIF", S_TYPE, R"(^\s*(#elseif|#ELSEIF)\>\s+)", __LINE__}},
+	{_ENDIF,            token{"_ENDIF", S_TYPE, R"(^\s*(#endif|#ENDIF)\>\s+)", __LINE__}},
+	{_INCLUDE,          token{"_INCLUDE", S_TYPE, R"(^\s*(#INCLUDE|#include)\>\s+)", __LINE__}}
 };
 
 /**
@@ -347,7 +348,7 @@ inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, INT, FLOAT, CHAR, S
 												 MULTIPLY, DIVIDE, IDENTIFIER, PLUS, MODULUS, 
 												 OPEN_PAREN, CLOSE_PAREN, OPEN_BRACE, CLOSE_BRACE, OPEN_BRACKET, CLOSE_BRACKET	};
 
-inline vector<unsigned long> COMMENTING_TOKENS = { OPEN_BRACE, COMMENT, ANYTHING };
+inline vector<unsigned long> COMMENTING_TOKENS = { OPEN_BRACE, COMMENT };
 inline vector<unsigned long> DOUBLE_QUOTED_TOKENS = { DOUBLE_QUOTE, VALID_CHAR };
 inline vector<unsigned long> SINGLE_QUOTED_TOKENS = { OPEN_BRACE, COMMENT, VALID_CHAR, SINGLE_QUOTE, DOUBLE_QUOTE };
 inline vector<unsigned long> IF_BLOCK_TOKENS = { CLOSE_BRACE, CLOSE_BRACE, OPEN_BRACKET, DOUBLE_QUOTE, IF, ELSE, STRING_LITERAL, NUMERIC_LITERAL, EQUAL_SIGN,
