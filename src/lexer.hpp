@@ -223,6 +223,9 @@ public:
 	 */
 	parser::symbol_type on_token( unsigned long id, const string& match = {} );
 
+	 // Declare the operator as a friend to access private members
+    friend std::ostream& operator<<(std::ostream& os, const lexer& lex);
+
 private:
 
 	//configuration types

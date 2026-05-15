@@ -386,7 +386,7 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 		case ELSE:
 			//set_state( &IF_BLOCK );
 			return parser::make_ELSE();
-		case IDENTIFIER:
+			case IDENTIFIER:
 			return parser::make_IDENTIFIER( match );
 		case PERCENT_SIGN:
 			return parser::make_PERCENT_SIGN();
@@ -428,4 +428,10 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 	} // END switch
 	cout << "UNDEFINED symbol found... id=" << id << ",  match=" << match << endl;
 	return parser::make_UNDEFINED();
+}
+
+// Overload definition
+std::ostream& operator<<(std::ostream& os, const lexer& lex) 
+{
+    return os; // Return stream to allow chaining
 }

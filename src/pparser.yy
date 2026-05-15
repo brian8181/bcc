@@ -174,7 +174,7 @@
 %right COLON
 %right VBAR 
 %type <std::string> expr
-%type <std::string> access_modfiers
+/* %type <std::string> access_modfiers */
 %type <std::string> access_modfier
 %type <std::string> intregal_type
 %type <std::string> decel
@@ -186,9 +186,9 @@
  * @name complier
  */
 compiler:
-    TEST_TOKEN                                                  {
+    TEST_TOKEN                                                 {
                                                                             INFO("complier: | TEST_TOKEN=" << $1);
-                                                                }  
+                                                               }  
    | files  END_OF_FILES                                       {
 																	INFO("compiler: files.size=" << $1.size() << " END_OF_FILES");
 
@@ -258,14 +258,28 @@ stmts[result]:
 stmt:
     decel SEMI_COLON                                            { 
                                                                     INFO("stmt: | decel SEMI_COLON"); 
+                                                                    stringstream ss;
+                                                                    ss << "// " << ";"; 
+                                                                    lexer::instance().write_ostream(ss.str());
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     | decel EQUAL_SIGN expr SEMI_COLON                          { 
                                                                     INFO("stmt: decel EQUAL_SIGN NUMERIC_LITERAL"); 
                                                                     symbol_table[$1] = $3;
+                                                                    stringstream ss;
+                                                                    ss << "// " << " = " << $expr << ";"; 
+                                                                    lexer::instance().write_ostream(ss.str());
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                    // testing lexer stream operator overload !
+                                                                    cout << lexer::instance();
                                                                 }
     | IDENTIFIER EQUAL_SIGN expr SEMI_COLON                     { 
                                                                     INFO("stmt: IDENTIFIER EQUAL_SIGN IDENTIFIER"); 
                                                                     symbol_table[$1] = $3;
+                                                                     stringstream ss;
+                                                                    ss << "// " << $IDENTIFIER << " = " << $expr << ";"; 
+                                                                    lexer::instance().write_ostream(ss.str());
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     ;
     
@@ -273,8 +287,8 @@ stmt:
  * @brief Numerical / logical exprssions
  */
 expr[result]:
-    NUMERIC_LITERAL                                             { $result=$1; }
-    | IDENTIFIER                                                { $result=$1; }
+    NUMERIC_LITERAL                                             { $result=$NUMERIC_LITERAL; }
+    | IDENTIFIER                                                { $result=$IDENTIFIER; }
     | expr[lhs] PLUS[op] expr[rhs]                              {
 																	INFO("PARSER expr: | expr PLUS_SIGN expr");
 																	stringstream ss;
@@ -284,46 +298,46 @@ expr[result]:
 																}
     | expr[lhs] MINUS[op] expr[rhs]                             {
 																	INFO("PARSER expr: | expr MINUS expr");
-																	// stringstream ss;
-                                                                    // ss << (std::atoi($lhs.c_str()) - std::atoi($rhs.c_str()));
-                                                                    // $result = ss.str();
-                                                                    // INFO("$result=" << $result);
+																	stringstream ss;
+                                                                    ss << (std::atoi($lhs.c_str()) - std::atoi($rhs.c_str()));
+                                                                    $result = ss.str();
+                                                                    INFO("$result=" << $result);
 																}
     | expr[lhs] MULT[op] expr[rhs]                              {
 																	INFO("PARSER expr: | expr ASTERISK expr");
-																	// stringstream ss;
-                                                                    // ss << (std::atoi($lhs.c_str()) * std::atoi($rhs.c_str()));
-                                                                    // $result = ss.str();
-                                                                    // INFO("$result=" << $result);
+																	stringstream ss;
+                                                                    ss << (std::atoi($lhs.c_str()) * std::atoi($rhs.c_str()));
+                                                                    $result = ss.str();
+                                                                    INFO("$result=" << $result);
 																}
     | expr[lhs] DIV[op] expr[rhs]                               {
 																	INFO("PARSER expr: | expr SLASH expr");
-																	// stringstream ss;
-                                                                    // ss << (std::atoi($lhs.c_str()) / std::atoi($rhs.c_str()));
-                                                                    // $result = ss.str();
-                                                                    // INFO("$result=" << $result);
+																	stringstream ss;
+                                                                    ss << (std::atoi($lhs.c_str()) / std::atoi($rhs.c_str()));
+                                                                    $result = ss.str();
+                                                                    INFO("$result=" << $result);
 																}
     | expr[lhs] LESS_THAN[op] expr[rhs]                         {
 																	INFO("PARSER expr: | expr LESS_THAN expr");
-																	// $result = (std::atoi($lhs.c_str()) < std::atoi($rhs.c_str()));
-                                                                    // INFO("$result=" << $result);
+																	$result = (std::atoi($lhs.c_str()) < std::atoi($rhs.c_str()));
+                                                                    INFO("$result=" << $result);
 																}
     | expr[lhs] GREATER_THAN[op] expr[rhs]                      {
 																	INFO("PARSER expr: | expr GREATER_THAN expr");
-																	// $result = (std::atoi($lhs.c_str()) > std::atoi($rhs.c_str()));
-                                                                    // INFO("$result=" << $result);
+																	$result = (std::atoi($lhs.c_str()) > std::atoi($rhs.c_str()));
+                                                                    INFO("$result=" << $result);
 																}
     | expr[lhs] GREATER_THAN_EQUAL[op] expr[rhs]                {
 																	INFO("PARSER expr: | expr GREATER_THAN_EQUAL expr ");
-																	//$result = (std::atoi($lhs.c_str()) >= std::atoi($rhs.c_str()));
+																	$result = (std::atoi($lhs.c_str()) >= std::atoi($rhs.c_str()));
 																}
     | expr[lhs] LESS_THAN_EQUAL[op] expr[rhs]                   {
 																	INFO("PARSER expr: | expr LESS_THAN_EQUAL expr");
-																	//$result = (std::atoi($lhs.c_str()) <= std::atoi($rhs.c_str()));
+																	$result = (std::atoi($lhs.c_str()) <= std::atoi($rhs.c_str()));
 																}
     | expr[lhs] NOT_EQUAL[op] expr[rhs]                         {
 																	INFO("PARSER expr: | expr NOT_EQUAL expr");
-																	//$result = (std::atoi($lhs.c_str()) != std::atoi($rhs.c_str()));
+																	$result = (std::atoi($lhs.c_str()) != std::atoi($rhs.c_str()));
 																}
     | LPAREN expr[exp] RPAREN                                   {
 																	INFO("PARSER expr: | LPAREN expr RPAREN");
@@ -336,22 +350,32 @@ decel:
                                                                     // tab[$2] = s;
                                                                     symbol_table[$2] = "empty";
                                                                     $decel = $2;
+
+                                                                    stringstream ss;
+                                                                    ss << "// " << "type<" << $intregal_type << "> " << "id<" << $IDENTIFIER << ">";  
+                                                                    lexer::instance().write_ostream(ss.str());
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
                                                                 ;
-
+/**
+ * @brief intergal type
+ */
 intregal_type:
-    INT                                                                         { INFO("intergal_type: | INT"); $$="int"; }
-    | FLOAT                                                                     { INFO("intergal_type: | INT"); $$="int"; }
-    | CHAR                                                                      { INFO("intergal_type: | INT"); $$="int"; }
-    | access_modfier INT                                                        { INFO("intergal_type: | access_modfier INT"); $$="int"; }
-    | access_modfier FLOAT                                                      { INFO("intergal_type: | access_modfier FLOAT"); $$="float"; }
-    | access_modfier CHAR                                                       { INFO("intergal_type: | access_modfier CHAR"); $$="char"; }
-    ;
-
+    INT                                                         { INFO("intergal_type: | INT"); $$="int"; }
+    | FLOAT                                                     { INFO("intergal_type: | INT"); $$="int"; }
+    | CHAR                                                      { INFO("intergal_type: | INT"); $$="int"; }
+    | access_modfier INT                                        { INFO("intergal_type: | access_modfier INT"); $$="int"; }
+    | access_modfier FLOAT                                      { INFO("intergal_type: | access_modfier FLOAT"); $$="float"; }
+    | access_modfier CHAR                                       { INFO("intergal_type: | access_modfier CHAR"); $$="char"; }
+                                                                ;
+/**
 access_modfiers:
     '%' '#' '$'
     ;
-
+*/
+/**
+ * @brief access_modifier
+ */
 access_modfier:
     CONST
     | VOLATILE
