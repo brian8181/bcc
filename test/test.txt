@@ -1,0 +1,6 @@
+int x;
+int y = 5;
+z = 6;
+float a = 1;
+float b = a;
+char c = 0;
