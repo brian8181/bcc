@@ -206,6 +206,7 @@ compiler:
                                                                 ;
 /**
  * @name files
+ * @brief files list
  */
 files[result]:
 	file                                                        {
@@ -238,6 +239,7 @@ file:
                                                                 ;
 /**
  * @name stmts
+ * @brief statments list
  */
 stmts[result]:
     /* %empty */
@@ -251,7 +253,10 @@ stmts[result]:
 																	$result = $lhs;
 																}
                                                                 ;
-
+/**
+ * @name stmt
+ * @brief statement
+ */
 stmt:
     expr  SEMI_COLON                                            {
                                                                     INFO("stmt: | expr SEMI_COLON");
@@ -264,7 +269,7 @@ stmt:
                                                                     lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
-    | decel EQUAL IDENTIFIER SEMI_COLON                          { 
+    | decel EQUAL IDENTIFIER SEMI_COLON                         { 
                                                                     INFO("stmt: | decel EQUAL IDENTIFIER SEMI_COLONL"); 
                                                                     symbol_table[$1] = $3;
                                                                     stringstream ss;
@@ -274,7 +279,7 @@ stmt:
                                                                     // testing lexer stream operator overload !
                                                                     cout << lexer::instance();
                                                                 }
-    | decel EQUAL expr SEMI_COLON                          { 
+    | decel EQUAL expr SEMI_COLON                               { 
                                                                     INFO("stmt: | decel EQUAL expr SEMI_COLON"); 
                                                                     symbol_table[$1] = $3;
                                                                     stringstream ss;
@@ -315,6 +320,7 @@ stmt:
     ;
     
 /**
+ * @name expr
  * @brief Numerical / logical exprssions
  */
 expr[result]:
@@ -333,14 +339,14 @@ expr[result]:
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] MULTIPLY[op] expr[rhs]                              {
+    | expr[lhs] MULTIPLY[op] expr[rhs]                          {
 																	INFO("PARSER expr: | expr MULTIPLY expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) * std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] DIVIDE[op] expr[rhs]                               {
+    | expr[lhs] DIVIDE[op] expr[rhs]                            {
 																	INFO("PARSER expr: | expr DIVIDE expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) / std::atoi($rhs.c_str()));
@@ -354,7 +360,7 @@ expr[result]:
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] EQUALS[op] expr[rhs]                         {
+    | expr[lhs] EQUALS[op] expr[rhs]                            {
 																	INFO("PARSER expr: | expr EQUALS expr");
 																	$result = (std::atoi($lhs.c_str()) == std::atoi($rhs.c_str()));
                                                                     INFO("$result=" << $result);
@@ -386,6 +392,10 @@ expr[result]:
                                                                     $result = $exp;
 																}
                                                                 ;
+/**
+ * @name decel
+ * @brief decelration
+ */                                                                
 decel:
     intregal_type IDENTIFIER                                    {
                                                                     INFO("decel: | type IDENTIFIER");
@@ -401,6 +411,7 @@ decel:
                                                                 }
                                                                 ;
 /**
+ * @name intreagl_type
  * @brief intergal type
  */
 intregal_type:
