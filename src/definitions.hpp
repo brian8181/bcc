@@ -217,7 +217,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define TYPEDEF				5028ul
 #define FUNCTION			5031ul
 #define EQUAL_OP            5034ul
-#define ASSIGN_OP           5037ul
+#define ASSIGN              5037ul
 #define END_OF_FILE   		2003ul
 #define END_OF_FILES   		2006ul
 #define IDENTIFIER_CHARS    2009ul
@@ -267,10 +267,9 @@ inline map<unsigned long, token> g_tokens =
 	{DIVIDE,            token{"DIVIDE", S_TYPE, R"([/])", __LINE__}},
 	{MODULUS,           token{"MODULUS", S_TYPE, R"([%])", __LINE__}},
 	{EQUAL,             token{"EQUAL", S_TYPE, R"([=])", __LINE__}},
-	{ASSIGN_OP,         token{"ASSIGN_OP", S_TYPE, R"([=])", __LINE__}},
+	{ASSIGN,            token{"ASSIGN", S_TYPE, R"([=])", __LINE__}},
 	{EQUALS,            token{"EQUALS", S_TYPE, R"(==)", __LINE__}},
 	{EQUAL_OP,          token{"EQUAL_OP", S_TYPE, R"(==)", __LINE__}},
-	{DASH,              token{"DASH", S_TYPE, R"([-])", __LINE__}},
 	{PLUS_SIGN,         token{"PLUS_SIGN", S_TYPE, R"([+])", __LINE__}},
 	{EQUAL_SIGN,        token{"EQUAL_SIGN", S_TYPE, R"([=])", __LINE__}},
 	{CLOSE_BRACKET,     token{"RBRACKET", S_TYPE, R"(\])", __LINE__}},
@@ -345,8 +344,8 @@ inline vector<state_t> states__ = { INITIAL, COMMENTING, DOUBLE_QUOTED, SINGLE_Q
 /**
  * @brief token list -> by state
  */
-inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, INT, FLOAT, CHAR, SEMI_COLON, NEWLINE, WHITESPACE, STRING_LITERAL, NUMERIC_LITERAL, EQUALS, EQUAL,
-												 MULTIPLY, DIVIDE, IDENTIFIER, PLUS, MODULUS };
+inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, INT, FLOAT, CHAR, SEMI_COLON, NEWLINE, WHITESPACE, STRING_LITERAL, NUMERIC_LITERAL, ASSIGN, EQUAL,
+												 MULTIPLY, DIVIDE, IDENTIFIER, MINUS, PLUS, MODULUS };
 
 inline vector<unsigned long> COMMENTING_TOKENS = { OPEN_BRACE, COMMENT };
 inline vector<unsigned long> DOUBLE_QUOTED_TOKENS = { DOUBLE_QUOTE, VALID_CHAR };

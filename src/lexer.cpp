@@ -380,11 +380,11 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_OPEN_PAREN();
 		case CLOSE_PAREN:
 			return parser::make_CLOSE_PAREN();
+		case WHILE:
+			return parser::make_WHILE();
 		case IF:
-			//set_state( &IF_BLOCK );
 			return parser::make_IF();
 		case ELSE:
-			//set_state( &IF_BLOCK );
 			return parser::make_ELSE();
 		case IDENTIFIER:
 			return parser::make_IDENTIFIER( match );
@@ -392,18 +392,18 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_MODULUS();
 		case PLUS:
 			return parser::make_PLUS();
-		case DASH:
-			return parser::make_DASH();
-		case DOT:
-			return parser::make_DOT();
+		case MINUS:
+			return parser::make_MINUS();
+		case MULTIPLY:
+			return parser::make_MULTIPLY();
 		case COMMA:
 			return parser::make_COMMA();
 		case DIVIDE:
 			return parser::make_DIVIDE();
 		case EQUAL:
 			return parser::make_EQUAL();
-		case EQUALS:
-			return parser::make_EQUALS();
+		case ASSIGN:
+			return parser::make_ASSIGN();
 		case NUMERIC_LITERAL:
 			return parser::make_NUMERIC_LITERAL( match );
 		case STRING_LITERAL:

@@ -147,7 +147,7 @@
 %token <std::string> UNSIGNED SIGNED LONG INLINE
 %token INT FLOAT CHAR
 %token INCLUDE
-%token IF ELSE ELSEIF DO WHILE FOREACH BREAK CONTINUE
+%token PRINT
 %token <std::string> INDIRECT_MEMBER ARRAY
 %token <std::string> IDENTIFIER 
 %token <std::string> STRING_LITERAL NUMERIC_LITERAL
@@ -165,11 +165,13 @@
 */
 
 %nonassoc IFX
-%nonassoc ELSE ELSEIF IF WHILE BREAK
-%left EQUAL EQUALS ASSIGN_OP EQUAL_OP
+%nonassoc IF ELSE ELSEIF DO WHILE FOR BREAK CONTINUE
+%left EQUAL ASSIGN
 %left GREATER_THAN_EQUAL LESS_THAN_EQUAL  NOT_EQUAL LESS_THAN GREATER_THAN COMMA
 %left PLUS MINUS
 %left MULTIPLY DIVIDE MODULUS
+%nonassoc UMINUS
+
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
 %type <std::string> access_modfier type_modifier modifiers
@@ -269,7 +271,7 @@ stmt:
                                                                     lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
-    | decel EQUAL IDENTIFIER SEMI_COLON                         { 
+    | decel ASSIGN IDENTIFIER SEMI_COLON                         { 
                                                                     INFO("stmt: | decel EQUAL IDENTIFIER SEMI_COLONL"); 
                                                                     symbol_table[$1] = $3;
                                                                     stringstream ss;
@@ -279,7 +281,7 @@ stmt:
                                                                     // testing lexer stream operator overload !
                                                                     cout << lexer::instance();
                                                                 }
-    | decel EQUAL expr SEMI_COLON                               { 
+    | decel ASSIGN expr SEMI_COLON                               { 
                                                                     INFO("stmt: | decel EQUAL expr SEMI_COLON"); 
                                                                     symbol_table[$1] = $3;
                                                                     stringstream ss;
@@ -289,7 +291,7 @@ stmt:
                                                                     // testing lexer stream operator overload !
                                                                     cout << lexer::instance();
                                                                 }
-     | IDENTIFIER EQUAL IDENTIFIER SEMI_COLON                   { 
+     | IDENTIFIER ASSIGN IDENTIFIER SEMI_COLON                   { 
                                                                     INFO("stmt: IDENTIFIER EQUAL IDENTIFIER SEMI_COLON"); 
                                                                     if(symbol_table.find($1) != symbol_table.end())
                                                                     {
@@ -303,7 +305,7 @@ stmt:
                                                                     // lexer::instance().write_ostream(ss.str());
                                                                     // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }                                           
-    | IDENTIFIER EQUAL expr SEMI_COLON                          { 
+    | IDENTIFIER ASSIGN expr SEMI_COLON                          { 
                                                                     INFO("stmt: IDENTIFIER EQUAL expr SEMI_COLON"); 
                                                                     if(symbol_table.find($IDENTIFIER) != symbol_table.end())
                                                                     {
@@ -330,6 +332,10 @@ stmt:
                                                                     // INFO("file=\"" << file << "\"");
 																	// lexer::instance().push_include(file);
                                                                 }
+    | WHILE OPEN_PAREN expr CLOSE_PAREN stmt SEMI_COLON         { INFO("expr: | WHILE OPEN_PAREN expr CLOSE_PAREN stmt SEMI_COLON"); }
+    | IF OPEN_PAREN expr CLOSE_PAREN stmt %prec IFX SEMI_COLON  { INFO("expr: | IF OPEN_PAREN expr CLOSE_PAREN stmt %prec IFX SEMI_COLON"); }
+|   | IF OPEN_PAREN expr CLOSE_PAREN stmt ELSE stmt SEMI_COLON  { INFO("expr: | IF OPEN_PAREN expr CLOSE_PAREN stmt ELSE stmt SEMI_COLON"); }
+    | OPEN_BRACE stmts CLOSE_BRACE                              { INFO("expr: | OPEN_BRACE stmts CLOSE_BRACE SEMI_COLON"); }
     ;
     
 /**
@@ -338,6 +344,7 @@ stmt:
  */
 expr[result]:
     NUMERIC_LITERAL                                             { $result=$NUMERIC_LITERAL; }
+    | IDENTIFIER                                                { $result=$IDENTIFIER; }
     | expr[lhs] PLUS[op] expr[rhs]                              {
 																	INFO("PARSER expr: | expr PLUS expr");
 																	stringstream ss;
@@ -373,8 +380,8 @@ expr[result]:
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] EQUALS[op] expr[rhs]                            {
-																	INFO("PARSER expr: | expr EQUALS expr");
+    | expr[lhs] EQUAL[op] expr[rhs]                            {
+																	INFO("PARSER expr: | expr EQUAL expr");
 																	$result = (std::atoi($lhs.c_str()) == std::atoi($rhs.c_str()));
                                                                     INFO("$result=" << $result);
 																}

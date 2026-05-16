@@ -1,8 +1,2 @@
-line1{$a}
-
-
-
-
-{$b}
-
-{$c}line8{$d}line8
+int x = 1 - 1 + 1;
+int y = 1 - (1 + 1);
