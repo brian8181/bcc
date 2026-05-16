@@ -42,8 +42,7 @@ using std::stringstream;
 using std::vector;
 using yy::parser;
 
-// smarty
-// commentstart = /#|;/
+
 // openB = /\[/
 // closeB = /\]/
 // section = /.*?(?=[\.=\[\]\r\n])/
@@ -71,12 +70,6 @@ const string CONFIG_PAIR = R"(\s*(?<type>" + TOKEN_TYPE_ + ")\\s+(?<name>[A-Za-z
 const string CONFIG_COMMENT = R"(^\s*#.*$)";
 const string CONFIG = R"((?<pairs>)" + CONFIG_PAIR + R"()|(?<comments>)" + CONFIG_COMMENT + R"())";
 const string qwerty = R"(ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890~!@#$%^&*()_+{}|:"<>?`-=[]\;',./')";
-
-// groups
-const string BUILTIN_FUNCTION = "(insert)|(include)|(config_load)|(assign)|(fetch)|(capture)";
-const string MATH = "(abs)|(ceil)|(cos)|(exp)|(floor)|(log)|(log10)|(max)|(min)|(pi)|(pow)|(rand)|(round)|(sin)|(sqrt)|(srans)|(tan)";
-const string KEY_WORDS = "(if)|(else)|(elseif)|(foreach)|(foreachelse)|(literal)|(section)|(strip)|(assign)|(counter)|(cycle)|(debug)|(eval)|(fetch)|(html_checkboxes)";
-const string VAR_MODIFIER = "(capitalize)|(indent)|(lower)|(upper)|(spacify)|(string_format)|(truncate)|(date_format)|(escape)";
 
 struct if_stmt
 {
@@ -219,6 +212,12 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define SIGNED				5016ul
 #define PTR					5019ul
 #define REF					5022ul
+#define REF					5022ul
+#define STRUCT				5025ul
+#define TYPEDEF				5028ul
+#define FUNCTION			5031ul
+#define EQUAL_OP            5034ul
+#define ASSIGN_OP           5037ul
 #define END_OF_FILE   		2003ul
 #define END_OF_FILES   		2006ul
 #define IDENTIFIER_CHARS    2009ul
@@ -245,7 +244,7 @@ inline map<unsigned long, token> g_tokens =
 	{TEST_TOKEN,	    token{"TEST_TOKEN", S_TYPE, R"(@@@)", __LINE__}},
 	{ESC_SEQ,	        token{"ESC_SEQ", S_TYPE, R"(\\[^\n])", __LINE__}},
 	{ESC_NLINE,	        token{"ESC_NLINE", S_TYPE, R"([^\\\n])", __LINE__}},
-	{WHITESPACE, 		token{"WHITESPACE", S_TYPE, R"([ \t])", __LINE__}},
+	{WHITESPACE, 		token{"WHITESPACE", S_TYPE, R"([ \t\r])", __LINE__}},
 	{NEWLINE,           token{"NEWLINE", S_TYPE, R"(\n)", __LINE__}},
 	{VALID_CHAR,        token{"VALID_CHAR", S_TYPE, R"([A-Za-z0-9*@_.~+-/ ])", __LINE__}},
 	{NUMERIC_LITERAL,   token{"NUMERIC_LITERAL", S_TYPE, R"([1-9]+[0-9]*|0)", __LINE__}},
@@ -257,7 +256,6 @@ inline map<unsigned long, token> g_tokens =
 	{DOUBLE_QUOTE,      token{"DOUBLE_QUOTE", S_TYPE, R"(")", __LINE__}},
 	{TILDE,             token{"TILDE", S_TYPE, R"(~)", __LINE__}},
 	{EXCLAMATION,       token{"EXCLAMATION", S_TYPE, R"([!])", __LINE__}},
-	{AT_SYMBOL,         token{"AT_SYMBOL", S_TYPE, R"([@])", __LINE__}},
 	{CARROT,            token{"CARROT", S_TYPE, R"([^])", __LINE__}},
 	{AMPERSAND,         token{"AMPERSAND", S_TYPE, R"([&])", __LINE__}},
 	{ASTERISK,          token{"ASTERISK", S_TYPE, R"([*])", __LINE__}},
@@ -269,7 +267,9 @@ inline map<unsigned long, token> g_tokens =
 	{DIVIDE,            token{"DIVIDE", S_TYPE, R"([/])", __LINE__}},
 	{MODULUS,           token{"MODULUS", S_TYPE, R"([%])", __LINE__}},
 	{EQUAL,             token{"EQUAL", S_TYPE, R"([=])", __LINE__}},
+	{ASSIGN_OP,             token{"ASSIGN_OP", S_TYPE, R"([=])", __LINE__}},
 	{EQUALS,            token{"EQUALS", S_TYPE, R"(==)", __LINE__}},
+	{EQUAL_OP,          token{"EQUAL_OP", S_TYPE, R"(==)", __LINE__}},
 	{DASH,              token{"DASH", S_TYPE, R"([-])", __LINE__}},
 	{PLUS_SIGN,         token{"PLUS_SIGN", S_TYPE, R"([+])", __LINE__}},
 	{EQUAL_SIGN,        token{"EQUAL_SIGN", S_TYPE, R"([=])", __LINE__}},
@@ -296,17 +296,19 @@ inline map<unsigned long, token> g_tokens =
 	{BREAK,             token{"BREAK", S_TYPE, R"(break)", __LINE__}},
 	{PTR,               token{"PTR", S_TYPE, R"([*])", __LINE__}},
 	{REF,               token{"REF", S_TYPE, R"([&])", __LINE__}},
-	{INT,               token{"INT", S_TYPE, R"((^|\s)\s+\<int\>\s+)", __LINE__}},
-	{FLOAT,             token{"FLOAT", S_TYPE, R"((^|\s)\s*\<float\>\s+)", __LINE__}},
-	{CHAR,              token{"CHAR", S_TYPE, R"((^|\s)\s*\<char\>\s+s)", __LINE__}},
-	{_IF,               token{"_IF", S_TYPE, R"(^\s(#if|#IF)\>\s+)", __LINE__}},
-	{_DEFINE,           token{"_DEFINE", S_TYPE, R"(^\s(#define|#DEFINE)\>\s+)", __LINE__}},
-	{_IFDEF,            token{"_IFDEF", S_TYPE, R"(^\s*(#ifdef|#IFDEF)\>\s+)", __LINE__}},
-	{_IFNDEF,           token{"_IFNDEF", S_TYPE, R"(^\s*(#ifndef|#IFNDEF)\>\s+)", __LINE__}},
-	{_ELSE,             token{"_ELSE", S_TYPE, R"(^\s*(#else|#ELSE)\>\s+)", __LINE__}},
-	{_ELSEIF,           token{"_ELSEIF", S_TYPE, R"(^\s*(#elseif|#ELSEIF)\>\s+)", __LINE__}},
-	{_ENDIF,            token{"_ENDIF", S_TYPE, R"(^\s*(#endif|#ENDIF)\>\s+)", __LINE__}},
-	{_INCLUDE,          token{"_INCLUDE", S_TYPE, R"(^\s*(#INCLUDE|#include)\>\s+)", __LINE__}}
+	{INT,               token{"INT", S_TYPE, R"(\s*\<int\>\s+)", __LINE__}},
+	{FLOAT,             token{"FLOAT", S_TYPE, R"(\s*\<float\>\s+)", __LINE__}},
+	{CHAR,              token{"CHAR", S_TYPE, R"(\s*\<char\>\s+)", __LINE__}},
+	{STRUCT,            token{"STRUCT", S_TYPE, R"(\s*\<struct\>\s+)", __LINE__}},
+	{TYPEDEF,           token{"TYPEDEF", S_TYPE, R"(\s*\<tyedef\>\s+)", __LINE__}},
+	{_IF,               token{"_IF", S_TYPE, R"((#if|#IF)\>\s+)", __LINE__}},
+	{_DEFINE,           token{"_DEFINE", S_TYPE, R"((#define|#DEFINE)\>\s+)", __LINE__}},
+	{_IFDEF,            token{"_IFDEF", S_TYPE, R"((#ifdef|#IFDEF)\>\s+)", __LINE__}},
+	{_IFNDEF,           token{"_IFNDEF", S_TYPE, R"((#ifndef|#IFNDEF)\>\s+)", __LINE__}},
+	{_ELSE,             token{"_ELSE", S_TYPE, R"((#else|#ELSE)\>\s+)", __LINE__}},
+	{_ELSEIF,           token{"_ELSEIF", S_TYPE, R"((#elseif|#ELSEIF)\>\s+)", __LINE__}},
+	{_ENDIF,            token{"_ENDIF", S_TYPE, R"((#endif|#ENDIF)\>\s+)", __LINE__}},
+	{_INCLUDE,          token{"_INCLUDE", S_TYPE, R"((#INCLUDE|#include)\>\s+)", __LINE__}}
 };
 
 /**

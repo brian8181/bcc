@@ -208,7 +208,7 @@ void lexer::set_state( state_t* pstate )
 		stringstream rstr;
 		rstr << "\"" << ptoken->rexp << "\"";
 		stringstream info;
-		info << std::left << "#" << i << "   "
+		info << std::left << "#" << setw(2)  << i << "   "
 			<< "id:   " << std::setw( 4 ) << std::right << id
 			<< "    ~    " << std::right << "idx: " << std::setw( 3 ) << std::left << ptoken->index
 			<< "    ~    " << std::left << "name: " << std::setw( 18 ) << std::left << ptoken->name
