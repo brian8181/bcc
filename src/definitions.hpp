@@ -267,7 +267,7 @@ inline map<unsigned long, token> g_tokens =
 	{DIVIDE,            token{"DIVIDE", S_TYPE, R"([/])", __LINE__}},
 	{MODULUS,           token{"MODULUS", S_TYPE, R"([%])", __LINE__}},
 	{EQUAL,             token{"EQUAL", S_TYPE, R"([=])", __LINE__}},
-	{ASSIGN_OP,             token{"ASSIGN_OP", S_TYPE, R"([=])", __LINE__}},
+	{ASSIGN_OP,         token{"ASSIGN_OP", S_TYPE, R"([=])", __LINE__}},
 	{EQUALS,            token{"EQUALS", S_TYPE, R"(==)", __LINE__}},
 	{EQUAL_OP,          token{"EQUAL_OP", S_TYPE, R"(==)", __LINE__}},
 	{DASH,              token{"DASH", S_TYPE, R"([-])", __LINE__}},

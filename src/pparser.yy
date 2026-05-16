@@ -144,14 +144,14 @@
 %token END_OF_FILE 0
 
 %token <std::string> CONST VOLATILE STATIC
-%token <std::string> UNSIGNED SIGNED INLINE
+%token <std::string> UNSIGNED SIGNED LONG INLINE
 %token INT FLOAT CHAR
 %token INCLUDE
 %token IF ELSE ELSEIF DO WHILE FOREACH BREAK CONTINUE
 %token <std::string> INDIRECT_MEMBER ARRAY
 %token <std::string> IDENTIFIER 
 %token <std::string> STRING_LITERAL NUMERIC_LITERAL
-%token CARROT DASH BACKSLASH QUESTION_MARK SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE BACK_SLASH AT AMPERSAND AND OR NOT
+%token CARROT DASH BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE BACK_SLASH AMPERSAND AND OR NOT
 %token COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_BRACE CLOSE_BRACE OPEN_PAREN CLOSE_PAREN DOT
 
 
@@ -166,13 +166,13 @@
 
 %nonassoc IFX
 %nonassoc ELSE ELSEIF IF WHILE BREAK
-%left EQUAL EQUALS
+%left EQUAL EQUALS ASSIGN_OP EQUAL_OP
 %left GREATER_THAN_EQUAL LESS_THAN_EQUAL  NOT_EQUAL LESS_THAN GREATER_THAN COMMA
 %left PLUS MINUS
 %left MULTIPLY DIVIDE MODULUS
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
-%type <std::string> access_modfier
+%type <std::string> access_modfier type_modifier modifiers
 %type <std::string> intregal_type
 %type <std::string> decel
 %type <std::string> compiler
@@ -410,7 +410,7 @@ expr[result]:
  * @brief decelration
  */                                                                
 decel:
-    intregal_type IDENTIFIER                                    {
+    intregal_type IDENTIFIER                                     {
                                                                     INFO("decel: | type IDENTIFIER");
                                                                     // __symbol s = {$2, $1, 0, 0};
                                                                     // tab[$2] = s;
@@ -429,24 +429,34 @@ decel:
  */
 intregal_type:
     INT                                                         { INFO("intergal_type: | INT"); $$="int"; }
-    | FLOAT                                                     { INFO("intergal_type: | INT"); $$="int"; }
-    | CHAR                                                      { INFO("intergal_type: | INT"); $$="int"; }
-    | access_modfier INT                                        { INFO("intergal_type: | access_modfier INT"); $$="int"; }
-    | access_modfier FLOAT                                      { INFO("intergal_type: | access_modfier FLOAT"); $$="float"; }
-    | access_modfier CHAR                                       { INFO("intergal_type: | access_modfier CHAR"); $$="char"; }
+    | FLOAT                                                     { INFO("intergal_type: | INT"); $$="float"; }
+    | CHAR                                                      { INFO("intergal_type: | INT"); $$="char"; }
                                                                 ;
 /**
-access_modfiers:
-    '%' '#' '$'
+ * @name modifiers
+ */
+modifiers:
+    %empty
+    | modifiers type_modifier
+    | modifiers access_modfier
     ;
-*/
 /**
- * @brief access_modifier
+ * @name type_modfier
+ */
+type_modifier:
+    SIGNED
+    | UNSIGNED
+    | LONG
+    ;
+/**
+ * @name access_modifier
+ * @brief access_modifier   
  */
 access_modfier:
     CONST
     | VOLATILE
     | STATIC 
+    | INLINE
     ;
 %%
 
