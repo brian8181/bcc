@@ -15,6 +15,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+//#include <assert>
 #include <stdio.h>
 #include <string.h>
 #include <filesystem>
@@ -160,7 +161,7 @@ bool lexer::next_file()
 	{
 		m_ifile = string( m_input_paths[i] );
 		m_buffer.clear();
-		read_istream( m_ifile, m_buffer );
+		read_str( m_ifile, m_buffer );
 
 		// set state
 		set_state( &INITIAL );
@@ -200,6 +201,10 @@ void lexer::set_state( state_t* pstate )
 	const vector<unsigned long>* STATE_TOKENS = g_state_tokens[p_state->id];
 	const unsigned long len = STATE_TOKENS->size();
 
+	string e;
+	build_search_expression(*STATE_TOKENS, g_tokens, e);
+	ATTN(e);
+
 	for( unsigned long i = 0; i < len; i++ )
 	{
 		unsigned long id = ( *STATE_TOKENS )[i];
@@ -229,6 +234,33 @@ void lexer::set_state( state_t* pstate )
 }
 
 /**
+ * @name build_search_expression
+ * @brief contruct a search string from tokens, denoted by id's / table
+ * @param const vector<unsigned long>& tokens
+ * @param const map<unsigned long, token>& table
+ * @param string& s
+ * @return string&, contructed search string
+ */
+string& lexer::build_search_expression(const vector<unsigned long>& tokens, map<unsigned long, token>& table, /*out*/ string& s)
+{
+	std::size_t sz = std::size(tokens);
+	assert(sz > 0);
+	// get / append first string
+	unsigned long id = tokens[0];
+	stringstream ss;
+	ss << table[id].rexp;
+	// get / append remaining strings 
+	for(int i = 1; i < sz; ++i)
+	{
+		token_t token = table[tokens[i]];
+		ss << "|(" << token.rexp << ")";
+	}
+	// set return value
+	s = ss.str();
+	return s;
+}
+
+/**
  * @name push_include
  * @brief prepend include file contents to beginning of buffer
  */
@@ -240,47 +272,11 @@ void lexer::push_include( const string& file )
 	file_tmp.erase(0,1);
 
 	string inc_buffer;                             // new include buffer
-	read_istream( string(file_tmp), inc_buffer );  // read include file
+	read_str( string(file_tmp), inc_buffer );  // read include file
 	trim(inc_buffer, '\n'); 	                   // trim any trialing newline
 	inc_buffer.append( m_buffer );                 // append current buffer
 	m_buffer.clear();
 	m_buffer = inc_buffer;                         // set current buffer
-}
-
-/**
- * @name read_istream
- * @brief read input file into string object
- */
-void lexer::read_istream( const string& file, /*out*/ string& s )
-{
-	ifstream stream( file, std::ios::in );
-	if( stream.is_open() )
-	{
-		stringstream ss;
-		char c;
-		while( stream.get( c ) )
-			ss << c;
-		s = ss.str();
-		stream.close();
-	}
-}
-
-/**
- * @name read_istream
- * @brief read input file into string object
- */
-bool lexer::read_istream( const string& file, /*out*/ char* buff, int& len)
-{
-	ifstream stream( file, std::ios::in );
-	if( stream.is_open() )
-	{
-		bool ret = false;
-		if(stream.read(buff, len))
-			ret = true;
-		stream.close();
-		return ret;
-	}
-	return false;
 }
 
 /**

@@ -146,6 +146,16 @@ public:
 	void set_state(state_t *pstate);
 
 	/**
+	 * @name build_search_expression
+	 * @brief contruct a search string from tokens, denoted by id's / table
+	 * @param const vector<unsigned long>& tokens
+	 * @param const map<unsigned long, token>& table
+	 * @param string& s
+	 * @return string&, contructed search string
+	 */
+	string& build_search_expression(const vector<unsigned long>& tokens, map<unsigned long, token>& table, /*out*/ string& s);
+
+	/**
 	 * @name get_current_infile
 	 * @param in_name
 	 * @param string& in_name
@@ -179,17 +189,17 @@ public:
 	 */
 	parser::symbol_type get_token();
 
-	/**
-	 * @name read_istream
-	 * @return int
-	 */
-	static void read_istream( const string& file, string& s );
+	// /**
+	//  * @name read_istream
+	//  * @return int
+	//  */
+	// static void read_istream( const string& file, string& s );
 
-	/**
-	 * @name read_istream
-	 * @brief read input file into string object
-	 */
-	static bool read_istream( const string& file, /*out*/ char* buff, int& len);
+	// /**
+	//  * @name read_istream
+	//  * @brief read input file into string object
+	//  */
+	// static bool read_istream( const string& file, /*out*/ char* buff, int& len);
 
 	/**
 	 * @name   write_stream

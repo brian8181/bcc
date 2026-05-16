@@ -168,9 +168,7 @@ int read_str(const string &file, /* out */ string &out, std::ios_base::openmode 
         stringstream ss;
         char c;
         while (stream.get(c))
-        {
             ss << c;
-        }
         out = ss.str();
 		stream.close();
         return static_cast<int>(ss.str().size());
