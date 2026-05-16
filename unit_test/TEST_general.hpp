@@ -32,6 +32,7 @@ public:
 
   CPPUNIT_TEST_SUITE( TEST_general );
   CPPUNIT_TEST( TEST_assign );
+  CPPUNIT_TEST( TEST_quoted );
   CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -40,7 +41,8 @@ public:
 
 protected:
   void TEST_assign();
-
+  void TEST_quoted();
+    
 private:
 
 

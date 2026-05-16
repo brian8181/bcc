@@ -9,12 +9,14 @@
 #include <sstream>
 #include <stack>
 #include <stdexcept>
+#include <iomanip>
 
 using std::stack;
 using std::cout;
 using std::endl;
 using std::cerr;
 using std::stringstream;
+using std::string;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( TEST_general );
 
@@ -47,10 +49,23 @@ void TEST_general::tearDown()
 {
 }
 
+void TEST_general::TEST_quoted()
+{
+    string expected = "Hello World";
+    string quoted = "\"Hello World\"";
+    stringstream ss;
+    string unquoted;
+    ss << quoted;
+    ss >> std::quoted(unquoted);
+    std::cout << "\nbefore=" << quoted << ", after=" << unquoted << std::endl; 
+    CPPUNIT_ASSERT(expected == unquoted);
+}
+
 /**
  *
  */
 void TEST_general::TEST_assign()
 {
-  CPPUNIT_ASSERT(1 == 1);
+   
+     CPPUNIT_ASSERT(1 == 1);
 }

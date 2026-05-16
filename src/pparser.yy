@@ -272,17 +272,17 @@ stmt:
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     | decel ASSIGN IDENTIFIER SEMI_COLON                         { 
-                                                                    INFO("stmt: | decel EQUAL IDENTIFIER SEMI_COLONL"); 
-                                                                    symbol_table[$1] = $3;
+                                                                    INFO("stmt: | decel ASSIGN IDENTIFIER SEMI_COLONL"); 
+                                                                    symbol_table[$1] = symbol_table[$3];
                                                                     stringstream ss;
-                                                                    ss << "// " << " = " << $IDENTIFIER << ";"; 
+                                                                    ss << "// \"" << $decel << "\":" << symbol_table[$decel] << " = \"" << $IDENTIFIER << "\":" << symbol_table[$3] << ";"; 
                                                                     lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     // testing lexer stream operator overload !
                                                                     cout << lexer::instance();
                                                                 }
     | decel ASSIGN expr SEMI_COLON                               { 
-                                                                    INFO("stmt: | decel EQUAL expr SEMI_COLON"); 
+                                                                    INFO("stmt: | decel ASSIGN expr SEMI_COLON"); 
                                                                     symbol_table[$1] = $3;
                                                                     stringstream ss;
                                                                     ss << "// " << " = " << $expr << ";"; 
@@ -292,43 +292,48 @@ stmt:
                                                                     cout << lexer::instance();
                                                                 }
      | IDENTIFIER ASSIGN IDENTIFIER SEMI_COLON                   { 
-                                                                    INFO("stmt: IDENTIFIER EQUAL IDENTIFIER SEMI_COLON"); 
+                                                                    INFO("stmt: IDENTIFIER ASSIGN IDENTIFIER SEMI_COLON"); 
                                                                     if(symbol_table.find($1) != symbol_table.end())
                                                                     {
                                                                         ERROR("UNDEFINED symbol, \"$1\"");
                                                                         return -1;
                                                                     }
 
-                                                                    // symbol_table[$1] = $3;
-                                                                    //  stringstream ss;
-                                                                    // ss << "// " << $IDENTIFIER << " = " << $expr << ";"; 
-                                                                    // lexer::instance().write_ostream(ss.str());
-                                                                    // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                    symbol_table[$1] = symbol_table[$3];
+                                                                    stringstream ss;
+                                                                    ss << "// " << $1 << " = " << $3 << ";"; 
+                                                                    lexer::instance().write_ostream(ss.str());
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }                                           
     | IDENTIFIER ASSIGN expr SEMI_COLON                          { 
-                                                                    INFO("stmt: IDENTIFIER EQUAL expr SEMI_COLON"); 
+                                                                    INFO("stmt: IDENTIFIER ASSIGN expr SEMI_COLON"); 
                                                                     if(symbol_table.find($IDENTIFIER) != symbol_table.end())
                                                                     {
-                                                                        ERROR("UNDEFINED symbol, \"$IDENTIFIER\"");
+                                                                        ERROR("UNDEFINED symbol, \"" << $IDENTIFIER << "\"");
                                                                         return -1;
                                                                     }
 
                                                                     symbol_table[$1] = $3;
                                                                      stringstream ss;
-                                                                    ss << "// " << $IDENTIFIER << " = " << $expr << ";"; 
+                                                                    ss << "// \"" << $IDENTIFIER << "\":" << symbol_table[$IDENTIFIER] << " = \"" << $expr << ";"; 
                                                                     lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
  | INCLUDE STRING_LITERAL SEMI_COLON                            {
-                                                                    INFO("stmt: | INCLUDE STRING_LITERAL SEMI_COLON");
-                                                                    // size_t len = $3.size();
-                                                                    // int i = 0;
-                                                                    // for(; i < len; ++i)
-                                                                    // {
-                                                                    //      if($3[i].first == "file")
-                                                                    //          break;
-                                                                    // }
-                                                                    // string file = $3[i].second;
+                                                                    INFO("stmt: | INCLUDE STRING_LITERAL=" << $2 << " SEMI_COLON");
+                                                                    size_t sz = $2.size();
+                                                                    int i = 0;
+                                                                    for(; i < sz; ++i)
+                                                                    {
+                                                                        // if($STRING_LITERAL)
+                                                                        //     break;
+                                                                    }
+                                                                    stringstream ss;
+                                                                    string unquoted_literal;
+                                                                    ss << $STRING_LITERAL;
+                                                                    ss >> std::quoted(unquoted_literal);
+
+                                                                    //string file = $2[i].second;
                                                                     // INFO("file=\"" << file << "\"");
 																	// lexer::instance().push_include(file);
                                                                 }
@@ -469,6 +474,8 @@ access_modfier:
 
 #undef PARSER_LOG
 
+/**
+*/
 bool get_value(const string& name, /*out*/ string& val)
 {
     if(symbol_table.find(name) != symbol_table.end())
@@ -480,6 +487,8 @@ bool get_value(const string& name, /*out*/ string& val)
     return false;
 }
 
+/**
+*/
 bool set_value(const string& name, const string& val)
 {
     if(symbol_table.find(name) != symbol_table.end())
@@ -492,11 +501,15 @@ bool set_value(const string& name, const string& val)
     return false;
 }
 
+/**
+*/
 bool is_name(const std::pair<string, string>& p, const string& str)
 {
     return (p.first == str);
 }
 
+/**
+*/
 char* STRDUP(char* s)
 {
     char* dup = (char*)malloc(strlen(s) + 1);
@@ -504,6 +517,8 @@ char* STRDUP(char* s)
     return dup;
 }
 
+/**
+*/
 nvalue* alloc_nvalue(char* name, char* value)
 {
     nvalue* nval = (nvalue*)malloc( sizeof( nvalue ) );
@@ -513,6 +528,8 @@ nvalue* alloc_nvalue(char* name, char* value)
     return nval;
 }
 
+/**
+*/
 void free_nvalue(nvalue* nv)
 {
     free(nv->name);
@@ -520,6 +537,8 @@ void free_nvalue(nvalue* nv)
     free(nv);
 }
 
+/**
+*/
 void free_all_nvalues()
 {
     if(!pnv_head)
@@ -537,15 +556,19 @@ void free_all_nvalues()
 
 namespace yy
 {
+    /**
+     * @name yylex
+     */
     auto yylex() -> parser::symbol_type
     {
         return lex();
     }
-
+    
+    /**
+     * @name parser::error
+     */
     auto parser::error(const std::string& msg) -> void
     {
         std::cerr << msg << '\n';
     }
-
-
 }
