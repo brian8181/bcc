@@ -89,6 +89,7 @@ struct block
 {
 	vector<string> src;
 };
+
 typedef struct token_t
 {
 	string name;
@@ -96,6 +97,7 @@ typedef struct token_t
 	string rexp;
 	unsigned long index;
 } token_t;
+
 typedef struct state_t
 {
 	unsigned long id;
@@ -197,8 +199,6 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define CATCH 72ul
 #define VALID_CHAR 113ul
 #define IDENTIFIER 1009ul
-#define SYMBOL 117ul
-#define CONST_SYMBOL 118ul
 #define ARRAY 119ul
 #define COMMENT 120ul
 #define WHITESPACE 121ul
@@ -258,11 +258,11 @@ inline map<unsigned long, token> g_tokens =
 	{TILDE,             token{"TILDE", S_TYPE, R"(~)", __LINE__}},
 	{EXCLAMATION,       token{"EXCLAMATION", S_TYPE, R"([!])", __LINE__}},
 	{AT_SYMBOL,         token{"AT_SYMBOL", S_TYPE, R"([@])", __LINE__}},
-	{CARROT,            token{"CARROT", S_TYPE, R"(\^)", __LINE__}},
-	{AMPERSAND,         token{"AMPERSAND", S_TYPE, R"(&)", __LINE__}},
-	{ASTERISK,          token{"ASTERISK", S_TYPE, R"(\*)", __LINE__}},
-	{OPEN_PAREN,        token{"OPEN_PAREN", S_TYPE, "\\(", __LINE__}},
-	{CLOSE_PAREN,       token{"CLOSE_PAREN", S_TYPE, "\\)", __LINE__}},
+	{CARROT,            token{"CARROT", S_TYPE, R"([^])", __LINE__}},
+	{AMPERSAND,         token{"AMPERSAND", S_TYPE, R"([&])", __LINE__}},
+	{ASTERISK,          token{"ASTERISK", S_TYPE, R"([*])", __LINE__}},
+	{OPEN_PAREN,        token{"OPEN_PAREN", S_TYPE, "[(]", __LINE__}},
+	{CLOSE_PAREN,       token{"CLOSE_PAREN", S_TYPE, "[)]", __LINE__}},
 	{MINUS,             token{"MINUS", S_TYPE, R"([-])", __LINE__}},
 	{PLUS,              token{"PLUS", S_TYPE, R"([+])", __LINE__}},
 	{MULTIPLY,          token{"MULTIPLY", S_TYPE, R"([*])", __LINE__}},
@@ -274,19 +274,19 @@ inline map<unsigned long, token> g_tokens =
 	{PLUS_SIGN,         token{"PLUS_SIGN", S_TYPE, R"([+])", __LINE__}},
 	{EQUAL_SIGN,        token{"EQUAL_SIGN", S_TYPE, R"([=])", __LINE__}},
 	{CLOSE_BRACKET,     token{"RBRACKET", S_TYPE, R"(\])", __LINE__}},
-	{OPEN_BRACE,        token{"OPEN_BRACE", S_TYPE, R"(\{)", __LINE__}},
-	{CLOSE_BRACE,       token{"CLOSE_BRACE", S_TYPE, R"(\})", __LINE__}},
+	{OPEN_BRACE,        token{"OPEN_BRACE", S_TYPE, R"([{])", __LINE__}},
+	{CLOSE_BRACE,       token{"CLOSE_BRACE", S_TYPE, R"([}])", __LINE__}},
 	{OPEN_BRACKET,      token{"LBRACKET", S_TYPE, R"(\[)", __LINE__}},
-	{VBAR,              token{"VBAR", S_TYPE, R"(\|)", __LINE__}},
-	{BACKSLASH,         token{"BACKSLASH", S_TYPE, R"(\\)", __LINE__}},
-	{COLON,             token{"COLON", S_TYPE, R"(:)", __LINE__}},
-	{SEMI_COLON,        token{"SEMI_COLON", S_TYPE, R"(;)", __LINE__}},
-	{SINGLE_QUOTE,      token{"SINGLE_QUOTE", S_TYPE, R"(')", __LINE__}},
-	{GREATER_THAN,      token{"GREATER_THAN", S_TYPE, R"(>)", __LINE__}},
-	{QUESTION_MARK,     token{"QUESTION_MARK", S_TYPE, R"(\?)", __LINE__}},
-	{COMMA,             token{"COMMA", S_TYPE, R"(\,)", __LINE__}},
+	{VBAR,              token{"VBAR", S_TYPE, R"([|])", __LINE__}},
+	{BACKSLASH,         token{"BACKSLASH", S_TYPE, R"([\])", __LINE__}},
+	{COLON,             token{"COLON", S_TYPE, R"([:])", __LINE__}},
+	{SEMI_COLON,        token{"SEMI_COLON", S_TYPE, R"([;])", __LINE__}},
+	{SINGLE_QUOTE,      token{"SINGLE_QUOTE", S_TYPE, R"(['])", __LINE__}},
+	{GREATER_THAN,      token{"GREATER_THAN", S_TYPE, R"([>])", __LINE__}},
+	{QUESTION_MARK,     token{"QUESTION_MARK", S_TYPE, R"([?])", __LINE__}},
+	{COMMA,             token{"COMMA", S_TYPE, R"([,])", __LINE__}},
 	{DOT,               token{"DOT", S_TYPE, R"(\.)", __LINE__}},
-	{SLASH,             token{"SLASH", S_TYPE, R"(/)", __LINE__}},
+	{SLASH,             token{"SLASH", S_TYPE, R"([/])", __LINE__}},
 	{GREATER_THAN_EQUAL,token{"GREATER_THAN_EQUAL", S_TYPE, R"(>=)", __LINE__}},
 	{LESS_THAN_EQUAL,   token{"LESS_THAN_EQUAL", S_TYPE, R"(<=)", __LINE__}},
 	{IF,                token{"IF", S_TYPE, R"(if)", __LINE__}},
@@ -294,8 +294,8 @@ inline map<unsigned long, token> g_tokens =
 	{ELSEIF,            token{"ELSEIF", S_TYPE, R"(elseif)", __LINE__}},
 	{WHILE,             token{"WHILE", S_TYPE, R"(while)", __LINE__}},
 	{BREAK,             token{"BREAK", S_TYPE, R"(break)", __LINE__}},
-	{PTR,               token{"PTR", S_TYPE, R"(*)", __LINE__}},
-	{REF,               token{"PTR", S_TYPE, R"(&)", __LINE__}},
+	{PTR,               token{"PTR", S_TYPE, R"([*])", __LINE__}},
+	{REF,               token{"REF", S_TYPE, R"([&])", __LINE__}},
 	{INT,               token{"INT", S_TYPE, R"((^|\s)\s+\<int\>\s+)", __LINE__}},
 	{FLOAT,             token{"FLOAT", S_TYPE, R"((^|\s)\s*\<float\>\s+)", __LINE__}},
 	{CHAR,              token{"CHAR", S_TYPE, R"((^|\s)\s*\<char\>\s+s)", __LINE__}},
@@ -334,7 +334,6 @@ inline state_t DOUBLE_QUOTED = { UL_DOUBLE_QUOTED, "DOUBLE_QUOTED" };
 inline state_t SINGLE_QUOTED = { UL_SINGLE_QUOTED, "SINGLE_QUOTED" };
 inline state_t IF_BLOCK = { UL_IF_BLOCK, "IF_BLOCK" };
 inline state_t IF_CONDITION = { UL_IF_CONDITION, "IF_CONDITION" };
-inline state_t& UNESCAPED = INITIAL;
 
 /**
  * @brief global state vector
@@ -345,14 +344,13 @@ inline vector<state_t> states__ = { INITIAL, COMMENTING, DOUBLE_QUOTED, SINGLE_Q
  * @brief token list -> by state
  */
 inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, INT, FLOAT, CHAR, SEMI_COLON, NEWLINE, WHITESPACE, STRING_LITERAL, NUMERIC_LITERAL, EQUALS, EQUAL,
-												 MULTIPLY, DIVIDE, IDENTIFIER, PLUS, MODULUS, 
-												 OPEN_PAREN, CLOSE_PAREN, OPEN_BRACE, CLOSE_BRACE, OPEN_BRACKET, CLOSE_BRACKET	};
+												 MULTIPLY, DIVIDE, IDENTIFIER, PLUS, MODULUS };
 
 inline vector<unsigned long> COMMENTING_TOKENS = { OPEN_BRACE, COMMENT };
 inline vector<unsigned long> DOUBLE_QUOTED_TOKENS = { DOUBLE_QUOTE, VALID_CHAR };
 inline vector<unsigned long> SINGLE_QUOTED_TOKENS = { OPEN_BRACE, COMMENT, VALID_CHAR, SINGLE_QUOTE, DOUBLE_QUOTE };
 inline vector<unsigned long> IF_BLOCK_TOKENS = { CLOSE_BRACE, CLOSE_BRACE, OPEN_BRACKET, DOUBLE_QUOTE, IF, ELSE, STRING_LITERAL, NUMERIC_LITERAL, EQUAL_SIGN,
-												 VBAR, COMMA, COLON, DOT, SLASH, SYMBOL, CONST_VAR_OPER };
+												 VBAR, COMMA, COLON, DOT, SLASH, CONST_VAR_OPER };
 
 inline vector<unsigned long> IF_CONDITION_TOKENS = { CLOSE_BRACE };
 

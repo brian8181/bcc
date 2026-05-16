@@ -206,7 +206,7 @@ void lexer::set_state( state_t* pstate )
 		token_t* ptoken = &g_tokens[id];
 
 		stringstream rstr;
-		rstr << "R\"(" << ptoken->rexp << ")\"";
+		rstr << "\"" << ptoken->rexp << "\"";
 		stringstream info;
 		info << std::left << "#" << i << "   "
 			<< "id:   " << std::setw( 4 ) << std::right << id

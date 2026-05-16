@@ -317,6 +317,19 @@ stmt:
                                                                     lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
+ | INCLUDE STRING_LITERAL SEMI_COLON                            {
+                                                                    INFO("stmt: | INCLUDE STRING_LITERAL SEMI_COLON");
+                                                                    // size_t len = $3.size();
+                                                                    // int i = 0;
+                                                                    // for(; i < len; ++i)
+                                                                    // {
+                                                                    //      if($3[i].first == "file")
+                                                                    //          break;
+                                                                    // }
+                                                                    // string file = $3[i].second;
+                                                                    // INFO("file=\"" << file << "\"");
+																	// lexer::instance().push_include(file);
+                                                                }
     ;
     
 /**

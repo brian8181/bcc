@@ -168,11 +168,6 @@ public:
 	}
 
 	/**
-	 * @name get_stack
-	 */
-	stack<string>& get_stack();
-
-	/**
 	 * @name  push_include
 	 * @brief prepends current buffer with include contents
 	 */

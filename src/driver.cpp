@@ -125,7 +125,7 @@ int parse_options(const int argc, char *argv[])
            
     const int offset = optind + SRC_IDX_OFFSET-1;
 	lexer::instance().init(argc-offset-1, argv+offset+1);
-	yyparser.parse();
+  	yyparser.parse();
 
 	return 0;
 }
