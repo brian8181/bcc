@@ -152,8 +152,8 @@
 %token <std::string> INDIRECT_MEMBER ARRAY
 %token <std::string> IDENTIFIER 
 %token <std::string> STRING_LITERAL NUMERIC_LITERAL
-%token CARROT DASH BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE BACK_SLASH AMPERSAND AND OR NOT
-%token COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_BRACE CLOSE_BRACE OPEN_PAREN CLOSE_PAREN DOT
+%token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE BACK_SLASH AND OR NOT
+%token COMMA LBRACKET RBRACKET LBRACE RBRACE LPAREN RPAREN DOT
 
 
 %type <std::string> file
@@ -169,8 +169,8 @@
 %nonassoc IF ELSE ELSEIF DO WHILE FOR BREAK CONTINUE
 %left EQUAL ASSIGN
 %left GREATER_THAN_EQUAL LESS_THAN_EQUAL  NOT_EQUAL LESS_THAN GREATER_THAN COMMA
-%left PLUS MINUS
-%left MULTIPLY DIVIDE MODULUS
+%left ADD SUB
+%left MUL DIV MOD
 %nonassoc UMINUS
 
 %type <std::string> expr
@@ -243,7 +243,7 @@ file:
 /*
 block:
     file block END_OF_FILE
-    | OPEN_BRACE block CLOSE_BRACE
+    | LBRACE block RBRACE
     ; */
 
 /**
@@ -284,7 +284,7 @@ stmt:
                                                                 }
    | decel ASSIGN expr SEMI_COLON                              { 
                                                                     INFO("stmt: | decel ASSIGN expr SEMI_COLON"); 
-                                                                    symbol_table[$1] = $3;
+                                                                    symbol_table[$decel] = $expr;
                                                                     stringstream ss;
                                                                     ss << "// " << $decel << " = " << $expr << ";"; 
                                                                     lexer::instance().write_ostream(ss.str());
@@ -310,10 +310,10 @@ stmt:
                                                                     lexer::instance().push_include($STRING_LITERAL);
                                                                     $$ = $STRING_LITERAL;
                                                                 }
-    | WHILE OPEN_PAREN expr CLOSE_PAREN stmt                    { INFO("expr: | WHILE OPEN_PAREN expr CLOSE_PAREN stmt"); }
-    | IF OPEN_PAREN expr CLOSE_PAREN stmt %prec IFX             { INFO("expr: | IF OPEN_PAREN expr CLOSE_PAREN stmt %prec IFX"); }
-|   | IF OPEN_PAREN expr CLOSE_PAREN stmt ELSE stmt             { INFO("expr: | IF OPEN_PAREN expr CLOSE_PAREN stmt ELSE stmt"); }
-    | OPEN_BRACE stmts CLOSE_BRACE                              { INFO("expr: | OPEN_BRACE stmts CLOSE_BRACE"); }
+    | WHILE LPAREN expr RPAREN stmt                    { INFO("expr: | WHILE LPAREN expr RPAREN stmt"); }
+    | IF LPAREN expr RPAREN stmt %prec IFX             { INFO("expr: | IF LPAREN expr RPAREN stmt %prec IFX"); }
+|   | IF LPAREN expr RPAREN stmt ELSE stmt             { INFO("expr: | IF LPAREN expr RPAREN stmt ELSE stmt"); }
+    | LBRACE stmts RBRACE                              { INFO("expr: | LBRACE stmts RBRACE"); }
     ;
 /**
  * @name expr
@@ -322,36 +322,36 @@ stmt:
 expr[result]:
     IDENTIFIER
     | NUMERIC_LITERAL
-    | expr[lhs] PLUS[op] expr[rhs]                              {
-																	INFO("PARSER expr: | expr PLUS expr");
+    | expr[lhs] ADD[op] expr[rhs]                              {
+																	INFO("PARSER expr: | expr ADD expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) + std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] MINUS[op] expr[rhs]                             {
-																	INFO("PARSER expr: | expr MINUS expr");
+    | expr[lhs] SUB[op] expr[rhs]                             {
+																	INFO("PARSER expr: | expr SUB expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) - std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] MULTIPLY[op] expr[rhs]                          {
-																	INFO("PARSER expr: | expr MULTIPLY expr");
+    | expr[lhs] MUL[op] expr[rhs]                          {
+																	INFO("PARSER expr: | expr MUL expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) * std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] DIVIDE[op] expr[rhs]                            {
-																	INFO("PARSER expr: | expr DIVIDE expr");
+    | expr[lhs] DIV[op] expr[rhs]                            {
+																	INFO("PARSER expr: | expr DIV expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) / std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] MODULUS[op] expr[rhs]                           {
-																	INFO("PARSER expr: | expr MODULUS expr");
+    | expr[lhs] MOD[op] expr[rhs]                           {
+																	INFO("PARSER expr: | expr MOD expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) % std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
@@ -384,8 +384,8 @@ expr[result]:
 																	INFO("PARSER expr: | expr NOT_EQUAL expr");
 																	$result = (std::atoi($lhs.c_str()) != std::atoi($rhs.c_str()));
 																}
-    | OPEN_PAREN expr[exp] CLOSE_PAREN                          {
-																	INFO("PARSER expr: | OPEN_PAREN expr CLOSE_PAREN");
+    | LPAREN expr[exp] RPAREN                                   {
+																	INFO("PARSER expr: | LPAREN expr RPAREN");
                                                                     $result = $exp;
 																}
                                                                 ;
@@ -403,10 +403,13 @@ decel:
                                                                     ss << "// " << "type<" << $type << "> " << "id<" << $lhs << ">";  
                                                                     lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+
+                                                                    _symbol s = {"z_", "int", 0, 0};
+                                                                    _symtab["x"] = s;
                                                                 }
                                                                 ;
 function_decel:
-    | intregal_type[type] IDENTIFIER[lhs] OPEN_PAREN CLOSE_PAREN    {
+    | intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN    {
                                                                         INFO("decel: | type IDENTIFIER");
                                                                         symbol_table[$lhs] = "empty";
                                                                         stringstream strm;

@@ -14,6 +14,18 @@ using std::endl;
 using std::string;
 namespace ast
 {
+	// template< class T >
+	// class exp{};
+
+	// template< class T>
+	// class  binary_exp{};
+
+	// template< class T >
+	// class object : a<T>
+	// {
+
+	// };
+
 	class expr_t
 	{
 	};

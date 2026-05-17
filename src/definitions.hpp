@@ -113,32 +113,20 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 /**
  * @brief token definitions : unsigned long integers
  */
-#define TILDE 4ul
-#define TIC_MARK 5ul
-#define EXCLAMATION 6ul
-#define AT_SYMBOL 7ul
-#define HASH_MARK 8ul
-#define DOLLAR_SIGN 9ul
-#define PERCENT_SIGN 10ul
-#define MODULUS 5510ul
-#define CARROT 11ul
-#define AMPERSAND 12ul
-#define ASTERISK 13ul
-#define MULTIPLY 5513ul
-#define OPEN_PAREN 14ul
-#define CLOSE_PAREN 15ul
-#define DASH 16ul
-#define MINUS 5516ul
+#define MOD 5510ul
+#define MUL 5513ul
+#define SUB 5516ul
 #define UNDERSCORE 17ul
-#define PLUS_SIGN 18ul
 #define EQUAL_SIGN 19ul
 #define PLUS 5518ul
+#define ADD 5518ul
 #define EQUAL 5519ul
-#define OPEN_BRACE 20ul
-#define OPEN_BRACKET 21ul
-#define CLOSE_BRACE 22ul
-#define CLOSE_BRACKET 23ul
-#define VBAR 5524ul
+#define LPAREN 14ul
+#define RPAREN 15ul
+#define LBRACE 20ul
+#define RBRACE 22ul
+#define LBRACKET 21ul
+#define RBRACKET 23ul
 #define BACKSLASH 25ul
 #define COLON 26ul
 #define SEMI_COLON 27ul
@@ -155,20 +143,21 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define LESS_THAN 30ul
 #define COMMA 31ul
 #define GREATER_THAN 32ul
+#define GT 32ul
 #define DOT 33ul
 #define QUESTION_MARK 34ul
-#define SLASH 35ul
-#define DIVIDE 5535ul
-#define NOT 39ul
-#define AND 40ul
-#define OR 41ul
-#define XOR 42ul
-#define LEFT_SHIFT 43ul
-#define RIGHT_SHIFT 44ul
-#define LOGICAL_AND 45ul
-#define LOGICAL_OR 46ul
-#define LOGICAL_NOT 47ul
-#define LOGICAL_EQUAL 48ul
+#define DIV    5535ul
+#define BIT_AND 5555ul 
+#define BIT_NOT 4ul
+#define BIT_OR 41ul
+#define BIT_XOR 42ul
+#define LSHIFT 43ul
+#define RSHIFT 44ul
+#define AND 45ul
+#define OR 46ul
+#define EXCLAMATION 6ul
+#define NOT 6ul
+#define EQ 48ul
 #define GREATER_THAN_EQUAL 49ul
 #define LESS_THAN_EQUAL 50ul
 #define NUMERIC_LITERAL 51ul
@@ -255,29 +244,21 @@ inline map<unsigned long, token> g_tokens =
 	{IDENTIFIER,        token{"IDENTIFIER", S_TYPE, R"(\<[A-Za-z_][A-Za-z0-9_]*\>)", __LINE__}},
 	{COMMENT,           token{"COMMENT", S_TYPE, R"(\{[ ]*\*[^*}]*\*[ ]*\})", __LINE__}},
 	{DOUBLE_QUOTE,      token{"DOUBLE_QUOTE", S_TYPE, R"(")", __LINE__}},
-	{TILDE,             token{"TILDE", S_TYPE, R"(~)", __LINE__}},
-	{EXCLAMATION,       token{"EXCLAMATION", S_TYPE, R"([!])", __LINE__}},
-	{CARROT,            token{"CARROT", S_TYPE, R"([^])", __LINE__}},
-	{AMPERSAND,         token{"AMPERSAND", S_TYPE, R"([&])", __LINE__}},
-	{ASTERISK,          token{"ASTERISK", S_TYPE, R"([*])", __LINE__}},
-	{OPEN_PAREN,        token{"OPEN_PAREN", S_TYPE, "[(]", __LINE__}},
-	{CLOSE_PAREN,       token{"CLOSE_PAREN", S_TYPE, "[)]", __LINE__}},
-	{MINUS,             token{"MINUS", S_TYPE, R"([-])", __LINE__}},
-	{PLUS,              token{"PLUS", S_TYPE, R"([+])", __LINE__}},
-	{MULTIPLY,          token{"MULTIPLY", S_TYPE, R"([*])", __LINE__}},
-	{DIVIDE,            token{"DIVIDE", S_TYPE, R"([/])", __LINE__}},
-	{MODULUS,           token{"MODULUS", S_TYPE, R"([%])", __LINE__}},
+	{SUB,             	token{"SUB", S_TYPE, R"([-])", __LINE__}},
+	{ADD,              	token{"ADD", S_TYPE, R"([+])", __LINE__}},
+	{MUL,          		token{"MUL", S_TYPE, R"([*])", __LINE__}},
+	{DIV,            	token{"DIV", S_TYPE, R"([/])", __LINE__}},
+	{MOD,           	token{"MOD", S_TYPE, R"([%])", __LINE__}},
 	{EQUAL,             token{"EQUAL", S_TYPE, R"([=])", __LINE__}},
 	{ASSIGN,            token{"ASSIGN", S_TYPE, R"([=])", __LINE__}},
 	{EQUALS,            token{"EQUALS", S_TYPE, R"(==)", __LINE__}},
 	{EQUAL_OP,          token{"EQUAL_OP", S_TYPE, R"(==)", __LINE__}},
-	{PLUS_SIGN,         token{"PLUS_SIGN", S_TYPE, R"([+])", __LINE__}},
-	{EQUAL_SIGN,        token{"EQUAL_SIGN", S_TYPE, R"([=])", __LINE__}},
-	{CLOSE_BRACKET,     token{"RBRACKET", S_TYPE, R"(\])", __LINE__}},
-	{OPEN_BRACE,        token{"OPEN_BRACE", S_TYPE, R"([{])", __LINE__}},
-	{CLOSE_BRACE,       token{"CLOSE_BRACE", S_TYPE, R"([}])", __LINE__}},
-	{OPEN_BRACKET,      token{"LBRACKET", S_TYPE, R"(\[)", __LINE__}},
-	{VBAR,              token{"VBAR", S_TYPE, R"([|])", __LINE__}},
+	{LPAREN,            token{"LPAREN", S_TYPE, "[(]", __LINE__}},
+	{RPAREN,            token{"RPAREN", S_TYPE, "[)]", __LINE__}},
+	{LBRACKET,          token{"LBRACKET", S_TYPE, R"(\[)", __LINE__}},
+	{RBRACKET,          token{"RBRACKET", S_TYPE, R"(\])", __LINE__}},
+	{LBRACE,            token{"LBRACE", S_TYPE, R"([{])", __LINE__}},
+	{RBRACE,            token{"RBRACE", S_TYPE, R"([}])", __LINE__}},
 	{BACKSLASH,         token{"BACKSLASH", S_TYPE, R"([\])", __LINE__}},
 	{COLON,             token{"COLON", S_TYPE, R"([:])", __LINE__}},
 	{SEMI_COLON,        token{"SEMI_COLON", S_TYPE, R"([;])", __LINE__}},
@@ -286,9 +267,18 @@ inline map<unsigned long, token> g_tokens =
 	{QUESTION_MARK,     token{"QUESTION_MARK", S_TYPE, R"([?])", __LINE__}},
 	{COMMA,             token{"COMMA", S_TYPE, R"([,])", __LINE__}},
 	{DOT,               token{"DOT", S_TYPE, R"(\.)", __LINE__}},
-	{SLASH,             token{"SLASH", S_TYPE, R"([/])", __LINE__}},
 	{GREATER_THAN_EQUAL,token{"GREATER_THAN_EQUAL", S_TYPE, R"(>=)", __LINE__}},
 	{LESS_THAN_EQUAL,   token{"LESS_THAN_EQUAL", S_TYPE, R"(<=)", __LINE__}},
+	{AND,               token{"AND", S_TYPE, R"(&&)", __LINE__}},
+	{OR,                token{"OR", S_TYPE, R"(\|\|)", __LINE__}},
+	{NOT,               token{"NOT", S_TYPE, R"([!])", __LINE__}},
+	{EQ,                token{"EQ", S_TYPE, R"(==)", __LINE__}},
+	{BIT_AND,           token{"BIT_AND", S_TYPE, R"(&)", __LINE__}},
+	{BIT_OR,            token{"BIT_OR", S_TYPE, R"(\|)", __LINE__}},
+	{BIT_NOT,           token{"BIT_NOT", S_TYPE, R"([~])", __LINE__}},
+	{BIT_XOR,           token{"BIT_XOR", S_TYPE, R"([^])", __LINE__}},
+	{LSHIFT,            token{"LSHIFT", S_TYPE, R"(<<)", __LINE__}},
+	{RSHIFT,            token{"RSHIFT", S_TYPE, R"(>>)", __LINE__}},
 	{IF,                token{"IF", S_TYPE, R"(if)", __LINE__}},
 	{ELSE,              token{"ELSE", S_TYPE, R"(else)", __LINE__}},
 	{ELSEIF,            token{"ELSEIF", S_TYPE, R"(elseif)", __LINE__}},
@@ -316,68 +306,41 @@ inline map<unsigned long, token> g_tokens =
  * @brief unsigned long states
  */
 constexpr unsigned long UL_INITIAL = 0x10;
-constexpr unsigned long UL_COMMENTING = 0x20;
-constexpr unsigned long UL_DOUBLE_QUOTED = 0x80;
-constexpr unsigned long UL_SINGLE_QUOTED = 0x100;
-constexpr unsigned long UL_IF_BLOCK = 0x400;
-constexpr unsigned long UL_IF_CONDITION = 0x800;
 
 /**
  * @brief global state IDs
  */
-inline vector<unsigned long> state_ids = { UL_INITIAL, UL_COMMENTING, UL_DOUBLE_QUOTED, UL_SINGLE_QUOTED, UL_IF_BLOCK, UL_IF_CONDITION };
+inline vector<unsigned long> state_ids = { UL_INITIAL };
 
 /**
  * @brief state_t states
  */
 
 inline state_t INITIAL = { UL_INITIAL, "INITIAL" };
-inline state_t COMMENTING = { UL_COMMENTING, "COMMENT" };
-inline state_t DOUBLE_QUOTED = { UL_DOUBLE_QUOTED, "DOUBLE_QUOTED" };
-inline state_t SINGLE_QUOTED = { UL_SINGLE_QUOTED, "SINGLE_QUOTED" };
-inline state_t IF_BLOCK = { UL_IF_BLOCK, "IF_BLOCK" };
-inline state_t IF_CONDITION = { UL_IF_CONDITION, "IF_CONDITION" };
 
 /**
  * @brief global state vector
  */
-inline vector<state_t> states__ = { INITIAL, COMMENTING, DOUBLE_QUOTED, SINGLE_QUOTED, IF_BLOCK, IF_CONDITION };
+inline vector<state_t> states__ = { INITIAL };
 
 /**
  * @brief token list -> by state
  */
 inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, INT, FLOAT, CHAR, SEMI_COLON, _INCLUDE, NEWLINE, WHITESPACE, STRING_LITERAL, NUMERIC_LITERAL, ASSIGN, EQUAL,
-												 MULTIPLY, DIVIDE, IDENTIFIER, MINUS, PLUS, MODULUS, OPEN_PAREN, CLOSE_PAREN, OPEN_BRACE, CLOSE_BRACE };
-
-inline vector<unsigned long> COMMENTING_TOKENS = { OPEN_BRACE, COMMENT };
-inline vector<unsigned long> DOUBLE_QUOTED_TOKENS = { DOUBLE_QUOTE, VALID_CHAR };
-inline vector<unsigned long> SINGLE_QUOTED_TOKENS = { OPEN_BRACE, COMMENT, VALID_CHAR, SINGLE_QUOTE, DOUBLE_QUOTE };
-inline vector<unsigned long> IF_BLOCK_TOKENS = { CLOSE_BRACE, CLOSE_BRACE, OPEN_BRACKET, DOUBLE_QUOTE, IF, ELSE, STRING_LITERAL, NUMERIC_LITERAL, EQUAL_SIGN,
-												 VBAR, COMMA, COLON, DOT, SLASH, CONST_VAR_OPER };
-
-inline vector<unsigned long> IF_CONDITION_TOKENS = { CLOSE_BRACE };
-
+												 MUL, DIV, IDENTIFIER, SUB, ADD, MOD, LPAREN, RPAREN, LBRACE, RBRACE, 
+												 OR, AND, NOT, BIT_OR, BIT_XOR, BIT_AND, BIT_NOT, RSHIFT, LSHIFT };
 /**
  * @brief global state: state_id -> states
  * @name g_tokens_by_state_id
  */
-inline map<unsigned long, vector<unsigned long>*> g_state_tokens {  {UL_INITIAL, &INITIAL_TOKENS},
-																	{UL_COMMENTING, &COMMENTING_TOKENS},
-																	{UL_SINGLE_QUOTED, &SINGLE_QUOTED_TOKENS},
-																	{UL_DOUBLE_QUOTED, &DOUBLE_QUOTED_TOKENS},
-																	{UL_IF_BLOCK, &IF_BLOCK_TOKENS},
-																	{UL_IF_CONDITION, &IF_CONDITION_TOKENS} };
+inline map<unsigned long, vector<unsigned long>*> g_state_tokens {  {UL_INITIAL, &INITIAL_TOKENS} };
 /**
  *
  */
-typedef unsigned long type_t;
+
+ typedef unsigned long type_t;
 typedef unsigned long terminal_t;
 typedef vector<terminal_t> terminals_t;
 typedef vector<type_t> types_t;
-typedef vector<unsigned long> rules_t;
-typedef vector<type_t> rules_t;
-typedef vector<type_t> sequence_t;
-typedef vector<sequence_t> sequences_t;
-typedef map < type_t, sequences_t > maps;
 
 #endif

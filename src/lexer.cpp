@@ -307,11 +307,11 @@ parser::symbol_type lexer::get_token()
 		{
 			if( m[i].matched )
 			{
+				assert(!m.prefix().matched); // unmatched, error
 				if( m.prefix().matched )
 				{
-					ATTN("PREFIX_ERROR");
-					if( p_state->id != UL_INITIAL )
-					 	return parser::make_YYerror();
+					ERROR("PREFIX_ERROR");
+					return EOF;
 				}
 				// get match : by sub_match index (i)
 				unsigned long id = ( *g_state_tokens[p_state->id] )[i - 1];
@@ -367,18 +367,18 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_CHAR();
 		case SEMI_COLON:
 			return parser::make_SEMI_COLON();
-		case OPEN_BRACE:
-			return parser::make_OPEN_BRACE();
-		case CLOSE_BRACE:
-			return parser::make_CLOSE_BRACE();
-		case OPEN_BRACKET:
-			return parser::make_OPEN_BRACKET();
-		case CLOSE_BRACKET:
-			return parser::make_CLOSE_BRACKET();
-		case OPEN_PAREN:
-			return parser::make_OPEN_PAREN();
-		case CLOSE_PAREN:
-			return parser::make_CLOSE_PAREN();
+		case LBRACE:
+			return parser::make_LBRACE();
+		case RBRACE:
+			return parser::make_RBRACE();
+		case LBRACKET:
+			return parser::make_LBRACKET();
+		case RBRACKET:
+			return parser::make_RBRACKET();
+		case LPAREN:
+			return parser::make_LPAREN();
+		case RPAREN:
+			return parser::make_RPAREN();
 		case WHILE:
 			return parser::make_WHILE();
 		case IF:
@@ -389,18 +389,18 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_INCLUDE();
 		case IDENTIFIER:
 			return parser::make_IDENTIFIER( match );
-		case MODULUS:
-			return parser::make_MODULUS();
-		case PLUS:
-			return parser::make_PLUS();
-		case MINUS:
-			return parser::make_MINUS();
-		case MULTIPLY:
-			return parser::make_MULTIPLY();
+		case MOD:
+			return parser::make_MOD();
+		case ADD:
+			return parser::make_ADD();
+		case SUB:
+			return parser::make_SUB();
+		case MUL:
+			return parser::make_MUL();
 		case COMMA:
 			return parser::make_COMMA();
-		case DIVIDE:
-			return parser::make_DIVIDE();
+		case DIV:
+			return parser::make_DIV();
 		case EQUAL:
 			return parser::make_EQUAL();
 		case ASSIGN:
