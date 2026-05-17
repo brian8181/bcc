@@ -250,6 +250,7 @@ private:
 	string m_ofile = "build/a.out";
 
 	string m_regex_str{};
+	stringstream strm_buf;
 	string m_buffer{};
 	string m_match{};
 	fstream m_fstream{};

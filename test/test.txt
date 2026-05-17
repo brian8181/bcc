@@ -1,4 +1,6 @@
+#include "test/test3.txt"
 int x = 5;
 int y = x;
 x = 42;
+int foo();
 

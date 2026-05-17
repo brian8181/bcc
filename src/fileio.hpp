@@ -112,11 +112,11 @@ int write_str(const string& file, /* in */ const string& out, std::ios_base::ope
 
 /**
  * @brief  read a file into a stringstream
- * @param  file : file to read from
- * @param  sstrm : stringstream to store the file contents
- * @return number of characters read, or -1 on error
+ * @param  const string& file : file to read from
+ * @param  stringstream& ostrm : stringstream to store the file contents
+ * @return stringstream&
  */
-int read_sstream(const string& file, /* out */ stringstream& sstrm, std::ios_base::openmode mode = ios::in);
+stringstream& read_sstream(const string &file, /* out */ stringstream &ostrm, std::ios_base::openmode mode = std::ios_base::in);
 
 /**
  * @brief  write a stringstream to a file

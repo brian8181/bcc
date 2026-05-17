@@ -307,7 +307,7 @@ inline map<unsigned long, token> g_tokens =
 	{_ELSE,             token{"_ELSE", S_TYPE, R"((#else|#ELSE)\>\s+)", __LINE__}},
 	{_ELSEIF,           token{"_ELSEIF", S_TYPE, R"((#elseif|#ELSEIF)\>\s+)", __LINE__}},
 	{_ENDIF,            token{"_ENDIF", S_TYPE, R"((#endif|#ENDIF)\>\s+)", __LINE__}},
-	{_INCLUDE,          token{"_INCLUDE", S_TYPE, R"((#INCLUDE|#include)\>\s+)", __LINE__}}
+	{_INCLUDE,          token{"_INCLUDE", S_TYPE, R"(#include\>\s)", __LINE__}}
 };
 
 /**
@@ -344,8 +344,8 @@ inline vector<state_t> states__ = { INITIAL, COMMENTING, DOUBLE_QUOTED, SINGLE_Q
 /**
  * @brief token list -> by state
  */
-inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, INT, FLOAT, CHAR, SEMI_COLON, NEWLINE, WHITESPACE, STRING_LITERAL, NUMERIC_LITERAL, ASSIGN, EQUAL,
-												 MULTIPLY, DIVIDE, IDENTIFIER, MINUS, PLUS, MODULUS };
+inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, INT, FLOAT, CHAR, SEMI_COLON, _INCLUDE, NEWLINE, WHITESPACE, STRING_LITERAL, NUMERIC_LITERAL, ASSIGN, EQUAL,
+												 MULTIPLY, DIVIDE, IDENTIFIER, MINUS, PLUS, MODULUS, OPEN_PAREN, CLOSE_PAREN, OPEN_BRACE, CLOSE_BRACE };
 
 inline vector<unsigned long> COMMENTING_TOKENS = { OPEN_BRACE, COMMENT };
 inline vector<unsigned long> DOUBLE_QUOTED_TOKENS = { DOUBLE_QUOTE, VALID_CHAR };

@@ -271,12 +271,11 @@ void lexer::push_include( const string& file )
 	file_tmp.erase(file.size()-1,1);
 	file_tmp.erase(0,1);
 
-	string inc_buffer;                             // new include buffer
-	read_str( string(file_tmp), inc_buffer );  // read include file
-	trim(inc_buffer, '\n'); 	                   // trim any trialing newline
-	inc_buffer.append( m_buffer );                 // append current buffer
+	stringstream ss; 
+	read_sstream(string(file_tmp), ss);  	       // read include file
+	ss << m_buffer;
 	m_buffer.clear();
-	m_buffer = inc_buffer;                         // set current buffer
+	m_buffer = ss.str();                           // set current buffer
 }
 
 /**
@@ -386,6 +385,8 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_IF();
 		case ELSE:
 			return parser::make_ELSE();
+		case _INCLUDE:
+			return parser::make_INCLUDE();
 		case IDENTIFIER:
 			return parser::make_IDENTIFIER( match );
 		case MODULUS:

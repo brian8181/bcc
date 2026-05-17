@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <stdexcept>
+#include "table.hpp"
 
 using std::cout;
 using std::endl;
@@ -23,6 +24,18 @@ void TEST_symbol_table::setUp()
 void TEST_symbol_table::tearDown()
 {
 
+}
+
+void TEST_symbol_table::TEST_add_symbol()
+{
+	symbol_table["x"] = "2";
+	CPPUNIT_ASSERT(symbol_table["x"] == "2");	
+}
+
+void TEST_symbol_table::TEST_find_symbol()
+{
+	symbol_table["x"] = "2";
+	CPPUNIT_ASSERT(symbol_table.find("x") != symbol_table.end());
 }
 
 void TEST_symbol_table::TEST_string_memory()
@@ -49,6 +62,7 @@ void TEST_symbol_table::TEST_string_memory()
 	CPPUNIT_ASSERT( str1 == str2 );
 	CPPUNIT_ASSERT( strcmp( str1.c_str(), str2.c_str() ) == 0 );
 }
+
 
 
 void TEST_symbol_table::TEST_add_symbol_change_value()

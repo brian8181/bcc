@@ -79,7 +79,8 @@ $(SRC)/lexer.hpp \
 $(SRC)/driver.hpp \
 $(SRC)/definitions.hpp \
 $(SRC)/table.hpp \
-$(SRC)/def.h
+$(SRC)/def.h \
+$(SRC)/find_substrs.hpp
 
 HEADER_ONLY= \
 $(BLD)/pparser.tab.hpp \
@@ -98,6 +99,7 @@ $(OBJ)/lexer.o \
 $(OBJ)/driver.o \
 $(OBJ)/symtab.o \
 $(OBJ)/streamy.o \
+$(OBJ)/find_substrs.o
 #$(OBJ)/index.o
 #$(OBJ)/def.o
 
@@ -108,6 +110,7 @@ $(OBJ)/utility.o \
 $(OBJ)/symtab.o \
 $(OBJ)/lexer.o \
 $(OBJ)/ast.o \
+$(OBJ)/find_substrs.o \
 $(OBJ)/TEST_lex.o \
 $(OBJ)/TEST_general.o \
 $(OBJ)/TEST_symbol_table.o \
@@ -122,16 +125,17 @@ $(OBJ)/TEST_expr.o
 # $(SRC)/auto_ptr.hpp $(OBJ)/auto_ptr.o \
 # $(SRC)/scoped_ptr.hpp $(OBJ)/scoped_ptr.o \
 # $(SRC)/utility.hpp $(OBJ)/utility.o \
+# $(SRC)/find_substrs.hpp $(OBJ)/find_substrs.o \
 # $(SRC)/ast.hpp \
 # $(BLD)/pparser.tab.hpp $(BLD)/pparser.tab.o \
 # $(SRC)/parser.hpp $(OBJ)/parser.o \
 # $(SRC)/lexer.hpp $(OBJ)/lexer.o \
-# $(SRC)/driver.hpp $(OBJ)/driver.o \
+# $(SRC)/driver.hpp $(OBJ)/driver.o 
 
 
 SOURCES=$(HEADERS) $(OBJS)
 
-all: $(BLD)/$(APP)
+all: $(BLD)/$(APP) $(BLD)/TEST_lex
 
 world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
 

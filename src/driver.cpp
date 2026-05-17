@@ -122,6 +122,10 @@ int parse_options(const int argc, char *argv[])
         token_t tok = value;
         std::cout << "key:" << key << " { name:" << tok.name << ", index:" << tok.index << " }\n";
     }
+
+
+    // do pre pocess
+    
            
     const int offset = optind + SRC_IDX_OFFSET-1;
 	lexer::instance().init(argc-offset-1, argv+offset+1);

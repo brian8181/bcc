@@ -7,6 +7,8 @@
 class TEST_symbol_table : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE( TEST_symbol_table );
+    CPPUNIT_TEST( TEST_add_symbol );
+    CPPUNIT_TEST( TEST_find_symbol );
     CPPUNIT_TEST( TEST_string_memory );
     CPPUNIT_TEST( TEST_add_symbol_change_value );
     CPPUNIT_TEST_SUITE_END();
@@ -16,6 +18,8 @@ public:
     void tearDown() override;
 
 protected:
+    void TEST_add_symbol();
+    void TEST_find_symbol();
     void TEST_string_memory();
     void TEST_add_symbol_change_value();
 
