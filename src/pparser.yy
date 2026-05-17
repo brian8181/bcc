@@ -284,7 +284,7 @@ stmt:
                                                                 }
    | decel ASSIGN expr SEMI_COLON                              { 
                                                                     INFO("stmt: | decel ASSIGN expr SEMI_COLON"); 
-                                                                    symbol_table[$decel] = $expr;
+                                                                    _symtab[$decel].val = new int(std::atoi($expr.c_str()));
                                                                     stringstream ss;
                                                                     ss << "// " << $decel << " = " << $expr << ";"; 
                                                                     lexer::instance().write_ostream(ss.str());
@@ -294,9 +294,10 @@ stmt:
                                                                 }
     | IDENTIFIER[lhs] ASSIGN expr SEMI_COLON                    { 
                                                                     INFO("stmt: IDENTIFIER ASSIGN expr SEMI_COLON"); 
-                                                                    if(symbol_table.find($lhs) != symbol_table.end())
+                                                                    if(_symtab.find($lhs) != _symtab.end())
                                                                     {
-                                                                        symbol_table[$1] = $3;
+                                                                        _symtab[$lhs].val = new int(std::atoi($expr.c_str()));
+                                                                        
                                                                         stringstream ss;
                                                                         ss << "// \"" << $lhs << "\":" << symbol_table[$lhs] << " = \"" << $expr << ";"; 
                                                                         lexer::instance().write_ostream(ss.str());
@@ -320,8 +321,14 @@ stmt:
  * @brief Numerical / logical exprssions
  */
 expr[result]:
-    IDENTIFIER
-    | NUMERIC_LITERAL
+    IDENTIFIER                                                 { 
+                                                                    INFO("PARSER expr: | IDENTIFIER");
+                                                                    $$ = *((int*)_symtab[$IDENTIFIER].val); 
+                                                               }
+    | NUMERIC_LITERAL                                          {
+                                                                    INFO("PARSER expr: | NUMERICAL_LITERAL");
+                                                                    $$ = $1;   
+                                                               }
     | expr[lhs] ADD[op] expr[rhs]                              {
 																	INFO("PARSER expr: | expr ADD expr");
 																	stringstream ss;
@@ -396,22 +403,24 @@ expr[result]:
 decel:
     intregal_type[type] IDENTIFIER[lhs]                         {
                                                                     INFO("decel: | type IDENTIFIER");
-                                                                    symbol_table[$lhs] = "empty";
-                                                                    $decel = $lhs;
-
+                                                                    _symbol lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
+                                                                    _symtab[$lhs] = lhs;                 // add to symbol table, unassigned!
+                                                                    
                                                                     stringstream ss;
                                                                     ss << "// " << "type<" << $type << "> " << "id<" << $lhs << ">";  
+                                                                    $decel = ss.str();
+
+                                                                    // write this to output
                                                                     lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
-
-                                                                    _symbol s = {"z_", "int", 0, 0};
-                                                                    _symtab["x"] = s;
                                                                 }
                                                                 ;
 function_decel:
-    | intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN    {
+    | intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN             {
                                                                         INFO("decel: | type IDENTIFIER");
-                                                                        symbol_table[$lhs] = "empty";
+                                                                        _symbol lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
+                                                                        _symtab[$lhs] = lhs;                 // add to symbol table, unassigned!
+                                                                    
                                                                         stringstream strm;
                                                                         strm << $type << " " << $lhs << "()";
                                                                         $function_decel = strm.str();
