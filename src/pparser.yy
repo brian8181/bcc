@@ -146,6 +146,7 @@
 %token <std::string> CONST VOLATILE STATIC
 %token <std::string> UNSIGNED SIGNED LONG INLINE
 %token INT FLOAT CHAR VOID
+%token STRUCT TYPEDEF
 %token INCLUDE
 %token PRINT
 %token <std::string> INDIRECT_MEMBER ARRAY
@@ -461,7 +462,7 @@ function_decel:
                                                                         lexer::instance().write_ostream(ss.str());
                                                                         INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     }
-                                                                ;
+                                                                    ;
 /**
  * @name intreagl_type
  * @brief intergal type

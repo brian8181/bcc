@@ -208,6 +208,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define INT					5003ul
 #define FLOAT				5006ul
 #define CHAR				5009ul
+#define VOID                5011ul
 #define UNSIGNED			5012ul
 #define SIGNED				5016ul
 #define PTR					5019ul
@@ -298,6 +299,7 @@ inline map<unsigned long, token> g_tokens =
 	{INT,               token{"INT", S_TYPE, R"(\s*\<int\>\s+)", __LINE__}},
 	{FLOAT,             token{"FLOAT", S_TYPE, R"(\s*\<float\>\s+)", __LINE__}},
 	{CHAR,              token{"CHAR", S_TYPE, R"(\s*\<char\>\s+)", __LINE__}},
+	{VOID,              token{"VOID", S_TYPE, R"(\s*\<void\>\s+)", __LINE__}},
 	{STRUCT,            token{"STRUCT", S_TYPE, R"(\s*\<struct\>\s+)", __LINE__}},
 	{TYPEDEF,           token{"TYPEDEF", S_TYPE, R"(\s*\<tyedef\>\s+)", __LINE__}},
 	{_IF,               token{"_IF", S_TYPE, R"((#if|#IF)\>\s+)", __LINE__}},
