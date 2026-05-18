@@ -143,19 +143,22 @@
 %token END_OF_FILES
 %token END_OF_FILE 0
 
-%token <std::string> CONST VOLATILE STATIC
-%token <std::string> UNSIGNED SIGNED LONG INLINE
+%token CONST VOLATILE STATIC
+%token UNSIGNED SIGNED LONG INLINE
 %token INT FLOAT CHAR VOID
 %token STRUCT TYPEDEF
 %token INCLUDE
 %token PRINT
 %token <std::string> INDIRECT_MEMBER ARRAY
 %token <std::string> IDENTIFIER 
-%token <std::string> STRING_LITERAL NUMERIC_LITERAL
-%token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE BACK_SLASH AND OR NOT
+%token <std::string> STRING_LITERAL NUMERIC_LITERAL REAL_LITERAL
+%token AND, OR, NOT, BIT_AND, BIT_OR, BIT_XOR, BIT_NOT, RSHIFT, LSHIFT,
+%token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE BACK_SLASH
 %token COMMA LBRACKET RBRACKET LBRACE RBRACE LPAREN RPAREN DOT
 
 
+/* %type <std::string> param
+%type < std::vector< std::string> > params */
 %type <std::string> file
 %type < std::vector< std::string > > files
 %type <std::string> stmt
@@ -167,11 +170,11 @@
 
 %nonassoc IFX
 %nonassoc IF ELSE ELSEIF DO WHILE FOR BREAK CONTINUE
-%left EQUAL ASSIGN
-%left GREATER_THAN_EQUAL LESS_THAN_EQUAL  NOT_EQUAL LESS_THAN GREATER_THAN COMMA
+%left EQ ASSIGN
+%left GREATER_THAN_EQUAL LESS_THAN_EQUAL NOT_EQUAL LESS_THAN GREATER_THAN
 %left ADD SUB
 %left MUL DIV MOD
-%nonassoc UMINUS
+%nonassoc MINUS
 
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
@@ -329,6 +332,10 @@ expr[result]:
                                                                     INFO("PARSER expr: | NUMERICAL_LITERAL");
                                                                     $$ = $1;   
                                                                }
+    | REAL_LITERAL                                             {
+                                                                    INFO("PARSER expr: | REAL_LITERAL");
+                                                                    $$ = $1;
+                                                                }
     | expr[lhs] ADD[op] expr[rhs]                              {
 																	INFO("PARSER expr: | expr ADD expr");
 																	stringstream ss;
@@ -364,8 +371,8 @@ expr[result]:
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] EQUAL[op] expr[rhs]                            {
-																	INFO("PARSER expr: | expr EQUAL expr");
+    | expr[lhs] EQ[op] expr[rhs]                            {
+																	INFO("PARSER expr: | expr EQ expr");
 																	$result = (std::atoi($lhs.c_str()) == std::atoi($rhs.c_str()));
                                                                     INFO("$result=" << $result);
 																}
@@ -387,6 +394,18 @@ expr[result]:
 																	INFO("PARSER expr: | expr LESS_THAN_EQUAL expr");
 																	$result = (std::atoi($lhs.c_str()) <= std::atoi($rhs.c_str()));
 																}
+    | expr[lhs] AND[op] expr[rhs]                               {
+																	INFO("PARSER expr: | expr AND expr");
+																	$result = (std::atoi($lhs.c_str()) && std::atoi($rhs.c_str()));
+																}
+    | expr[lhs] OR[op] expr[rhs]                               {
+																	INFO("PARSER expr: | expr OR expr");
+																	$result = (std::atoi($lhs.c_str()) || std::atoi($rhs.c_str()));
+																}
+    | NOT expr[lhs]                                {
+																	INFO("PARSER expr: | NOT expr");
+																	$result = !(std::atoi($lhs.c_str()));
+																}
     | expr[lhs] NOT_EQUAL[op] expr[rhs]                         {
 																	INFO("PARSER expr: | expr NOT_EQUAL expr");
 																	$result = (std::atoi($lhs.c_str()) != std::atoi($rhs.c_str()));
@@ -396,6 +415,20 @@ expr[result]:
                                                                     $result = $exp;
 																}
                                                                 ;
+ 
+/* 
+params:
+    param
+    | params COMMA param
+    ;
+
+param:
+    expr                                        { 
+                                                                    INFO("param: | IDENTIFIER");
+                                                                    $$ = $1;
+                                                               }
+    ;  */
+
 /**
  * @name decel
  * @brief decelration
@@ -431,6 +464,7 @@ function_decel:
                                                                         INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     }
                                                                     ;
+
 /**
  * @name intreagl_type
  * @brief intergal type

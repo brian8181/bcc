@@ -365,6 +365,8 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_FLOAT();
 		case CHAR:
 			return parser::make_CHAR();
+		case VOID:
+			return parser::make_VOID();
 		case SEMI_COLON:
 			return parser::make_SEMI_COLON();
 		case LBRACE:
@@ -401,17 +403,38 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_COMMA();
 		case DIV:
 			return parser::make_DIV();
-		case EQUAL:
-			return parser::make_EQUAL();
+		case EQ:
+			return parser::make_EQ();
 		case ASSIGN:
 			return parser::make_ASSIGN();
+		case AND:
+			return parser::make_AND();
+		case OR:
+			return parser::make_OR();
+		case NOT:
+			return parser::make_NOT();
+		case BIT_AND:
+			return parser::make_BIT_AND();
+		case BIT_OR:
+			return parser::make_BIT_OR();
+		case BIT_NOT:
+			return parser::make_BIT_NOT();
+		case BIT_XOR:
+			return parser::make_BIT_XOR();
+		case LSHIFT:
+			return parser::make_LSHIFT();
+		case RSHIFT:
+			return parser::make_RSHIFT();
 		case NUMERIC_LITERAL:
 			return parser::make_NUMERIC_LITERAL( match );
+		case REAL_LITERAL:
+			return parser::make_REAL_LITERAL( match );
 		case STRING_LITERAL:
 			return parser::make_STRING_LITERAL( match );
-		//case DOUBLE_QUOTE:
-		// 	set_state( &DOUBLE_QUOTED );
-		// 	return get_token();
+		case STRUCT:
+			return parser::make_STRUCT();
+		case TYPEDEF:
+			return parser::make_TYPEDEF();
 		case NEWLINE:
 			m_line++;
 			m_fstream << "// line:" << m_line << endl; 
