@@ -7,26 +7,44 @@
 using std::set;
 using std::map;
 
-enum stype
-{
-	eINT,
-	eFLOAT,
-	eCHAR,
-	eVOID
-};
+constexpr const unsigned long eINT   = 0x10;
+constexpr const unsigned long eFLOAT = 0x20;
+constexpr const unsigned long eCHAR  = 0x40;
+constexpr const unsigned long eVOID  = 0x80;
 
-typedef struct _symbol
+// enum type_t
+// {
+// 	eINT   = 0x10,
+// 	eFLOAT = 0x20,
+// 	eCHAR  = 0x40,
+// 	eVOID  = 0x80
+// };
+
+// struct id_t
+// {
+// 	string name;
+// 	etype id;
+// } typedef id_t;
+
+// id_t _types[4] = 
+// {
+// 	{"int", eINT},
+// 	{"float", eFLOAT},
+// 	{"char", eCHAR},
+// 	{"void", eVOID}
+// }
+
+typedef struct _symbol_t
 {
 	string name;
 	string stype;
 	int type;
 	void* val;
-} _symbol;
+} _symbol_t;
 
-map<string, _symbol> _symtab = {{"x", {"x","int", eINT, 0}}, {"y", {"y", "int", eINT, 0}}, {"z", {"z", "int", eINT, 0}}};
+map<string, _symbol_t> _symtab = {{"x", {"x","int", eINT, 0}}, {"y", {"y", "int", eINT, 0}}, {"z", {"z", "int", eINT, 0}}};
 
 typedef map<string, string> symbol_table_t;
-typedef map<string, void*> object_table_t;
 
 // test
 symbol_table_t symbol_table { {"global", "empty"} };

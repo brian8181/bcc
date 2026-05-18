@@ -90,7 +90,6 @@ public:
 		// APPROACH: Meyers' singleton (Static/Data Segment)
 		// Simplest, thread-safe (C++11+), and stack-efficient.
 		static lexer instance;
-		std::cout << "[Info] Using Meyers' implementation (Static Segment).\n";
 		return instance;
 #endif
 	}
@@ -100,6 +99,7 @@ private:
 	// Private constructor prevents direct instantiation.
 	lexer()
 	{
+		std::cout << "[Info] Using Meyers' implementation (Static Segment).\n";
 		std::cout << "[System] lexer instance created at address: " << this << "\n";
 	}
 

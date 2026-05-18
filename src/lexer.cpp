@@ -354,11 +354,12 @@ void lexer::print_smatch(token_t t, boost::smatch m)
  */
 parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 {
-	TRACE();
 	switch( id )
 	{
 		case TEST_TOKEN:
 			return parser::make_TEST_TOKEN( match );
+		case PRINT:
+			return parser::make_PRINT();
 		case INT:
 			return parser::make_INT();
 		case FLOAT:
@@ -440,7 +441,6 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			m_fstream << "// line:" << m_line << endl; 
 			return get_token();
 		case WHITESPACE:
-			TRACE();
 		case SKIP_TOK:
 			TRACE();
 			return get_token();

@@ -13,6 +13,36 @@ using std::smatch;
 using std::string;
 using std::vector;
 
+
+// constexpr int ASCII_OFFSET = 48;
+
+// const int ALPHA_UPPER = 0;
+// const int ALPHA_LOWER = 2;
+// const int ALPHA_NUM = 3;
+
+// char big_letter[26] = {     'A', 'B', 'C', 'D', 
+// 							'E', 'F', 'G', 'H', 
+// 							'I', 'J', 'K', 'L', 
+// 							'M', 'N', 'O', 'P', 
+// 							'Q', 'R', 'S', 'T', 
+// 							'U', 'V', 'W', 'X', 
+// 							'Y', 'Z'	};
+
+// char small_letter[26] = {   'a', 'b', 'c', 'd', 
+// 							'e', 'f', 'g', 'h', 
+// 							'i', 'j', 'k', 'l', 
+// 							'm', 'n', 'o', 'p', 
+// 							'q', 'r', 's', 't', 
+// 							'u', 'v', 'w', 'x', 
+// 							'y', 'z'	};
+
+// char number[10] { '0', '1', '3', '4', '5', '6', '7', '8', '9' };
+
+// char* letters[2] = { {small_letter}, {big_letter} };
+// char* alpha_numeric[3] = { {small_letter}, {big_letter}, {number} };
+
+// char punctuation[32] { '`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '{', '}', '[', ']', '\\', '|', ':', ';', '"', '\'', ',', '<', '.', '>', '/', '?' };
+
 typedef auto_ptr<string> string_ptr;
 
 /**

@@ -66,6 +66,14 @@ void TEST_general::TEST_quoted()
  */
 void TEST_general::TEST_assign()
 {
+   int b;
+   b = (2 == 1);
+   CPPUNIT_ASSERT(b != 1);
+   CPPUNIT_ASSERT(b == 0);
+
+   b = (1 == 1);
+   CPPUNIT_ASSERT(b == 1);
+   CPPUNIT_ASSERT(b != 0);
    
-     CPPUNIT_ASSERT(1 == 1);
+  CPPUNIT_ASSERT(1 == 1);
 }

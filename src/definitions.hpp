@@ -82,103 +82,103 @@ typedef parser::token_type yytoken;
 typedef parser::symbol_type yysymbol;
 inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 
-
 /**
  * @brief token definitions : unsigned long integers
  */
-#define ADD 					5518ul
-#define SUB 					5516ul
-#define MUL 					5513ul
-#define DIV 					5535ul
-#define MOD 					5510ul
-#define LPAREN 					14ul
-#define RPAREN 					15ul
-#define LBRACE 					20ul
-#define RBRACE 					22ul
-#define LBRACKET 				21ul
-#define RBRACKET 				23ul
-#define BIT_AND 				5555ul 
-#define BIT_NOT 				4ul
-#define BIT_OR 					41ul
-#define BIT_XOR 				42ul
-#define LSHIFT  				43ul
-#define RSHIFT  				44ul
-#define AND 					45ul
-#define OR 						46ul
-#define NOT 					6ul
-#define EQ 						7748ul
-#define LESS_THAN 				30ul
-#define GREATER_THAN 			32ul
-#define GREATER_THAN_EQUAL 		49ul
-#define LESS_THAN_EQUAL 		50ul
-#define NUMERIC_LITERAL 		51ul
-#define REAL_LITERAL   			7771ul
-#define STRING_LITERAL 			52ul
-#define HEXADECIMAL_LITERAL 	54ul
-#define OCTAL_DECIMAL_LITERAL 	55ul
-#define IF 						60ul
-#define ELSE 					61ul
-#define ELSEIF 					62ul
-#define DO 						64ul
-#define WHILE 					65ul
-#define SWITCH					66ul
-#define CASE 					67ul
-#define DEFAULT 				68ul
-#define BREAK 					69ul
-#define CONTINUE 				70ul
-#define TRY 					71ul
-#define CATCH 					72ul
-#define IDENTIFIER 				1009ul
-#define ARRAY 					119ul
-#define COMMENT 				120ul
-#define INDIRECT_MEMBER 		170ul
-#define SHORT               	5001ul
-#define INT						5003ul
-#define LONG					5004ul
-#define SINGLE              	5005ul
-#define FLOAT					5006ul
-#define DOUBLE					5007ul
-#define CHAR					5009ul
-#define VOID                	5011ul
-#define UNSIGNED				5012ul
-#define SIGNED					5016ul
-#define PTR						5019ul
-#define REF						5022ul
-#define STRUCT					5025ul
-#define TYPEDEF					5028ul
-#define FUNCTION				5031ul
-#define ASSIGN              	5037ul
-#define _IF						6000ul				
-#define _INCLUDE            	6003ul
-#define _DEFINE             	6006ul
-#define _IFDEF              	6009ul
-#define _IFNDEF	            	6012ul
-#define _ENDIF              	6015ul
-#define _ELSE               	6018ul
-#define _ELSEIF             	6021ul
-#define DOT 					33ul
-#define QUESTION_MARK 			34ul
-#define BACKSLASH 				25ul
-#define UNDERSCORE 				17ul
-#define COMMA 					31ul
-#define COLON 					26ul
-#define SEMI_COLON 				27ul
-#define DOUBLE_QUOTE 			28ul
-#define SINGLE_QUOTE 			29ul
-#define ESC_SEQ      			307ul
-#define ESC_NLINE           	308ul
-#define ESC_BACKSLASH       	301ul
-#define ESC_NEWLINE 			302ul
-#define ESC_DOUBLE_QUOTE 		303ul
-#define ESC_SINGLE_QUOTE 		304ul
-#define ESC_TAB 				305ul
-#define END_OF_FILE   			2003ul
-#define END_OF_FILES   			2006ul
-#define WHITESPACE 				121ul
-#define NEWLINE 				124ul
-#define SKIP_TOK 				125ul
-#define UNDEFINED 				150ul
-#define TEST_TOKEN          	777ul
+#define PRINT                     88
+#define ADD 					  89   
+#define SUB 					  90   
+#define MUL 					  91   
+#define DIV 					  92   
+#define MOD 					  93   
+#define LPAREN 				      94   
+#define RPAREN 				      95   
+#define LBRACE 				      96   
+#define RBRACE 				      97   
+#define LBRACKET 				  98   
+#define RBRACKET 				  99   
+#define BIT_AND 				 100   
+#define BIT_NOT 				 101   
+#define BIT_OR 				     102   
+#define BIT_XOR 				 103   
+#define LSHIFT  				 104   
+#define RSHIFT  				 105   
+#define AND 					 106   
+#define OR 					     107   
+#define NOT 					 108   
+#define EQ 					     109   
+#define LESS_THAN 			     110   
+#define GREATER_THAN 			 111   
+#define GREATER_THAN_EQUAL 	     112   
+#define LESS_THAN_EQUAL 		 113   
+#define NUMERIC_LITERAL 		 114   
+#define REAL_LITERAL   		     115   
+#define STRING_LITERAL 		     116   
+#define HEXADECIMAL_LITERAL 	 117   
+#define OCTAL_DECIMAL_LITERAL    118   
+#define IF 					     119   
+#define ELSE 					 120   
+#define ELSEIF 				     121   
+#define DO 					     122   
+#define WHILE 				     123   
+#define SWITCH				     124   
+#define CASE 					 125   
+#define DEFAULT 				 126   
+#define BREAK 				     127   
+#define CONTINUE 				 128   
+#define TRY 					 129   
+#define CATCH 				     130   
+#define IDENTIFIER 			     131   
+#define ARRAY 				     132   
+#define COMMENT 				 133   
+#define INDIRECT_MEMBER 		 134   
+#define SHORT               	 135   
+#define INT					     136   
+#define LONG					 137   
+#define SINGLE              	 138   
+#define FLOAT					 139   
+#define DOUBLE				     140   
+#define CHAR					 141   
+#define VOID                	 142   
+#define UNSIGNED				 143   
+#define SIGNED				     144   
+#define PTR					     145   
+#define REF					     146   
+#define STRUCT				     147   
+#define TYPEDEF				     148   
+#define FUNCTION				 149   
+#define ASSIGN              	 150   
+#define _IF					     151   
+#define _INCLUDE            	 152   
+#define _DEFINE             	 153   
+#define _IFDEF              	 154   
+#define _IFNDEF	                 155   
+#define _ENDIF              	 156   
+#define _ELSE               	 157   
+#define _ELSEIF             	 158   
+#define DOT 					 159   
+#define QUESTION_MARK 		     160   
+#define BACKSLASH 			     161   
+#define UNDERSCORE 			     162   
+#define COMMA 				     163   
+#define COLON 				     164   
+#define SEMI_COLON 			     165   
+#define DOUBLE_QUOTE 			 166   
+#define SINGLE_QUOTE 			 167   
+#define ESC_SEQ      			 168   
+#define ESC_NLINE           	 169   
+#define ESC_BACKSLASH       	 170   
+#define ESC_NEWLINE 			 171   
+#define ESC_DOUBLE_QUOTE 		 172   
+#define ESC_SINGLE_QUOTE 		 173   
+#define ESC_TAB 				 174   
+#define END_OF_FILE   		     175   
+#define END_OF_FILES   		     176   
+#define WHITESPACE 			     177   
+#define NEWLINE 				 178   
+#define SKIP_TOK 				 179   
+#define UNDEFINED 			     180   
+#define TEST_TOKEN          	 181   
 #define S_TYPE "string"
 
 
@@ -198,12 +198,13 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 inline map<unsigned long, token> g_tokens =
 {
 	{TEST_TOKEN,	    token{"TEST_TOKEN", S_TYPE, R"(@@@)", __LINE__}},
+	{PRINT,	    		token{"PRINT", S_TYPE, R"(PRINT)", __LINE__}},
 	{ESC_SEQ,	        token{"ESC_SEQ", S_TYPE, R"(\\[^\n])", __LINE__}},
 	{ESC_NLINE,	        token{"ESC_NLINE", S_TYPE, R"([^\\\n])", __LINE__}},
 	{WHITESPACE, 		token{"WHITESPACE", S_TYPE, R"([ \t\r])", __LINE__}},
 	{NEWLINE,           token{"NEWLINE", S_TYPE, R"(\n)", __LINE__}},
 	{NUMERIC_LITERAL,   token{"NUMERIC_LITERAL", S_TYPE, R_NUMERIC_LITERAL, __LINE__}},
-	{REAL_LITERAL,      token{"REAL_LITERAL", S_TYPE, R_NUMERIC_LITERAL, __LINE__}},
+	{REAL_LITERAL,      token{"REAL_LITERAL", S_TYPE, R"([0-9]+\.[0-9]+)", __LINE__}},
 	{STRING_LITERAL,    token{"STRING_LITERAL", S_TYPE, R"("[A-Za-z0-9*@_.~+-/ ]+")", __LINE__}},
 	{IDENTIFIER,        token{"IDENTIFIER", S_TYPE, R"([A-Za-z_][A-Za-z0-9_]*)", __LINE__}},
 	{COMMENT,           token{"COMMENT", S_TYPE, R"(\{[ ]*\*[^*}]*\*[ ]*\})", __LINE__}},
@@ -287,7 +288,7 @@ inline vector<state_t> states__ = { INITIAL };
 /**
  * @brief token list -> by state
  */
-inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, INT, FLOAT, CHAR, VOID, SEMI_COLON, EQ, ASSIGN, _INCLUDE, 
+inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, SEMI_COLON, EQ, ASSIGN, _INCLUDE, 
 												 NEWLINE, WHITESPACE, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
 												 MUL, DIV, SUB, ADD, MOD, LPAREN, RPAREN, LBRACE, RBRACE, 
 												 OR, AND, NOT, BIT_OR, BIT_XOR, BIT_AND, BIT_NOT, RSHIFT, LSHIFT,
