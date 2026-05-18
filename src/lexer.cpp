@@ -432,6 +432,8 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_REAL_LITERAL( match );
 		case STRING_LITERAL:
 			return parser::make_STRING_LITERAL( match );
+		case CHAR_LITERAL:
+			return parser::make_CHAR_LITERAL( match );
 		case STRUCT:
 			return parser::make_STRUCT();
 		case TYPEDEF:

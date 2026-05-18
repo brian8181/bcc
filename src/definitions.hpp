@@ -115,7 +115,8 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define REAL_LITERAL   		     115   
 #define STRING_LITERAL 		     116   
 #define HEXADECIMAL_LITERAL 	 117   
-#define OCTAL_DECIMAL_LITERAL    118   
+#define OCTAL_DECIMAL_LITERAL    118 
+#define CHAR_LITERAL             1118
 #define IF 					     119   
 #define ELSE 					 120   
 #define ELSEIF 				     121   
@@ -206,6 +207,7 @@ inline map<unsigned long, token> g_tokens =
 	{NUMERIC_LITERAL,   token{"NUMERIC_LITERAL", S_TYPE, R_NUMERIC_LITERAL, __LINE__}},
 	{REAL_LITERAL,      token{"REAL_LITERAL", S_TYPE, R"([0-9]+\.[0-9]+)", __LINE__}},
 	{STRING_LITERAL,    token{"STRING_LITERAL", S_TYPE, R"("[A-Za-z0-9*@_.~+-/ ]+")", __LINE__}},
+	{CHAR_LITERAL,      token{"CHAR_LITERAL", S_TYPE, R"("'.'")", __LINE__}},
 	{IDENTIFIER,        token{"IDENTIFIER", S_TYPE, R"([A-Za-z_][A-Za-z0-9_]*)", __LINE__}},
 	{COMMENT,           token{"COMMENT", S_TYPE, R"(\{[ ]*\*[^*}]*\*[ ]*\})", __LINE__}},
 	{DOUBLE_QUOTE,      token{"DOUBLE_QUOTE", S_TYPE, R"(")", __LINE__}},
@@ -289,7 +291,7 @@ inline vector<state_t> states__ = { INITIAL };
  * @brief token list -> by state
  */
 inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, SEMI_COLON, EQ, ASSIGN, _INCLUDE, 
-												 NEWLINE, WHITESPACE, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
+												 NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
 												 MUL, DIV, SUB, ADD, MOD, LPAREN, RPAREN, LBRACE, RBRACE, 
 												 OR, AND, NOT, BIT_OR, BIT_XOR, BIT_AND, BIT_NOT, RSHIFT, LSHIFT,
 												STRUCT, TYPEDEF };
