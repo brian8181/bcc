@@ -461,20 +461,16 @@ expr[result]:
                                                                     $result = $exp;
 																}
                                                                 ;
- 
-/* 
+/**
+ * @name params
+ */
 params:
-    param
-    | params COMMA param
+    expr
+    | params COMMA expr
     ;
-
-param:
-    expr                                        { 
-                                                                    INFO("param: | IDENTIFIER");
-                                                                    $$ = $1;
-                                                               }
-    ;  */
-
+/**
+ * @name assign_expr
+*/    
 assign_expr:
     IDENTIFIER ASSIGN expr                                      {
                                                                     INFO("assign_expr: IDENTIFIER ASSIGN expr");
@@ -482,7 +478,6 @@ assign_expr:
                                                                     $$ = p;
                                                                 }
                                                                 ;
-
 /**
  * @name decel
  * @brief decelration
