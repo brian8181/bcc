@@ -388,8 +388,8 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_IF();
 		case ELSE:
 			return parser::make_ELSE();
-		case _INCLUDE:
-			return parser::make_INCLUDE();
+		case HASH_INCLUDE:
+			return parser::make_HASH_INCLUDE();
 		case IDENTIFIER:
 			return parser::make_IDENTIFIER( match );
 		case MOD:

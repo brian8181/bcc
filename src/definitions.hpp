@@ -116,7 +116,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define STRING_LITERAL 		     116   
 #define HEXADECIMAL_LITERAL 	 117   
 #define OCTAL_DECIMAL_LITERAL    118 
-#define CHAR_LITERAL             1118
+#define CHAR_LITERAL             1180
 #define IF 					     119   
 #define ELSE 					 120   
 #define ELSEIF 				     121   
@@ -149,14 +149,17 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define TYPEDEF				     148   
 #define FUNCTION				 149   
 #define ASSIGN              	 150   
-#define _IF					     151   
-#define _INCLUDE            	 152   
-#define _DEFINE             	 153   
-#define _IFDEF              	 154   
-#define _IFNDEF	                 155   
-#define _ENDIF              	 156   
-#define _ELSE               	 157   
-#define _ELSEIF             	 158   
+#define HASH_IF					 151   
+#define HASH_INCLUDE             152   
+#define HASH_DEFINE              153 
+#define HASH_UNDEF               1530   
+#define HASH_IFDEF               154   
+#define HASH_IFNDEF	             155   
+#define HASH_ENDIF               156   
+#define HASH_ELSE                157   
+#define HASH_ELSEIF              158   
+#define HASH_PRAGMA              1580 
+#define HASH_ERROR               1581   
 #define DOT 					 159   
 #define QUESTION_MARK 		     160   
 #define BACKSLASH 			     161   
@@ -256,14 +259,17 @@ inline map<unsigned long, token> g_tokens =
 	{VOID,              token{"VOID", S_TYPE, R"(\s*\<void\>\s+)", __LINE__}},
 	{STRUCT,            token{"STRUCT", S_TYPE, R"(\s*\<struct\>\s+)", __LINE__}},
 	{TYPEDEF,           token{"TYPEDEF", S_TYPE, R"(\s*\<tyedef\>\s+)", __LINE__}},
-	{_IF,               token{"_IF", S_TYPE, R"((#if|#IF)\>\s+)", __LINE__}},
-	{_DEFINE,           token{"_DEFINE", S_TYPE, R"((#define|#DEFINE)\>\s+)", __LINE__}},
-	{_IFDEF,            token{"_IFDEF", S_TYPE, R"((#ifdef|#IFDEF)\>\s+)", __LINE__}},
-	{_IFNDEF,           token{"_IFNDEF", S_TYPE, R"((#ifndef|#IFNDEF)\>\s+)", __LINE__}},
-	{_ELSE,             token{"_ELSE", S_TYPE, R"((#else|#ELSE)\>\s+)", __LINE__}},
-	{_ELSEIF,           token{"_ELSEIF", S_TYPE, R"((#elseif|#ELSEIF)\>\s+)", __LINE__}},
-	{_ENDIF,            token{"_ENDIF", S_TYPE, R"((#endif|#ENDIF)\>\s+)", __LINE__}},
-	{_INCLUDE,          token{"_INCLUDE", S_TYPE, R"(#include\>\s)", __LINE__}}
+	{HASH_IF,           token{"HASH_IF", S_TYPE, R"((#if|#IF)\>\s+)", __LINE__}},
+	{HASH_DEFINE,       token{"HASH_DEFINE", S_TYPE, R"((#define|#DEFINE)\>\s+)", __LINE__}},
+	{HASH_IFDEF,        token{"HASH_IFDEF", S_TYPE, R"((#ifdef|#IFDEF)\>\s+)", __LINE__}},
+	{HASH_IFNDEF,       token{"HASH_IFNDEF", S_TYPE, R"((#ifndef|#IFNDEF)\>\s+)", __LINE__}},
+	{HASH_ELSE,         token{"HASH_ELSE", S_TYPE, R"((#else|#ELSE)\>\s+)", __LINE__}},
+	{HASH_ELSEIF,       token{"HASH_ELSEIF", S_TYPE, R"((#elseif|#ELSEIF)\>\s+)", __LINE__}},
+	{HASH_ENDIF,        token{"HASH_ENDIF", S_TYPE, R"((#endif|#ENDIF)\>\s+)", __LINE__}},
+	{HASH_INCLUDE,      token{"HASH_INCLUDE", S_TYPE, R"(#include\>\s)", __LINE__}},
+	{HASH_UNDEF,        token{"HASH_UNDEF", S_TYPE, R"(#undef|#UNDEF\>\s)", __LINE__}},
+	{HASH_ERROR,        token{"HASH_ERROR", S_TYPE, R"(#error\>\s)", __LINE__}},
+	{HASH_PRAGMA,       token{"HASH_PRGAMA", S_TYPE, R"(#pargma\>\s)", __LINE__}}
 };
 
 /**
@@ -290,7 +296,7 @@ inline vector<state_t> states__ = { INITIAL };
 /**
  * @brief token list -> by state
  */
-inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, SEMI_COLON, EQ, ASSIGN, _INCLUDE, 
+inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, SEMI_COLON, EQ, ASSIGN, HASH_INCLUDE, 
 												 NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
 												 MUL, DIV, SUB, ADD, MOD, LPAREN, RPAREN, LBRACE, RBRACE, 
 												 OR, AND, NOT, BIT_OR, BIT_XOR, BIT_AND, BIT_NOT, RSHIFT, LSHIFT,

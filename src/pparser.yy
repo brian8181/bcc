@@ -147,7 +147,7 @@
 %token UNSIGNED SIGNED LONG REGISTER SHORT
 %token INT FLOAT CHAR VOID
 %token STRUCT TYPEDEF
-%token INCLUDE
+%token HASH_INCLUDE HASH_DEFINE HASH_UDEF HASH_IF HASH_IFDEF HASH_IFNDEF
 %token <std::string> INDIRECT_MEMBER ARRAY
 %token AND OR NOT BIT_AND BIT_OR BIT_XOR BIT_NOT RSHIFT LSHIFT
 %token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE BACK_SLASH
@@ -303,7 +303,7 @@ stmt:
                                                                         _symtab[$assign_expr.first].val = new int(std::atoi($assign_expr.second.c_str()));
                                                                         
                                                                         stringstream ss;
-                                                                        ss << "// \"" << $assign_expr.first << "\":" << symbol_table[$assign_expr.first] << " = \"" << $assign_expr.second << ";"; 
+                                                                        ss << "// type<" << _symtab[$assign_expr.first].stype << "> id<" <<  $assign_expr.first << "> = " << $assign_expr.second << ";"; 
                                                                         lexer::instance().write_ostream(ss.str());
                                                                         INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     }
@@ -312,8 +312,8 @@ stmt:
                                                                         //INFO("UNDEFINED symbol, \"" << $assign_expr.first << "\"");
                                                                     }
                                                                 }
-    | INCLUDE STRING_LITERAL                                    {
-                                                                    INFO("stmt: | INCLUDE STRING_LITERAL=" << $2 << " SEMI_COLON");
+    | HASH_INCLUDE STRING_LITERAL                               {
+                                                                    INFO("stmt: | HASH_INCLUDE STRING_LITERAL=" << $2 << " SEMI_COLON");
                                                                     lexer::instance().push_include($STRING_LITERAL);
                                                                     $$ = $STRING_LITERAL;
                                                                 }
@@ -494,7 +494,7 @@ decel:
                                                                         _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
                                                                         
                                                                         stringstream ss;
-                                                                        ss << "// " << "type<" << $type << "> " << "id<" << $lhs << ">";  
+                                                                        ss << "type<" << $type << "> " << "id<" << $lhs << ">";  
                                                                         $decel = ss.str();
 
                                                                         // write this to output
