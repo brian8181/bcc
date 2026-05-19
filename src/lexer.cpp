@@ -340,13 +340,13 @@ void lexer::print_smatch(token_t t, boost::smatch m)
 									       << " - suffix.sz:" << m.suffix().str().size()	);
 
     INFO(	"match" 								      << FMT_FG_WHITE << "[ " << t.index << " : " << t.name                     << " ] "\
-												          << FMT_FG_WHITE << "[ " << "\"" << esc_nl( m.str()    ).get_val() << "\"" << " ]" << FMT_RESET \
-			<< FMT_ITALIC << FMT_FG_GREEN <<  " - prefix" << FMT_FG_WHITE << "[ " << "\"" << esc_nl( m.prefix() ).get_val() << "\"" << " ]" << FMT_RESET \
-			<< FMT_ITALIC << FMT_FG_GREEN <<  " - suffix" << FMT_FG_WHITE << "[ " << "\"" << esc_nl( m.suffix() ).get_val() << "\"" << " ]" << FMT_RESET		);
+												          << FMT_FG_MAGENTA << "[ " << "\"" << esc_nl( m.str()    ).get_val() << "\"" << " ]" << FMT_RESET \
+			<< FMT_ITALIC << FMT_FG_GREEN <<  " - prefix" << FMT_FG_MAGENTA << "[ " << "\"" << esc_nl( m.prefix() ).get_val() << "\"" << " ]" << FMT_RESET \
+			<< FMT_ITALIC << FMT_FG_GREEN <<  " - suffix" << FMT_FG_MAGENTA << "[ " << "\"" << esc_nl( m.suffix() ).get_val() << "\"" << " ]" << FMT_RESET		);
 }
 
 /**
- * @name  on_token
+ * @name  on_token	
  * @brief override virtual, on_token, for each token ...
  * @param unsigned long id
  * @param string match: current match

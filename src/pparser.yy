@@ -461,12 +461,49 @@ expr[result]:
                                                                     $result = $exp;
 																}
                                                                 ;
+function_decel:
+    intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN              {
+                                                                        INFO("function_decel: | intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN");
+                                                                        _symbol_t lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
+                                                                        _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
+                                                                    
+                                                                        stringstream strm;
+                                                                        strm << $type << " " << $lhs << "()";
+                                                                        $function_decel = strm.str();
+
+                                                                        stringstream ss;
+                                                                        ss << "// " << "type<" << $type << "> " << "id<" << $lhs << "> ()";  
+                                                                        lexer::instance().write_ostream(ss.str());
+                                                                        INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                    }
+    | intregal_type[type] IDENTIFIER[lhs] LPAREN params_decel RPAREN      {
+                                                                        INFO("function_decel: | | intregal_type[type] IDENTIFIER[lhs] LPAREN params RPAREN");
+                                                                        _symbol_t lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
+                                                                        _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
+                                                                    
+                                                                        stringstream strm;
+                                                                        strm << $type << " " << $lhs << "()";
+                                                                        $function_decel = strm.str();
+
+                                                                        stringstream ss;
+                                                                        ss << "// " << "type<" << $type << "> " << "id<" << $lhs << "> ()";  
+                                                                        lexer::instance().write_ostream(ss.str());
+                                                                        INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                    }                                                        
+                                                                    ;
 /**
  * @name params
  */
 params:
     expr
     | params COMMA expr
+    ;
+/**
+ * @name params_decel
+ */
+params_decel:
+    decel
+    | params COMMA decel
     ;
 /**
  * @name assign_expr
@@ -497,22 +534,7 @@ decel:
                                                                         INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     }
                                                                     ;
-function_decel:
-    intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN              {
-                                                                        INFO("decel: | type IDENTIFIER");
-                                                                        _symbol_t lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
-                                                                        _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
-                                                                    
-                                                                        stringstream strm;
-                                                                        strm << $type << " " << $lhs << "()";
-                                                                        $function_decel = strm.str();
 
-                                                                        stringstream ss;
-                                                                        ss << "// " << "type<" << $type << "> " << "id<" << $lhs << "> ()";  
-                                                                        lexer::instance().write_ostream(ss.str());
-                                                                        INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
-                                                                    }
-                                                                    ;
 print_function:
     PRINT LPAREN expr RPAREN                                        {
                                                                         INFO("print_function: | PRINT LPAREN expr RPAREN"); 
