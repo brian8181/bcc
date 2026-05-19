@@ -143,7 +143,8 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define VOID                	 142   
 #define UNSIGNED				 143   
 #define SIGNED				     144   
-#define PTR					     145   
+#define PTR					     145  
+#define DEREFERENCE 			 145 
 #define REF					     146   
 #define STRUCT				     147   
 #define TYPEDEF				     148   
@@ -210,13 +211,14 @@ inline map<unsigned long, token> g_tokens =
 	{NUMERIC_LITERAL,   token{"NUMERIC_LITERAL", S_TYPE, R_NUMERIC_LITERAL, __LINE__}},
 	{REAL_LITERAL,      token{"REAL_LITERAL", S_TYPE, R"([0-9]+\.[0-9]+)", __LINE__}},
 	{STRING_LITERAL,    token{"STRING_LITERAL", S_TYPE, R"("[A-Za-z0-9*@_.~+-/ ]+")", __LINE__}},
-	{CHAR_LITERAL,      token{"CHAR_LITERAL", S_TYPE, R"("'.'")", __LINE__}},
+	{CHAR_LITERAL,      token{"CHAR_LITERAL", S_TYPE, R"('.')", __LINE__}},
 	{IDENTIFIER,        token{"IDENTIFIER", S_TYPE, R"([A-Za-z_][A-Za-z0-9_]*)", __LINE__}},
 	{COMMENT,           token{"COMMENT", S_TYPE, R"(\{[ ]*\*[^*}]*\*[ ]*\})", __LINE__}},
-	{DOUBLE_QUOTE,      token{"DOUBLE_QUOTE", S_TYPE, R"(")", __LINE__}},
 	{SUB,             	token{"SUB", S_TYPE, R"([-])", __LINE__}},
 	{ADD,              	token{"ADD", S_TYPE, R"([+])", __LINE__}},
 	{MUL,          		token{"MUL", S_TYPE, R"([*])", __LINE__}},
+	{PTR,               token{"PTR", S_TYPE, R"([*])", __LINE__}},
+	{DEREFERENCE,       token{"DEREFERENCE", S_TYPE, R"([*])", __LINE__}},
 	{DIV,            	token{"DIV", S_TYPE, R"([/])", __LINE__}},
 	{MOD,           	token{"MOD", S_TYPE, R"([%])", __LINE__}},
 	{ASSIGN,            token{"ASSIGN", S_TYPE, R"([=])", __LINE__}},
@@ -229,7 +231,6 @@ inline map<unsigned long, token> g_tokens =
 	{BACKSLASH,         token{"BACKSLASH", S_TYPE, R"([\])", __LINE__}},
 	{COLON,             token{"COLON", S_TYPE, R"([:])", __LINE__}},
 	{SEMI_COLON,        token{"SEMI_COLON", S_TYPE, R"([;])", __LINE__}},
-	{SINGLE_QUOTE,      token{"SINGLE_QUOTE", S_TYPE, R"(['])", __LINE__}},
 	{GREATER_THAN,      token{"GREATER_THAN", S_TYPE, R"([>])", __LINE__}},
 	{QUESTION_MARK,     token{"QUESTION_MARK", S_TYPE, R"([?])", __LINE__}},
 	{COMMA,             token{"COMMA", S_TYPE, R"([,])", __LINE__}},
@@ -243,7 +244,7 @@ inline map<unsigned long, token> g_tokens =
 	{BIT_AND,           token{"BIT_AND", S_TYPE, R"(&)", __LINE__}},
 	{BIT_OR,            token{"BIT_OR", S_TYPE, R"([|])", __LINE__}},
 	{BIT_NOT,           token{"BIT_NOT", S_TYPE, R"([~])", __LINE__}},
-	{BIT_XOR,           token{"BIT_XOR", S_TYPE, R"([^])", __LINE__}},
+	{BIT_XOR,           token{"BIT_XOR", S_TYPE, R"(^)", __LINE__}},
 	{LSHIFT,            token{"LSHIFT", S_TYPE, R"([<]{2})", __LINE__}},
 	{RSHIFT,            token{"RSHIFT", S_TYPE, R"([>]{2})", __LINE__}},
 	{IF,                token{"IF", S_TYPE, R"(if)", __LINE__}},
@@ -251,8 +252,6 @@ inline map<unsigned long, token> g_tokens =
 	{ELSEIF,            token{"ELSEIF", S_TYPE, R"(elseif)", __LINE__}},
 	{WHILE,             token{"WHILE", S_TYPE, R"(while)", __LINE__}},
 	{BREAK,             token{"BREAK", S_TYPE, R"(break)", __LINE__}},
-	{PTR,               token{"PTR", S_TYPE, R"([*])", __LINE__}},
-	{REF,               token{"REF", S_TYPE, R"([&])", __LINE__}},
 	{INT,               token{"INT", S_TYPE, R"(\s*\<int\>\s+)", __LINE__}},
 	{FLOAT,             token{"FLOAT", S_TYPE, R"(\s*\<float\>\s+)", __LINE__}},
 	{CHAR,              token{"CHAR", S_TYPE, R"(\s*\<char\>\s+)", __LINE__}},
@@ -299,8 +298,8 @@ inline vector<state_t> states__ = { INITIAL };
 inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, SEMI_COLON, EQ, ASSIGN, HASH_INCLUDE, 
 												 NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
 												 MUL, DIV, SUB, ADD, MOD, LPAREN, RPAREN, LBRACE, RBRACE, 
-												 OR, AND, NOT, BIT_OR, BIT_XOR, BIT_AND, BIT_NOT, RSHIFT, LSHIFT,
-												STRUCT, TYPEDEF };
+												 OR, AND, NOT, BIT_OR, 	BIT_AND, BIT_NOT, RSHIFT, LSHIFT, COMMA,
+												STRUCT, TYPEDEF, PTR };
 /**
  * @brief global state: state_id -> states
  * @name g_tokens_by_state_id

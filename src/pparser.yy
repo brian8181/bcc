@@ -138,6 +138,7 @@
 }
 
 %token SKIP_TOKEN UNDEFINED
+%token HASH_INCLUDE HASH_DEFINE HASH_UDEF HASH_IF HASH_IFDEF HASH_IFNDEF
 %token <std::string> TEST_TOKEN 
 
 %token END_OF_FILES
@@ -147,12 +148,12 @@
 %token UNSIGNED SIGNED LONG REGISTER SHORT
 %token INT FLOAT CHAR VOID
 %token STRUCT TYPEDEF
-%token HASH_INCLUDE HASH_DEFINE HASH_UDEF HASH_IF HASH_IFDEF HASH_IFNDEF
-%token <std::string> INDIRECT_MEMBER ARRAY
-%token AND OR NOT BIT_AND BIT_OR BIT_XOR BIT_NOT RSHIFT LSHIFT
-%token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE BACK_SLASH
-%token COMMA LBRACKET RBRACKET LBRACE RBRACE LPAREN RPAREN DOT
 
+%token <std::string> INDIRECT_MEMBER 
+%token AND OR NOT BIT_AND BIT_OR BIT_XOR BIT_NOT RSHIFT LSHIFT
+%token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE
+%token COMMA LBRACKET RBRACKET LBRACE RBRACE LPAREN RPAREN DOT PTR ASTERICK
+ 
 %token <std::string> IDENTIFIER 
 %token <std::string> STRING_LITERAL NUMERIC_LITERAL REAL_LITERAL CHAR_LITERAL
 %nonassoc IFX
@@ -309,7 +310,7 @@ stmt:
                                                                     }
                                                                     else
                                                                     {
-                                                                        //INFO("UNDEFINED symbol, \"" << $assign_expr.first << "\"");
+                                                                        INFO("UNDEFINED symbol");
                                                                     }
                                                                 }
     | HASH_INCLUDE STRING_LITERAL                               {
@@ -330,7 +331,6 @@ stmt:
     | error RBRACE                                              
     ;
 
-
 /**
  * @name expr
  * @brief Numerical / logical exprssions
@@ -350,6 +350,12 @@ expr[result]:
                                                                     INFO("PARSER expr: | REAL_LITERAL");
                                                                     stringstream ss;
                                                                     ss << std::atof($REAL_LITERAL.c_str());
+                                                                    $result = ss.str();
+                                                                }
+    | CHAR_LITERAL                                              {
+                                                                    INFO("PARSER expr: | CHAR_LITERAL");
+                                                                    stringstream ss;
+                                                                    ss << $CHAR_LITERAL;
                                                                     $result = ss.str();
                                                                 }
     | SUB expr %prec UMINUS                                     {
@@ -461,8 +467,16 @@ expr[result]:
                                                                     $result = $exp;
 																}
                                                                 ;
+function_call:
+    IDENTIFIER[lhs] LPAREN RPAREN                                {
+                                                                    TRACE()
+                                                                 }
+    | IDENTIFIER[lhs] params_list                                {
+                                                                    TRACE();
+                                                                 } 
+                                                                 ;
 function_decel:
-    intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN              {
+    intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN               {
                                                                         INFO("function_decel: | intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN");
                                                                         _symbol_t lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
                                                                         _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
@@ -476,8 +490,8 @@ function_decel:
                                                                         lexer::instance().write_ostream(ss.str());
                                                                         INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     }
-    | intregal_type[type] IDENTIFIER[lhs] LPAREN params_decel RPAREN      {
-                                                                        INFO("function_decel: | | intregal_type[type] IDENTIFIER[lhs] LPAREN params RPAREN");
+    | intregal_type[type] IDENTIFIER[lhs] params_decel_list         {
+                                                                        INFO("function_decel: intregal_type[type] IDENTIFIER[lhs] LPAREN params_decel_list RPAREN");
                                                                         _symbol_t lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
                                                                         _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
                                                                     
@@ -491,20 +505,40 @@ function_decel:
                                                                         INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     }                                                        
                                                                     ;
+
+params_list:
+    LPAREN params RPAREN                                        {
+                                                                    INFO("params_list: LPAREN params RPAREN");
+                                                                }
+                                                                ;
 /**
  * @name params
  */
 params:
-    expr
-    | params COMMA expr
-    ;
+    expr                                                        {
+                                                                      INFO("params: expr");
+                                                                }
+    | params COMMA expr                                         {
+                                                                      INFO("params: params COMMA expr");
+                                                                }
+                                                                ;
+
+params_decel_list:
+    LPAREN params_decel RPAREN                                  {
+                                                                    INFO("params_decel_list: LPAREN params_decel RPAREN");
+                                                                }
+                                                                ;
 /**
  * @name params_decel
  */
 params_decel:
-    decel
-    | params COMMA decel
-    ;
+    decel                                                       {
+                                                                    INFO("params_decel: decel");
+                                                                }
+    | params_decel COMMA decel                                  {
+                                                                    INFO("params_decel: params_decel COMMA decel");
+                                                                }
+                                                                ;
 /**
  * @name assign_expr
 */    
@@ -533,8 +567,21 @@ decel:
                                                                         lexer::instance().write_ostream(ss.str());
                                                                         INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     }
-                                                                    ;
+    |  intregal_type[type] PTR IDENTIFIER[lhs]                      {
+                                                                        INFO("decel: | type IDENTIFIER");
+                                                                        _symbol_t lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
+                                                                        _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
+                                                                        
+                                                                        stringstream ss;
+                                                                        ss << "type<" << $type << "> " << "id<" << $lhs << ">";  
+                                                                        $decel = ss.str();
 
+                                                                        // write this to output
+                                                                        lexer::instance().write_ostream(ss.str());
+                                                                        INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                    }
+                                                                    ;
+  
 print_function:
     PRINT LPAREN expr RPAREN                                        {
                                                                         INFO("print_function: | PRINT LPAREN expr RPAREN"); 
@@ -577,6 +624,30 @@ access_modfier:
     | VOLATILE
     | STATIC 
     | REGISTER
+    ;
+
+tokens:
+    STRUCT
+    | TYPEDEF
+    | BACKSLASH
+    | QUESTION_MARK
+    | DOT
+    | COLON
+    | INDIRECT_MEMBER
+    | DOUBLE_QUOTE
+    | SINGLE_QUOTE
+    | ASTERICK
+    | LBRACKET
+    | RBRACKET
+    | ELSEIF
+    | DO
+    | FOR
+    | BREAK
+    | CONTINUE
+    | RETURN
+    | SWITCH
+    | CASE
+    | DEFAULT
     ;
 %%
 
