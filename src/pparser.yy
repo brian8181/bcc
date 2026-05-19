@@ -152,7 +152,7 @@
 %token <std::string> INDIRECT_MEMBER 
 %token AND OR NOT BIT_AND BIT_OR BIT_XOR BIT_NOT RSHIFT LSHIFT
 %token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE
-%token COMMA LBRACKET RBRACKET LBRACE RBRACE LPAREN RPAREN DOT PTR ASTERICK
+%token COMMA LBRACKET RBRACKET LBRACE RBRACE DOT PTR ASTERICK
  
 %token <std::string> IDENTIFIER 
 %token <std::string> STRING_LITERAL NUMERIC_LITERAL REAL_LITERAL CHAR_LITERAL
@@ -160,6 +160,7 @@
 %nonassoc IF ELSE ELSEIF DO WHILE FOR BREAK CONTINUE RETURN CASE SWITCH DEFAULT PRINT
 %left EQ ASSIGN
 %left GREATER_THAN_EQUAL LESS_THAN_EQUAL NOT_EQUAL LESS_THAN GREATER_THAN
+%nonassoc  LPAREN RPAREN
 %left ADD SUB
 %left MUL DIV MOD
 %nonassoc UMINUS
@@ -181,7 +182,7 @@
 /* %type <std::string> access_modfiers */
 %type <std::string> access_modfier type_modifier modifiers
 %type <std::string> intregal_type
-%type <std::string> decel function_decel
+%type <std::string> decel function_decel function_call
 %type <std::string> compiler
 %start compiler
 
@@ -338,7 +339,7 @@ stmt:
 expr[result]:
     IDENTIFIER                                                  { 
                                                                     INFO("PARSER expr: | IDENTIFIER");
-                                                                    $$ = *((int*)_symtab[$IDENTIFIER].val); //? val may not be int
+                                                                    //$$ = *((int*)_symtab[$IDENTIFIER].val); //? val may not be int
                                                                 }
     | NUMERIC_LITERAL                                           {
                                                                     INFO("PARSER expr: | NUMERICAL_LITERAL");
@@ -467,14 +468,20 @@ expr[result]:
                                                                     $result = $exp;
 																}
                                                                 ;
+/**
+ * @name function_call
+ */
 function_call:
     IDENTIFIER[lhs] LPAREN RPAREN                                {
-                                                                    TRACE()
+                                                                    INFO("function_call: IDENTIFIER[lhs] LPAREN RPAREN");
                                                                  }
     | IDENTIFIER[lhs] params_list                                {
-                                                                    TRACE();
+                                                                    INFO("function_call: IDENTIFIER[lhs] params_list");
                                                                  } 
                                                                  ;
+/**
+ * @name function_decel
+ */                                                                 
 function_decel:
     intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN               {
                                                                         INFO("function_decel: | intregal_type[type] IDENTIFIER[lhs] LPAREN RPAREN");
@@ -505,7 +512,9 @@ function_decel:
                                                                         INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     }                                                        
                                                                     ;
-
+/**
+ * @name pramas_list
+ */
 params_list:
     LPAREN params RPAREN                                        {
                                                                     INFO("params_list: LPAREN params RPAREN");
@@ -522,7 +531,9 @@ params:
                                                                       INFO("params: params COMMA expr");
                                                                 }
                                                                 ;
-
+/**
+ * @name params_decel_list
+ */
 params_decel_list:
     LPAREN params_decel RPAREN                                  {
                                                                     INFO("params_decel_list: LPAREN params_decel RPAREN");
@@ -581,7 +592,9 @@ decel:
                                                                         INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     }
                                                                     ;
-  
+/**
+ * @name print_function
+ */
 print_function:
     PRINT LPAREN expr RPAREN                                        {
                                                                         INFO("print_function: | PRINT LPAREN expr RPAREN"); 

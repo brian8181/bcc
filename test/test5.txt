@@ -15,3 +15,5 @@ c = 70 / 10;
 c = 25 % 7;
 char s = 'S';
 int foo();
+foo();
+bar(x, 2);
