@@ -92,6 +92,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define DIV 					  92   
 #define MOD 					  93   
 #define LPAREN 				      94   
+#define LPAREN_FUNC 				      940   
 #define RPAREN 				      95   
 #define LBRACE 				      96   
 #define RBRACE 				      97   
@@ -107,10 +108,18 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define OR 					     107   
 #define NOT 					 108   
 #define EQ 					     109   
+
 #define LESS_THAN 			     110   
 #define GREATER_THAN 			 111   
 #define GREATER_THAN_EQUAL 	     112   
-#define LESS_THAN_EQUAL 		 113   
+#define LESS_THAN_EQUAL 		 113
+
+#define NEQ                      1090
+#define LT 	             		 1100   
+#define GT 	            		 1110   
+#define GEQ             	     1120   
+#define LEQ             		 1130
+
 #define NUMERIC_LITERAL 		 114   
 #define REAL_LITERAL   		     115   
 #define STRING_LITERAL 		     116   
@@ -213,6 +222,7 @@ inline map<unsigned long, token> g_tokens =
 	{STRING_LITERAL,    token{"STRING_LITERAL", S_TYPE, R"("[A-Za-z0-9*@_.~+-/ ]+")", __LINE__}},
 	{CHAR_LITERAL,      token{"CHAR_LITERAL", S_TYPE, R"('.')", __LINE__}},
 	{IDENTIFIER,        token{"IDENTIFIER", S_TYPE, R"([A-Za-z_][A-Za-z0-9_]*)", __LINE__}},
+	{FUNCTION,        	token{"FUCTION", S_TYPE, R"([A-Za-z_][A-Za-z0-9_]*)", __LINE__}},
 	{COMMENT,           token{"COMMENT", S_TYPE, R"(\{[ ]*\*[^*}]*\*[ ]*\})", __LINE__}},
 	{SUB,             	token{"SUB", S_TYPE, R"([-])", __LINE__}},
 	{ADD,              	token{"ADD", S_TYPE, R"([+])", __LINE__}},
@@ -223,6 +233,7 @@ inline map<unsigned long, token> g_tokens =
 	{MOD,           	token{"MOD", S_TYPE, R"([%])", __LINE__}},
 	{ASSIGN,            token{"ASSIGN", S_TYPE, R"([=])", __LINE__}},
 	{LPAREN,            token{"LPAREN", S_TYPE, "[(]", __LINE__}},
+	//{LPAREN_FUNC,       token{"LPAREN_FUNC", S_TYPE, "\\b[(]", __LINE__}},
 	{RPAREN,            token{"RPAREN", S_TYPE, "[)]", __LINE__}},
 	{LBRACKET,          token{"LBRACKET", S_TYPE, R"(\[)", __LINE__}},
 	{RBRACKET,          token{"RBRACKET", S_TYPE, R"(\])", __LINE__}},
@@ -231,16 +242,26 @@ inline map<unsigned long, token> g_tokens =
 	{BACKSLASH,         token{"BACKSLASH", S_TYPE, R"([\])", __LINE__}},
 	{COLON,             token{"COLON", S_TYPE, R"([:])", __LINE__}},
 	{SEMI_COLON,        token{"SEMI_COLON", S_TYPE, R"([;])", __LINE__}},
-	{GREATER_THAN,      token{"GREATER_THAN", S_TYPE, R"([>])", __LINE__}},
 	{QUESTION_MARK,     token{"QUESTION_MARK", S_TYPE, R"([?])", __LINE__}},
 	{COMMA,             token{"COMMA", S_TYPE, R"([,])", __LINE__}},
 	{DOT,               token{"DOT", S_TYPE, R"(\.)", __LINE__}},
+	
+	{LESS_THAN,         token{"LESS_THAN", S_TYPE, R"([>])", __LINE__}},
+	{GREATER_THAN,      token{"GREATER_THAN", S_TYPE, R"([>])", __LINE__}},
 	{GREATER_THAN_EQUAL,token{"GREATER_THAN_EQUAL", S_TYPE, R"(>=)", __LINE__}},
 	{LESS_THAN_EQUAL,   token{"LESS_THAN_EQUAL", S_TYPE, R"(<=)", __LINE__}},
+
+	{EQ,                token{"EQ", S_TYPE, R"(==)", __LINE__}},
+	{NEQ,               token{"EQ", S_TYPE, R"(!=)", __LINE__}},
+	{LT,                token{"NEQ", S_TYPE, R"([>])", __LINE__}},
+	{LT,                token{"LT", S_TYPE, R"([>])", __LINE__}},
+	{GT,                token{"GT", S_TYPE, R"([>])", __LINE__}},
+	{GEQ,               token{"GEQ", S_TYPE, R"(>=)", __LINE__}},
+	{LEQ,               token{"LEQ", S_TYPE, R"(<=)", __LINE__}},
+	
 	{AND,               token{"AND", S_TYPE, R"(&&)", __LINE__}},
 	{OR,                token{"OR", S_TYPE, R"(\|\|)", __LINE__}},
 	{NOT,               token{"NOT", S_TYPE, R"([!])", __LINE__}},
-	{EQ,                token{"EQ", S_TYPE, R"(==)", __LINE__}},
 	{BIT_AND,           token{"BIT_AND", S_TYPE, R"(&)", __LINE__}},
 	{BIT_OR,            token{"BIT_OR", S_TYPE, R"([|])", __LINE__}},
 	{BIT_NOT,           token{"BIT_NOT", S_TYPE, R"([~])", __LINE__}},
@@ -275,28 +296,41 @@ inline map<unsigned long, token> g_tokens =
  * @brief unsigned long states
  */
 constexpr unsigned long UL_INITIAL = 0x10;
+constexpr unsigned long UL_PRE_PROCESS = 0x20;
 
 /**
  * @brief global state IDs
  */
-inline vector<unsigned long> state_ids = { UL_INITIAL };
+inline vector<unsigned long> state_ids = { UL_INITIAL, UL_PRE_PROCESS };
 
 /**
  * @brief state_t states
  */
 
 inline state_t INITIAL = { UL_INITIAL, "INITIAL" };
+inline state_t PRE_PROCESS = { UL_PRE_PROCESS, "PRE_PROCESS" };
 
 /**
  * @brief global state vector
  */
-inline vector<state_t> states__ = { INITIAL };
+inline vector<state_t> states__ = { PRE_PROCESS, INITIAL };
 
 /**
  * @brief token list -> by state
  */
-inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, SEMI_COLON, EQ, ASSIGN, HASH_INCLUDE, 
+inline vector<unsigned long> PRE_PROCESS_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, SEMI_COLON, ASSIGN, HASH_INCLUDE, 
 												 NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
+												 EQ, NEQ, LEQ, GEQ, LT, GT,
+												 MUL, DIV, SUB, ADD, MOD, LPAREN, RPAREN, LBRACE, RBRACE, 
+												 OR, AND, NOT, BIT_OR, 	BIT_AND, BIT_NOT, RSHIFT, LSHIFT, COMMA,
+												STRUCT, TYPEDEF, PTR };
+
+/**
+ * @brief token list -> by state
+ */
+inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, SEMI_COLON, ASSIGN, HASH_INCLUDE, 
+												 NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
+												 EQ, NEQ, LEQ, GEQ, LT, GT,
 												 MUL, DIV, SUB, ADD, MOD, LPAREN, RPAREN, LBRACE, RBRACE, 
 												 OR, AND, NOT, BIT_OR, 	BIT_AND, BIT_NOT, RSHIFT, LSHIFT, COMMA,
 												STRUCT, TYPEDEF, PTR };
@@ -304,7 +338,7 @@ inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, 
  * @brief global state: state_id -> states
  * @name g_tokens_by_state_id
  */
-inline map<unsigned long, vector<unsigned long>*> g_state_tokens {  {UL_INITIAL, &INITIAL_TOKENS} };
+inline map<unsigned long, vector<unsigned long>*> g_state_tokens {  {UL_PRE_PROCESS, &PRE_PROCESS_TOKENS}, {UL_INITIAL, &INITIAL_TOKENS} };
 /**
  *
  */

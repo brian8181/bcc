@@ -40,6 +40,9 @@ typedef struct _symbol_t
 	string stype;
 	int type;
 	void* val;
+
+	 // Declare the operator as a friend to access private members
+    friend std::ostream& operator<<(std::ostream& os, const _symbol_t& lex);
 } _symbol_t;
 
 map<string, _symbol_t> _symtab = {{"x", {"x","int", eINT, 0}}, {"y", {"y", "int", eINT, 0}}, {"z", {"z", "int", eINT, 0}}};

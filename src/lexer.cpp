@@ -380,6 +380,8 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_RBRACKET();
 		case LPAREN:
 			return parser::make_LPAREN();
+		case FUNCTION:
+			return parser::make_FUNCTION( match );
 		case RPAREN:
 			return parser::make_RPAREN();
 		case WHILE:
@@ -406,6 +408,16 @@ parser::symbol_type lexer::on_token( unsigned long id, const string& match )
 			return parser::make_DIV();
 		case EQ:
 			return parser::make_EQ();
+		case NEQ:
+			return parser::make_NEQ();
+		case GEQ:
+			return parser::make_GEQ();
+		case LEQ:
+			return parser::make_LEQ();	
+		case GT:
+			return parser::make_GT();
+		case LT:
+			return parser::make_LT();
 		case ASSIGN:
 			return parser::make_ASSIGN();
 		case AND:
