@@ -82,38 +82,53 @@ typedef parser::token_type yytoken;
 typedef parser::symbol_type yysymbol;
 inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 
+#define STRING                   0x10000
+#define SHORT               	 0x20000   
+#define INT					     0x40000 
+#define LONG					 0x80000
+#define SINGLE              	 0x100000
+#define FLOAT					 0x200000
+#define DOUBLE				     0x400000
+#define CHAR					 0x8000000
+#define VOID                	 0x10000000
+#define UNSIGNED				 0x20000000
+#define SIGNED				     0x40000000 
+#define CONST                    0x80000000 
+#define STATIC					 0x200000000
+#define REGISTER				 0x400000000
+#define PTR						 0x800000000
+#define VOLATILE				 0x1000000000
+#define STRUCT                   0x2000000000
+
 /**
  * @brief token definitions : unsigned long integers
  */
 #define PRINT                     88
 #define ADD 					  89   
-#define SUB 					  90   
+#define DASH 					  90   
 #define MUL 					  91   
 #define DIV 					  92   
 #define MOD 					  93   
 #define LPAREN 				      94   
-#define LPAREN_FUNC 				      940   
+#define LPAREN_FUNC 		      940   
 #define RPAREN 				      95   
 #define LBRACE 				      96   
 #define RBRACE 				      97   
 #define LBRACKET 				  98   
 #define RBRACKET 				  99   
+
 #define BIT_AND 				 100   
 #define BIT_NOT 				 101   
 #define BIT_OR 				     102   
 #define BIT_XOR 				 103   
 #define LSHIFT  				 104   
 #define RSHIFT  				 105   
+
 #define AND 					 106   
 #define OR 					     107   
 #define NOT 					 108   
+
 #define EQ 					     109   
-
-#define LESS_THAN 			     110   
-#define GREATER_THAN 			 111   
-#define GREATER_THAN_EQUAL 	     112   
-#define LESS_THAN_EQUAL 		 113
-
 #define NEQ                      1090
 #define LT 	             		 1100   
 #define GT 	            		 1110   
@@ -130,7 +145,9 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define ELSE 					 120   
 #define ELSEIF 				     121   
 #define DO 					     122   
-#define WHILE 				     123   
+#define WHILE 				     123  
+#define FOR 				     1230  
+#define RETURN 				     1240   
 #define SWITCH				     124   
 #define CASE 					 125   
 #define DEFAULT 				 126   
@@ -142,21 +159,11 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define ARRAY 				     132   
 #define COMMENT 				 133   
 #define INDIRECT_MEMBER 		 134   
-#define STRING                   1350
-#define SHORT               	 135   
-#define INT					     136   
-#define LONG					 137   
-#define SINGLE              	 138   
-#define FLOAT					 139   
-#define DOUBLE				     140   
-#define CHAR					 141   
-#define VOID                	 142   
-#define UNSIGNED				 143   
-#define SIGNED				     144   
-#define PTR					     145  
+
+//#define PTR					     145  
 #define DEREFERENCE 			 145 
 #define REF					     146   
-#define STRUCT				     147   
+//#define STRUCT				     147   
 #define TYPEDEF				     148   
 #define FUNCTION				 149   
 #define ASSIGN              	 150   
@@ -225,7 +232,7 @@ inline map<unsigned long, token> g_tokens =
 		{IDENTIFIER, token{"IDENTIFIER", S_TYPE, R"([A-Za-z_][A-Za-z0-9_]*)", __LINE__}},
 		{FUNCTION, token{"FUCTION", S_TYPE, R"([A-Za-z_][A-Za-z0-9_]*)", __LINE__}},
 		{COMMENT, token{"COMMENT", S_TYPE, R"(\{[ ]*\*[^*}]*\*[ ]*\})", __LINE__}},
-		{SUB, token{"SUB", S_TYPE, R"([-])", __LINE__}},
+		{DASH, token{"DASH", S_TYPE, R"([-])", __LINE__}},
 		{ADD, token{"ADD", S_TYPE, R"([+])", __LINE__}},
 		{MUL, token{"MUL", S_TYPE, R"([*])", __LINE__}},
 		{PTR, token{"PTR", S_TYPE, R"([*])", __LINE__}},
@@ -246,11 +253,6 @@ inline map<unsigned long, token> g_tokens =
 		{QUESTION_MARK, token{"QUESTION_MARK", S_TYPE, R"([?])", __LINE__}},
 		{COMMA, token{"COMMA", S_TYPE, R"([,])", __LINE__}},
 		{DOT, token{"DOT", S_TYPE, R"(\.)", __LINE__}},
-
-		{LESS_THAN, token{"LESS_THAN", S_TYPE, R"([>])", __LINE__}},
-		{GREATER_THAN, token{"GREATER_THAN", S_TYPE, R"([>])", __LINE__}},
-		{GREATER_THAN_EQUAL, token{"GREATER_THAN_EQUAL", S_TYPE, R"(>=)", __LINE__}},
-		{LESS_THAN_EQUAL, token{"LESS_THAN_EQUAL", S_TYPE, R"(<=)", __LINE__}},
 
 		{EQ, token{"EQ", S_TYPE, R"(==)", __LINE__}},
 		{NEQ, token{"EQ", S_TYPE, R"(!=)", __LINE__}},
@@ -273,6 +275,8 @@ inline map<unsigned long, token> g_tokens =
 		{ELSE, token{"ELSE", S_TYPE, R"(else)", __LINE__}},
 		{ELSEIF, token{"ELSEIF", S_TYPE, R"(elseif)", __LINE__}},
 		{WHILE, token{"WHILE", S_TYPE, R"(while)", __LINE__}},
+		{FOR, token{"FOR", S_TYPE, R"(for)", __LINE__}},
+		{RETURN, token{"RETURN", S_TYPE, R"(return)", __LINE__}},
 		{BREAK, token{"BREAK", S_TYPE, R"(break)", __LINE__}},
 		{STRING, token{"STRING", S_TYPE, R"(\s*\<STRING\>\s+)", __LINE__}},
 		{INT, token{"INT", S_TYPE, R"(\s*\<int\>\s+)", __LINE__}},
@@ -322,17 +326,19 @@ inline vector<state_t> states__ = { PRE_PROCESS, INITIAL };
 inline vector<unsigned long> PRE_PROCESS_TOKENS = {  TEST_TOKEN, PRINT, STRING, INT, FLOAT, CHAR, VOID, SEMI_COLON, ASSIGN, HASH_INCLUDE, 
 												 NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
 												 EQ, NEQ, LEQ, GEQ, LT, GT,
-												 MUL, DIV, SUB, ADD, MOD, LPAREN, RPAREN, LBRACE, RBRACE, 
+												 MUL, DIV, DASH, ADD, MOD, LPAREN, RPAREN, LBRACE, RBRACE, 
 												 OR, AND, NOT, BIT_OR, 	BIT_AND, BIT_NOT, RSHIFT, LSHIFT, COMMA,
 												STRUCT, TYPEDEF, PTR };
 
 /**
  * @brief token list -> by state
  */
-inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, SEMI_COLON, ASSIGN, HASH_INCLUDE, 
+inline vector<unsigned long> INITIAL_TOKENS = {  TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, 
+												 IF, ELSE, WHILE, DO, FOR, RETURN, BREAK, CONTINUE, 
+												 SEMI_COLON, ASSIGN, HASH_INCLUDE, 
 												 NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
 												 EQ, NEQ, LEQ, GEQ, LT, GT,
-												 MUL, DIV, SUB, ADD, MOD, LBRACKET, RBRACKET, LPAREN, RPAREN, LBRACE, RBRACE, 
+												 MUL, DIV, DASH, ADD, MOD, LBRACKET, RBRACKET, LPAREN, RPAREN, LBRACE, RBRACE, 
 												 OR, AND, NOT, BIT_OR, 	BIT_AND, BIT_NOT, RSHIFT, LSHIFT, COMMA,
 												STRUCT, TYPEDEF, PTR };
 /**

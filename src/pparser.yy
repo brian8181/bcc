@@ -162,7 +162,7 @@
 %nonassoc IF ELSE ELSEIF DO WHILE FOR BREAK CONTINUE RETURN CASE SWITCH DEFAULT PRINT
 %left EQ NEQ GEQ LEQ LT GT ASSIGN
 %nonassoc  LPAREN RPAREN
-%left ADD SUB
+%left ADD DASH
 %left MUL DIV MOD
 %nonassoc UMINUS
 
@@ -182,7 +182,7 @@
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
 %type <std::string> access_modfier type_modifier modifiers
-%type <std::string> intregal_type
+%type <int> intregal_type
 %type <std::string> decel func_param_decels param_decels function_decel function_call
 %type <std::string> compiler
 %start compiler
@@ -372,8 +372,8 @@ expr[result]:
                                                                     ss << $CHAR_LITERAL;
                                                                     $result = ss.str();
                                                                 }
-    | SUB expr %prec UMINUS                                     {
-                                                                    INFO("expr: | SUB expr %prec UMINUS");
+    | DASH expr %prec UMINUS                                     {
+                                                                    INFO("expr: | DASH expr %prec UMINUS");
                                                                     stringstream ss;
                                                                     ss << -std::atoi($expr.c_str());
                                                                     $result = ss.str();
@@ -385,8 +385,8 @@ expr[result]:
                                                                     $result = ss.str();
                                                                     INFO("$result=" << $result);
 																}
-    | expr[lhs] SUB[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr SUB expr");
+    | expr[lhs] DASH[op] expr[rhs]                               {
+																	INFO("PARSER expr: | expr DASH expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) - std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
@@ -721,11 +721,11 @@ access_modfier:
  * @brief intergal type
  */
 intregal_type:
-    INT                                                         { INFO("intergal_type: | INT");  $$="int"; }
-    | FLOAT                                                     { INFO("intergal_type: | FLOAT"); $$="float"; }
-    | CHAR                                                      { INFO("intergal_type: | CHAR"); $$="char"; }
-    | STRING                                                    { INFO("intergal_type: | STRING"); $$="STRING"; }
-    | VOID                                                      { INFO("intergal_type: | VOID"); $$="VOID"; }
+    INT                                                         { INFO("intergal_type: | INT");  $$=INT; }
+    | FLOAT                                                     { INFO("intergal_type: | FLOAT"); $$=FLOAT; }
+    | CHAR                                                      { INFO("intergal_type: | CHAR"); $$=CHAR; }
+    | STRING                                                    { INFO("intergal_type: | STRING"); $$=STRING; }
+    | VOID                                                      { INFO("intergal_type: | VOID"); $$=VOID; }
                                                                 ;
 tokens:
     STRUCT

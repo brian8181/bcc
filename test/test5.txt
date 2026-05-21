@@ -20,5 +20,16 @@ int foo();
 int boo(int x, int y);
 int abc[10];
 abc[0] = 42;
-int xyz[5] =                                                                                     { 1, 2, 3 };
+int xyz[5] =  { 1, 2, 3 };
+xyz[0] = 15;
+if(x==3)
+    a=0;
 
+if(x==3)
+{
+    a=0;
+}
+else
+{
+    a=1;
+}

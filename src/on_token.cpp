@@ -48,12 +48,26 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_LPAREN();
     case RPAREN:
         return parser::make_RPAREN();
+    
+    case FOR:
+        return parser::make_FOR();
+    case DO:
+        return parser::make_DO();
     case WHILE:
         return parser::make_WHILE();
     case IF:
         return parser::make_IF();
+    case RETURN:
+        return parser::make_RETURN();
     case ELSE:
         return parser::make_ELSE();
+    case ELSEIF:
+        return parser::make_ELSEIF();
+    case BREAK:
+        return parser::make_BREAK();
+    case CONTINUE:
+        return parser::make_CONTINUE();
+
     case HASH_INCLUDE:
         return parser::make_HASH_INCLUDE();
     case IDENTIFIER:
@@ -62,8 +76,8 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_MOD();
     case ADD:
         return parser::make_ADD();
-    case SUB:
-        return parser::make_SUB();
+    case DASH:
+        return parser::make_DASH();
     case MUL:
         return parser::make_MUL();
     case COMMA:
