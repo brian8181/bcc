@@ -24,7 +24,6 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_TEST_TOKEN(match);
     case PRINT:
         return parser::make_PRINT();
-
     case STRING:
         return parser::make_STRING();
     case INT:
@@ -35,10 +34,8 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_CHAR();
     case VOID:
         return parser::make_VOID();
-
     case SEMI_COLON:
         return parser::make_SEMI_COLON();
-
     case LBRACE:
         return parser::make_LBRACE();
     case RBRACE:
@@ -72,23 +69,9 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_CONTINUE();
 
     case HASH_INCLUDE:
-        return parser::make_INCLUDE();
-    case HASH_IF:
-        return parser::make_HASH_IF();
-    case DEFINE:
-        return parser::make_DEFINE();
-    case IFDEF:
-        return parser::make_IFDEF();
-    case IFNDEF:
-        return parser::make_IFNDEF();
-    case UNDEF:
-        return parser::make_UNDEF();
-    case HASH_ERROR:
-        return parser::make_HASH_ERROR();
-    case PRAGMA:
-        return parser::make_PRAGMA();
-    
-
+        return parser::make_HASH_INCLUDE();
+    case IDENTIFIER:
+        return parser::make_IDENTIFIER(match);
     case MOD:
         return parser::make_MOD();
     case ADD:
@@ -113,6 +96,8 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_GT();
     case LT:
         return parser::make_LT();
+    case ASSIGN:
+        return parser::make_ASSIGN();
     case AND:
         return parser::make_AND();
     case OR:
@@ -131,12 +116,6 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_LSHIFT();
     case RSHIFT:
         return parser::make_RSHIFT();
-
-    case ASSIGN:
-        return parser::make_ASSIGN();
-   
-    case IDENTIFIER:
-        return parser::make_IDENTIFIER(match);
     case NUMERIC_LITERAL:
         return parser::make_NUMERIC_LITERAL(match);
     case REAL_LITERAL:
@@ -149,7 +128,6 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_STRUCT();
     case TYPEDEF:
         return parser::make_TYPEDEF();
-
     case NEWLINE:
         m_line++;
         m_fstream << "// line:" << m_line << endl;

@@ -140,7 +140,7 @@
 }
 
 %token SKIP_TOKEN UNDEFINED
-%token INCLUDE DEFINE UNDEF HASH_IF IFDEF IFNDEF HASH_ERROR PRAGMA
+%token HASH_INCLUDE HASH_DEFINE HASH_UNDEF HASH_IF HASH_IFDEF HASH_IFNDEF
 %token <std::string> TEST_TOKEN 
 
 %token END_OF_FILES
@@ -168,8 +168,6 @@
 
 /* %type <std::string> param
 %type < std::vector< std::string> > params */
-%type < std::list< std::string > > args
-%type < std::string > arg
 %type <std::string> file
 %type < std::vector< std::string > > files
 %type <std::string> stmt
@@ -184,7 +182,7 @@
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
 %type <std::string> access_modfier type_modifier modifiers
-%type intregal_type
+%type <int> intregal_type
 %type <std::string> decel func_param_decels param_decels function_decel function_call
 %type <std::string> compiler
 %start compiler
@@ -293,7 +291,7 @@ stmt:
     | function_decel SEMI_COLON                                 {
                                                                     INFO("stmt: | function_decel SEMI_COLON");
                                                                 }
-    | decel ASSIGN expr SEMI_COLON                               { 
+   | decel ASSIGN expr SEMI_COLON                               { 
                                                                     INFO("stmt: | decel ASSIGN expr SEMI_COLON"); 
                                                                     // _symtab[$decel].val = new int(std::atoi($expr.c_str()));
                                                                     // stringstream ss;
@@ -329,8 +327,8 @@ stmt:
                                                                         INFO("UNDEFINED symbol");
                                                                     }
                                                                 }
-    | INCLUDE STRING_LITERAL                               {
-                                                                    INFO("stmt: | INCLUDE STRING_LITERAL=" << $2 << " SEMI_COLON");
+    | HASH_INCLUDE STRING_LITERAL                               {
+                                                                    INFO("stmt: | HASH_INCLUDE STRING_LITERAL=" << $2 << " SEMI_COLON");
                                                                     lexer::instance().push_include($STRING_LITERAL);
                                                                     $$ = $STRING_LITERAL;
                                                                 }
@@ -698,16 +696,6 @@ modifiers:
     | modifiers type_modifier
     | modifiers access_modfier
     ;
-
-args[list]:
-    arg                                                        { $list.push_back($arg); }
-    | args arg                                                 { $args.push_back($arg); $list == $args; }
-    ;
-
-arg:
-    '#' STRING_LITERAL '#'
-    ;
-
 /**
  * @name type_modfier
  */
@@ -733,11 +721,11 @@ access_modfier:
  * @brief intergal type
  */
 intregal_type:
-    INT                                                         { INFO("intergal_type: | INT");  /*$$=1*/; }
-    | FLOAT                                                     { INFO("intergal_type: | FLOAT"); /*$$=FLOAT;*/ }
-    | CHAR                                                      { INFO("intergal_type: | CHAR"); /*$$=CHAR;*/ }
-    | STRING                                                    { INFO("intergal_type: | STRING"); /*$$=STRING;*/ }
-    | VOID                                                      { INFO("intergal_type: | VOID"); /*$$=VOID;*/ }
+    INT                                                         { INFO("intergal_type: | INT");  $$=INT; }
+    | FLOAT                                                     { INFO("intergal_type: | FLOAT"); $$=FLOAT; }
+    | CHAR                                                      { INFO("intergal_type: | CHAR"); $$=CHAR; }
+    | STRING                                                    { INFO("intergal_type: | STRING"); $$=STRING; }
+    | VOID                                                      { INFO("intergal_type: | VOID"); $$=VOID; }
                                                                 ;
 tokens:
     STRUCT
