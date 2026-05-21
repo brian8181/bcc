@@ -224,7 +224,6 @@ void lexer::set_state( state_t* pstate )
 		cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
 			<< info.str() << FMT_ITALIC << FMT_RESET << endl;
 
-//   	ss << "(?<" << ptoken->name << ">)" << ptoken->rexp << ")|";
 		ss << "(" << ptoken->rexp << ")|";
 	}
 
@@ -255,6 +254,7 @@ string& lexer::build_search_expression(const vector<unsigned long>& tokens, map<
 	{
 		token_t token = table[tokens[i]];
 		ss << "|(" << token.rexp << ")";
+		//ss << "|(?<" << token.name << ">" << token.rexp << ")";
 	}
 	// set return value
 	s = ss.str();
