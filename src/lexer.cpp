@@ -222,7 +222,7 @@ void lexer::set_state( state_t* pstate )
 			<< "    ~    " << std::left << "regex: " << std::left << std::setw( 44 ) << rstr.str() << std::right;
 
 		cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
-			<< info.str() << FMT_ITALIC << FMT_RESET << endl;
+			<< info.str() << FMT_RESET << endl;
 
 		ss << "(" << ptoken->rexp << ")|";
 	}
