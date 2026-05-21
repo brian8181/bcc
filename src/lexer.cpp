@@ -28,6 +28,7 @@
 #include "utility.hpp"
 #include "bash_color.hpp"
 #include "log.hpp"
+#include "on_token.hpp"
 namespace fs = std::filesystem;
 
 using std::cerr;
@@ -145,7 +146,6 @@ bool lexer::init( const int argc, char* argv[] )
 		}
 		m_input_paths.push_back(p);
 	}
-	m_fstream.open( "build/a.out", std::ios_base::out | std::ios::trunc );
 	initalized = true;
 	return next_file();
 }
@@ -157,7 +157,8 @@ bool lexer::init( const int argc, char* argv[] )
  */
 bool lexer::next_file()
 {
-	if(static int i = 0; i < m_input_paths.size() )
+	int sz = m_input_paths.size();
+	if (static int i = 0; i < sz)
 	{
 		m_ifile = string( m_input_paths[i] );
 		m_buffer.clear();
@@ -166,23 +167,23 @@ bool lexer::next_file()
 		// set state
 		set_state( &INITIAL );
 		m_line = 0;
-		++m_file_count;
 		++i;
+		m_current_file_idx = i;
 
 		// todo close open stream & open one for next file
 		fs::path p = m_ifile;
 		p.replace_extension(".html");
 		m_ofile = (string)p;
 
-		INFO("output file=\"" << m_ofile << "\"");
-		INFO( "initialized buffer - [ \"" << esc_nl( m_buffer ).get_val() << "\" ]" );
-		return true;
-	}
-	// flush close current
-	if( m_fstream.is_open() )
-	{
-		m_fstream.flush();
-		m_fstream.close();
+		// flush close current
+		if (m_fstream.is_open())
+		{
+			m_fstream.flush();
+			m_fstream.close();
+		}
+		m_fstream.open("out.c", std::ios_base::out | std::ios::trunc);
+		m_fstream << "testing ...";
+		return (m_fstream.is_open() && !m_buffer.empty());
 	}
 	return false;
 }
@@ -286,7 +287,9 @@ void lexer::push_include( const string& file )
 parser::symbol_type lexer::get_token()
 {
 	if( EOFS )
+	{
 		return parser::make_END_OF_FILES();
+	}
 
 	if( m_buffer.empty() )
 	{
@@ -335,133 +338,14 @@ parser::symbol_type lexer::get_token()
  */
 void lexer::print_smatch(token_t t, boost::smatch m)
 {
-	INFO(	"match.pos:" << m.position()   << " - match.sz:"  << m.str().size()
-									       << " - prefix.sz:" << m.prefix().str().size()
-									       << " - suffix.sz:" << m.suffix().str().size()	);
+	// INFO(	"match.pos:" << m.position()   << " - match.sz:"  << m.str().size()
+	// 								       << " - prefix.sz:" << m.prefix().str().size()
+	// 								       << " - suffix.sz:" << m.suffix().str().size()	);
 
-    INFO(	"match" 								      << FMT_FG_WHITE << "[ " << t.index << " : " << t.name                     << " ] "\
-												          << FMT_FG_MAGENTA << "[ " << "\"" << esc_nl( m.str()    ).get_val() << "\"" << " ]" << FMT_RESET \
-			<< FMT_ITALIC << FMT_FG_GREEN <<  " - prefix" << FMT_FG_MAGENTA << "[ " << "\"" << esc_nl( m.prefix() ).get_val() << "\"" << " ]" << FMT_RESET \
-			<< FMT_ITALIC << FMT_FG_GREEN <<  " - suffix" << FMT_FG_MAGENTA << "[ " << "\"" << esc_nl( m.suffix() ).get_val() << "\"" << " ]" << FMT_RESET		);
-}
-
-/**
- * @name  on_token	
- * @brief override virtual, on_token, for each token ...
- * @param unsigned long id
- * @param string match: current match
- * @return parser::symbol_type
- */
-parser::symbol_type lexer::on_token( unsigned long id, const string& match )
-{
-	switch( id )
-	{
-		case TEST_TOKEN:
-			return parser::make_TEST_TOKEN( match );
-		case PRINT:
-			return parser::make_PRINT();
-		case INT:
-			return parser::make_INT();
-		case FLOAT:
-			return parser::make_FLOAT();
-		case CHAR:
-			return parser::make_CHAR();
-		case VOID:
-			return parser::make_VOID();
-		case SEMI_COLON:
-			return parser::make_SEMI_COLON();
-		case LBRACE:
-			return parser::make_LBRACE();
-		case RBRACE:
-			return parser::make_RBRACE();
-		case LBRACKET:
-			return parser::make_LBRACKET();
-		case RBRACKET:
-			return parser::make_RBRACKET();
-		case LPAREN:
-			return parser::make_LPAREN();
-		case FUNCTION:
-			return parser::make_FUNCTION( match );
-		case RPAREN:
-			return parser::make_RPAREN();
-		case WHILE:
-			return parser::make_WHILE();
-		case IF:
-			return parser::make_IF();
-		case ELSE:
-			return parser::make_ELSE();
-		case HASH_INCLUDE:
-			return parser::make_HASH_INCLUDE();
-		case IDENTIFIER:
-			return parser::make_IDENTIFIER( match );
-		case MOD:
-			return parser::make_MOD();
-		case ADD:
-			return parser::make_ADD();
-		case SUB:
-			return parser::make_SUB();
-		case MUL:
-			return parser::make_MUL();
-		case COMMA:
-			return parser::make_COMMA();
-		case DIV:
-			return parser::make_DIV();
-		case EQ:
-			return parser::make_EQ();
-		case NEQ:
-			return parser::make_NEQ();
-		case GEQ:
-			return parser::make_GEQ();
-		case LEQ:
-			return parser::make_LEQ();	
-		case GT:
-			return parser::make_GT();
-		case LT:
-			return parser::make_LT();
-		case ASSIGN:
-			return parser::make_ASSIGN();
-		case AND:
-			return parser::make_AND();
-		case OR:
-			return parser::make_OR();
-		case NOT:
-			return parser::make_NOT();
-		case BIT_AND:
-			return parser::make_BIT_AND();
-		case BIT_OR:
-			return parser::make_BIT_OR();
-		case BIT_NOT:
-			return parser::make_BIT_NOT();
-		case BIT_XOR:
-			return parser::make_BIT_XOR();
-		case LSHIFT:
-			return parser::make_LSHIFT();
-		case RSHIFT:
-			return parser::make_RSHIFT();
-		case NUMERIC_LITERAL:
-			return parser::make_NUMERIC_LITERAL( match );
-		case REAL_LITERAL:
-			return parser::make_REAL_LITERAL( match );
-		case STRING_LITERAL:
-			return parser::make_STRING_LITERAL( match );
-		case CHAR_LITERAL:
-			return parser::make_CHAR_LITERAL( match );
-		case STRUCT:
-			return parser::make_STRUCT();
-		case TYPEDEF:
-			return parser::make_TYPEDEF();
-		case NEWLINE:
-			m_line++;
-			m_fstream << "// line:" << m_line << endl; 
-			return get_token();
-		case WHITESPACE:
-		case SKIP_TOK:
-			TRACE();
-			return get_token();
-		default:;
-	} // END switch
-	cout << "UNDEFINED symbol found... id=" << id << ",  match=" << match << endl;
-	return parser::make_UNDEFINED();
+    INFO( FMT_RESET << FMT_FG_GREEN <<  "match" 	<< FMT_FG_CYAN << "[ " << FMT_ITALIC << t.index << " : "                          << t.name                   << " ]"\
+										            << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\""    << esc_nl( m.str()    ).get_val() << "\"" << FMT_RESET_ITALIC << " ](" << m.str().size() << ")" << FMT_RESET \
+					<< FMT_FG_GREEN <<  " - prefix" << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\""    << esc_nl( m.prefix() ).get_val() << "\"" << FMT_RESET_ITALIC << " ](" << m.prefix().str().size() << ")" << FMT_RESET \
+					<< FMT_FG_GREEN <<  " - suffix" << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\""    << esc_nl( m.suffix() ).get_val() << "\"" << FMT_RESET_ITALIC << " ](" << m.suffix().str().size() << ")" << FMT_RESET		);
 }
 
 // Overload definition
@@ -469,3 +353,5 @@ std::ostream& operator<<(std::ostream& os, const lexer& lex)
 {
     return os; // Return stream to allow chaining
 }
+
+// 

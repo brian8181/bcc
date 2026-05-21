@@ -1,0 +1,224 @@
+x=this is x. y=this is y
+key:88 { name:PRINT, index:216 }
+key:89 { name:ADD, index:229 }
+key:90 { name:SUB, index:228 }
+key:91 { name:MUL, index:230 }
+key:92 { name:DIV, index:233 }
+key:93 { name:MOD, index:234 }
+key:94 { name:LPAREN, index:236 }
+key:95 { name:RPAREN, index:238 }
+key:96 { name:LBRACE, index:241 }
+key:97 { name:RBRACE, index:242 }
+key:98 { name:LBRACKET, index:239 }
+key:99 { name:RBRACKET, index:240 }
+key:100 { name:BIT_AND, index:266 }
+key:101 { name:BIT_NOT, index:268 }
+key:102 { name:BIT_OR, index:267 }
+key:103 { name:BIT_XOR, index:269 }
+key:104 { name:LSHIFT, index:270 }
+key:105 { name:RSHIFT, index:271 }
+key:106 { name:AND, index:263 }
+key:107 { name:OR, index:264 }
+key:108 { name:NOT, index:265 }
+key:109 { name:EQ, index:255 }
+key:110 { name:LESS_THAN, index:250 }
+key:111 { name:GREATER_THAN, index:251 }
+key:112 { name:GREATER_THAN_EQUAL, index:252 }
+key:113 { name:LESS_THAN_EQUAL, index:253 }
+key:114 { name:NUMERIC_LITERAL, index:221 }
+key:115 { name:REAL_LITERAL, index:222 }
+key:116 { name:STRING_LITERAL, index:223 }
+key:119 { name:IF, index:272 }
+key:120 { name:ELSE, index:273 }
+key:121 { name:ELSEIF, index:274 }
+key:123 { name:WHILE, index:275 }
+key:127 { name:BREAK, index:276 }
+key:131 { name:IDENTIFIER, index:225 }
+key:133 { name:COMMENT, index:227 }
+key:136 { name:INT, index:278 }
+key:139 { name:FLOAT, index:279 }
+key:141 { name:CHAR, index:280 }
+key:142 { name:VOID, index:281 }
+key:145 { name:PTR, index:231 }
+key:147 { name:STRUCT, index:282 }
+key:148 { name:TYPEDEF, index:283 }
+key:149 { name:FUCTION, index:226 }
+key:150 { name:ASSIGN, index:235 }
+key:151 { name:HASH_IF, index:284 }
+key:152 { name:HASH_INCLUDE, index:291 }
+key:153 { name:HASH_DEFINE, index:285 }
+key:154 { name:HASH_IFDEF, index:286 }
+key:155 { name:HASH_IFNDEF, index:287 }
+key:156 { name:HASH_ENDIF, index:290 }
+key:157 { name:HASH_ELSE, index:288 }
+key:158 { name:HASH_ELSEIF, index:289 }
+key:159 { name:DOT, index:248 }
+key:160 { name:QUESTION_MARK, index:246 }
+key:161 { name:BACKSLASH, index:243 }
+key:163 { name:COMMA, index:247 }
+key:164 { name:COLON, index:244 }
+key:165 { name:SEMI_COLON, index:245 }
+key:168 { name:ESC_SEQ, index:217 }
+key:169 { name:ESC_NLINE, index:218 }
+key:177 { name:WHITESPACE, index:219 }
+key:178 { name:NEWLINE, index:220 }
+key:181 { name:TEST_TOKEN, index:215 }
+key:1090 { name:EQ, index:256 }
+key:1100 { name:NEQ, index:257 }
+key:1110 { name:GT, index:259 }
+key:1120 { name:GEQ, index:260 }
+key:1130 { name:LEQ, index:261 }
+key:1180 { name:CHAR_LITERAL, index:224 }
+key:1350 { name:STRING, index:277 }
+key:1530 { name:HASH_UNDEF, index:292 }
+key:1580 { name:HASH_PRGAMA, index:294 }
+key:1581 { name:HASH_ERROR, index:293 }
+[Info] Using Meyers' implementation (Static Segment).
+[System] lexer instance created at address: 0x512c20
+[ATTN] Enter set_state ~ 16:INITIAL ~~> 16:INITIAL  ---> func:"set_state" ~ file:"src/lexer.cpp" ~ line:197 ~  ~ May 20 2026, 16:34:57
+[ATTN] @@@|(PRINT)|(\s*\<int\>\s+)|(\s*\<float\>\s+)|(\s*\<char\>\s+)|(\s*\<void\>\s+)|([;])|([=])|(#include\>\s)|(\n)|([ \t\r])|('.')|("[A-Za-z0-9*@_.~+-/ ]+")|([1-9]+[0-9]*|0)|([0-9]+\.[0-9]+)|([A-Za-z_][A-Za-z0-9_]*)|(==)|(!=)|(<=)|(>=)|([>])|([>])|([*])|([/])|([-])|([+])|([%])|([(])|([)])|([{])|([}])|(\|\|)|(&&)|([!])|([|])|(&)|([~])|([>]{2})|([<]{2})|([,])|(\s*\<struct\>\s+)|(\s*\<tyedef\>\s+)|([*])  ---> func:"set_state" ~ file:"src/lexer.cpp" ~ line:206 ~  ~ May 20 2026, 16:34:57
+#0    id:    181    ~    idx: 215    ~    name: TEST_TOKEN            ~    type: string        ~    regex: "@@@"                                       
+#1    id:     88    ~    idx: 216    ~    name: PRINT                 ~    type: string        ~    regex: "PRINT"                                     
+#2    id:    136    ~    idx: 278    ~    name: INT                   ~    type: string        ~    regex: "\s*\<int\>\s+"                             
+#3    id:    139    ~    idx: 279    ~    name: FLOAT                 ~    type: string        ~    regex: "\s*\<float\>\s+"                           
+#4    id:    141    ~    idx: 280    ~    name: CHAR                  ~    type: string        ~    regex: "\s*\<char\>\s+"                            
+#5    id:    142    ~    idx: 281    ~    name: VOID                  ~    type: string        ~    regex: "\s*\<void\>\s+"                            
+#6    id:    165    ~    idx: 245    ~    name: SEMI_COLON            ~    type: string        ~    regex: "[;]"                                       
+#7    id:    150    ~    idx: 235    ~    name: ASSIGN                ~    type: string        ~    regex: "[=]"                                       
+#8    id:    152    ~    idx: 291    ~    name: HASH_INCLUDE          ~    type: string        ~    regex: "#include\>\s"                              
+#9    id:    178    ~    idx: 220    ~    name: NEWLINE               ~    type: string        ~    regex: "\n"                                        
+#10   id:    177    ~    idx: 219    ~    name: WHITESPACE            ~    type: string        ~    regex: "[ \t\r]"                                   
+#11   id:   1180    ~    idx: 224    ~    name: CHAR_LITERAL          ~    type: string        ~    regex: "'.'"                                       
+#12   id:    116    ~    idx: 223    ~    name: STRING_LITERAL        ~    type: string        ~    regex: ""[A-Za-z0-9*@_.~+-/ ]+""                   
+#13   id:    114    ~    idx: 221    ~    name: NUMERIC_LITERAL       ~    type: string        ~    regex: "[1-9]+[0-9]*|0"                            
+#14   id:    115    ~    idx: 222    ~    name: REAL_LITERAL          ~    type: string        ~    regex: "[0-9]+\.[0-9]+"                            
+#15   id:    131    ~    idx: 225    ~    name: IDENTIFIER            ~    type: string        ~    regex: "[A-Za-z_][A-Za-z0-9_]*"                    
+#16   id:    109    ~    idx: 255    ~    name: EQ                    ~    type: string        ~    regex: "=="                                        
+#17   id:   1090    ~    idx: 256    ~    name: EQ                    ~    type: string        ~    regex: "!="                                        
+#18   id:   1130    ~    idx: 261    ~    name: LEQ                   ~    type: string        ~    regex: "<="                                        
+#19   id:   1120    ~    idx: 260    ~    name: GEQ                   ~    type: string        ~    regex: ">="                                        
+#20   id:   1100    ~    idx: 257    ~    name: NEQ                   ~    type: string        ~    regex: "[>]"                                       
+#21   id:   1110    ~    idx: 259    ~    name: GT                    ~    type: string        ~    regex: "[>]"                                       
+#22   id:     91    ~    idx: 230    ~    name: MUL                   ~    type: string        ~    regex: "[*]"                                       
+#23   id:     92    ~    idx: 233    ~    name: DIV                   ~    type: string        ~    regex: "[/]"                                       
+#24   id:     90    ~    idx: 228    ~    name: SUB                   ~    type: string        ~    regex: "[-]"                                       
+#25   id:     89    ~    idx: 229    ~    name: ADD                   ~    type: string        ~    regex: "[+]"                                       
+#26   id:     93    ~    idx: 234    ~    name: MOD                   ~    type: string        ~    regex: "[%]"                                       
+#27   id:     94    ~    idx: 236    ~    name: LPAREN                ~    type: string        ~    regex: "[(]"                                       
+#28   id:     95    ~    idx: 238    ~    name: RPAREN                ~    type: string        ~    regex: "[)]"                                       
+#29   id:     96    ~    idx: 241    ~    name: LBRACE                ~    type: string        ~    regex: "[{]"                                       
+#30   id:     97    ~    idx: 242    ~    name: RBRACE                ~    type: string        ~    regex: "[}]"                                       
+#31   id:    107    ~    idx: 264    ~    name: OR                    ~    type: string        ~    regex: "\|\|"                                      
+#32   id:    106    ~    idx: 263    ~    name: AND                   ~    type: string        ~    regex: "&&"                                        
+#33   id:    108    ~    idx: 265    ~    name: NOT                   ~    type: string        ~    regex: "[!]"                                       
+#34   id:    102    ~    idx: 267    ~    name: BIT_OR                ~    type: string        ~    regex: "[|]"                                       
+#35   id:    100    ~    idx: 266    ~    name: BIT_AND               ~    type: string        ~    regex: "&"                                         
+#36   id:    101    ~    idx: 268    ~    name: BIT_NOT               ~    type: string        ~    regex: "[~]"                                       
+#37   id:    105    ~    idx: 271    ~    name: RSHIFT                ~    type: string        ~    regex: "[>]{2}"                                    
+#38   id:    104    ~    idx: 270    ~    name: LSHIFT                ~    type: string        ~    regex: "[<]{2}"                                    
+#39   id:    163    ~    idx: 247    ~    name: COMMA                 ~    type: string        ~    regex: "[,]"                                       
+#40   id:    147    ~    idx: 282    ~    name: STRUCT                ~    type: string        ~    regex: "\s*\<struct\>\s+"                          
+#41   id:    148    ~    idx: 283    ~    name: TYPEDEF               ~    type: string        ~    regex: "\s*\<tyedef\>\s+"                          
+#42   id:    145    ~    idx: 231    ~    name: PTR                   ~    type: string        ~    regex: "[*]"                                       
+[ATTN] Exit set_state ~ 16:INITIAL  ---> func:"set_state" ~ file:"src/lexer.cpp" ~ line:233 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:4 - prefix.sz:0 - suffix.sz:175  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 278 : INT ] [ "int " ] - prefix[ "" ] - suffix[ "a;\na = 1 + 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:174  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 225 : IDENTIFIER ] [ "a" ] - prefix[ "" ] - suffix[ ";\na = 1 + 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[INFO] decel: | type IDENTIFIER  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:576 ~  ~ May 20 2026, 18:17:01
+[INFO] strm << type<INT> id<a>  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:589 ~  ~ May 20 2026, 18:17:01
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:173  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 245 : SEMI_COLON ] [ ";" ] - prefix[ "" ] - suffix[ "\na = 1 + 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[INFO] stmt: | decel SEMI_COLON  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:283 ~  ~ May 20 2026, 18:17:01
+[INFO] strm << // type<INT> id<a>;  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:287 ~  ~ May 20 2026, 18:17:01
+[INFO] stmts: | stmt  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:264 ~  ~ May 20 2026, 18:17:01
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:172  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 220 : NEWLINE ] [ "\n" ] - prefix[ "" ] - suffix[ "a = 1 + 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:171  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 225 : IDENTIFIER ] [ "a" ] - prefix[ "" ] - suffix[ " = 1 + 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:170  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 219 : WHITESPACE ] [ " " ] - prefix[ "" ] - suffix[ "= 1 + 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"on_token" ~ file:"src/lexer.cpp" ~ line:463 ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:169  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 235 : ASSIGN ] [ "=" ] - prefix[ "" ] - suffix[ " 1 + 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:168  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 219 : WHITESPACE ] [ " " ] - prefix[ "" ] - suffix[ "1 + 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"on_token" ~ file:"src/lexer.cpp" ~ line:463 ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:167  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 221 : NUMERIC_LITERAL ] [ "1" ] - prefix[ "" ] - suffix[ " + 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[INFO] PARSER expr: | NUMERICAL_LITERAL  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:353 ~  ~ May 20 2026, 18:17:01
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:166  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 219 : WHITESPACE ] [ " " ] - prefix[ "" ] - suffix[ "+ 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"on_token" ~ file:"src/lexer.cpp" ~ line:463 ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:165  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 229 : ADD ] [ "+" ] - prefix[ "" ] - suffix[ " 2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:164  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 219 : WHITESPACE ] [ " " ] - prefix[ "" ] - suffix[ "2 * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"on_token" ~ file:"src/lexer.cpp" ~ line:463 ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:163  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 221 : NUMERIC_LITERAL ] [ "2" ] - prefix[ "" ] - suffix[ " * 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[INFO] PARSER expr: | NUMERICAL_LITERAL  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:353 ~  ~ May 20 2026, 18:17:01
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:162  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 219 : WHITESPACE ] [ " " ] - prefix[ "" ] - suffix[ "* 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"on_token" ~ file:"src/lexer.cpp" ~ line:463 ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:161  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 230 : MUL ] [ "*" ] - prefix[ "" ] - suffix[ " 3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:160  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 219 : WHITESPACE ] [ " " ] - prefix[ "" ] - suffix[ "3;\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"on_token" ~ file:"src/lexer.cpp" ~ line:463 ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:159  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 221 : NUMERIC_LITERAL ] [ "3" ] - prefix[ "" ] - suffix[ ";\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[INFO] PARSER expr: | NUMERICAL_LITERAL  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:353 ~  ~ May 20 2026, 18:17:01
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:158  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 245 : SEMI_COLON ] [ ";" ] - prefix[ "" ] - suffix[ "\na = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[INFO] PARSER expr: | expr DIV expr  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:398 ~  ~ May 20 2026, 18:17:01
+[INFO] $result=0  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:402 ~  ~ May 20 2026, 18:17:01
+[INFO] PARSER expr: | expr SUB expr  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:384 ~  ~ May 20 2026, 18:17:01
+[INFO] $result=1  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:388 ~  ~ May 20 2026, 18:17:01
+[INFO] assign_expr: IDENTIFIER ASSIGN expr  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:565 ~  ~ May 20 2026, 18:17:01
+[INFO] stmt: assign_expr SEMI_COLON  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:304 ~  ~ May 20 2026, 18:17:01
+[INFO] stmt: IDENTIFIER ASSIGN expr SEMI_COLON  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:305 ~  ~ May 20 2026, 18:17:01
+[INFO] strm << // type<INT> id<a> = 1;  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:318 ~  ~ May 20 2026, 18:17:01
+[INFO] stmts: | stmts stmt  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:268 ~  ~ May 20 2026, 18:17:01
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:157  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 220 : NEWLINE ] [ "\n" ] - prefix[ "" ] - suffix[ "a = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:156  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 225 : IDENTIFIER ] [ "a" ] - prefix[ "" ] - suffix[ " = 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:155  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 219 : WHITESPACE ] [ " " ] - prefix[ "" ] - suffix[ "= 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"on_token" ~ file:"src/lexer.cpp" ~ line:463 ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:154  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 235 : ASSIGN ] [ "=" ] - prefix[ "" ] - suffix[ " 5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:153  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 219 : WHITESPACE ] [ " " ] - prefix[ "" ] - suffix[ "5 + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"on_token" ~ file:"src/lexer.cpp" ~ line:463 ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:152  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 221 : NUMERIC_LITERAL ] [ "5" ] - prefix[ "" ] - suffix[ " + -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[INFO] PARSER expr: | NUMERICAL_LITERAL  ---> func:"parse" ~ file:"src/pparser.yy" ~ line:353 ~  ~ May 20 2026, 18:17:01
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:151  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 219 : WHITESPACE ] [ " " ] - prefix[ "" ] - suffix[ "+ -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"on_token" ~ file:"src/lexer.cpp" ~ line:463 ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:150  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 229 : ADD ] [ "+" ] - prefix[ "" ] - suffix[ " -3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"lex" ~ file:"src/driver.cpp" ~ line:58 ~ May 20 2026, 09:01:38
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:149  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 219 : WHITESPACE ] [ " " ] - prefix[ "" ] - suffix[ "-3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[TRCE] func:"on_token" ~ file:"src/lexer.cpp" ~ line:463 ~ May 20 2026, 16:34:57
+[INFO] match.pos:0 - match.sz:1 - prefix.sz:0 - suffix.sz:148  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:340 ~  ~ May 20 2026, 16:34:57
+[INFO] match[ 228 : SUB ] [ "-" ] - prefix[ "" ] - suffix[ "3;\nb = 5 + 10;\n\nint b;\nb = 5 * 7 * 2;\nb = 1 + 2 * 3 + 5;\n\nint c;\nc = (1 + 2) * 3;\nc = (2 == 1);\nc = b / 10;\nc = 70 / 10;\nc = 25 % 7;\n\nchar c = 'S';\n" ]  ---> func:"print_smatch" ~ file:"src/lexer.cpp" ~ line:344 ~  ~ May 20 2026, 16:34:57
+[System] lexer instance destroyed.

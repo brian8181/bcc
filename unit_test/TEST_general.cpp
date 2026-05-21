@@ -51,6 +51,13 @@ void TEST_general::tearDown()
 
 void TEST_general::TEST_quoted()
 {
+    //1000101011000111001000110000010010001001111010000000000000000000
+    // 0 - 999'999'999'999'999'999'9
+
+    unsigned long MAX = 9'999'999'999'999'999'999ul;
+    unsigned long digits[10000];
+    
+
     string expected = "Hello World";
     string quoted = "\"Hello World\"";
     stringstream ss;
@@ -66,14 +73,14 @@ void TEST_general::TEST_quoted()
  */
 void TEST_general::TEST_assign()
 {
-   int b;
-   b = (2 == 1);
-   CPPUNIT_ASSERT(b != 1);
-   CPPUNIT_ASSERT(b == 0);
+    int b;
+    b = (2 == 1);
+    CPPUNIT_ASSERT(b != 1);
+    CPPUNIT_ASSERT(b == 0);
 
-   b = (1 == 1);
-   CPPUNIT_ASSERT(b == 1);
-   CPPUNIT_ASSERT(b != 0);
-   
-  CPPUNIT_ASSERT(1 == 1);
+    b = (1 == 1);
+    CPPUNIT_ASSERT(b == 1);
+    CPPUNIT_ASSERT(b != 0);
+
+    CPPUNIT_ASSERT(1 == 1);
 }

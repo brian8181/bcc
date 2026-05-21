@@ -76,6 +76,7 @@ $(SRC)/ast.hpp \
 $(BLD)/pparser.tab.hpp \
 $(SRC)/parser.hpp \
 $(SRC)/lexer.hpp \
+$(SRC)/on_token.hpp \
 $(SRC)/driver.hpp \
 $(SRC)/definitions.hpp \
 $(SRC)/table.hpp \
@@ -96,6 +97,7 @@ $(OBJ)/utility.o \
 $(BLD)/pparser.tab.o \
 $(OBJ)/parser.o \
 $(OBJ)/lexer.o \
+$(OBJ)/on_token.o \
 $(OBJ)/driver.o \
 $(OBJ)/symtab.o \
 $(OBJ)/streamy.o \
@@ -109,6 +111,7 @@ $(OBJ)/scoped_ptr.o \
 $(OBJ)/utility.o \
 $(OBJ)/symtab.o \
 $(OBJ)/lexer.o \
+$(OBJ)/on_token.o \
 $(OBJ)/ast.o \
 $(OBJ)/find_substrs.o \
 $(OBJ)/TEST_lex.o \
@@ -131,8 +134,6 @@ $(OBJ)/TEST_expr.o
 # $(SRC)/parser.hpp $(OBJ)/parser.o \
 # $(SRC)/lexer.hpp $(OBJ)/lexer.o \
 # $(SRC)/driver.hpp $(OBJ)/driver.o 
-
-
 SOURCES=$(HEADERS) $(OBJS)
 
 all: $(BLD)/$(APP) $(BLD)/TEST_lex
@@ -189,7 +190,7 @@ $(OBJ)/%.o: $(SRC)/%.c $(SRC)/%.h
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(SRC)/%.cpp $(SRC)/%.hpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(TST)/%.cpp $(TST)/%.hpp # $(HEADERS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@

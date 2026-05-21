@@ -11,6 +11,12 @@ constexpr const unsigned long eINT   = 0x10;
 constexpr const unsigned long eFLOAT = 0x20;
 constexpr const unsigned long eCHAR  = 0x40;
 constexpr const unsigned long eVOID  = 0x80;
+constexpr const unsigned long eFUNC   = 0x100;
+constexpr const unsigned long eVAR    =  0x200;
+constexpr const unsigned long eARRAY  = 0x400;
+constexpr const unsigned long ePTR    = 0x800;
+constexpr const unsigned long eVOID_PTR_FUNC = eVOID | ePTR | eFUNC;
+
 
 // enum type_t
 // {
@@ -34,15 +40,22 @@ constexpr const unsigned long eVOID  = 0x80;
 // 	{"void", eVOID}
 // }
 
+//template <typename T>
 typedef struct _symbol_t
 {
 	string name;
 	string stype;
-	int type;
+	unsigned long type;
 	void* val;
 
 	 // Declare the operator as a friend to access private members
     friend std::ostream& operator<<(std::ostream& os, const _symbol_t& lex);
+
+	// T get_val()
+	// {
+	// 	(T *)val;
+	// }
+
 } _symbol_t;
 
 map<string, _symbol_t> _symtab = {{"x", {"x","int", eINT, 0}}, {"y", {"y", "int", eINT, 0}}, {"z", {"z", "int", eINT, 0}}};

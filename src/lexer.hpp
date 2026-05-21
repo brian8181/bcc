@@ -256,7 +256,7 @@ private:
 	fstream m_fstream{};
 	//fstream ostrm;
 	int m_line = 0;
-	int m_file_count = 0;
+	int m_current_file_idx = 0;
 	state_t* p_state = &INITIAL;
 	stringstream g_stringstream{};
 };

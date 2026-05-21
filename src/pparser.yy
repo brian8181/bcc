@@ -148,7 +148,7 @@
 
 %token CONST VOLATILE STATIC
 %token UNSIGNED SIGNED LONG REGISTER SHORT
-%token INT FLOAT CHAR VOID
+%token INT FLOAT CHAR VOID STRING
 %token STRUCT TYPEDEF
 
 %token <std::string> INDIRECT_MEMBER 
@@ -157,13 +157,11 @@
 %token COMMA LBRACKET RBRACKET LBRACE RBRACE DOT PTR ASTERICK
  
 %token <std::string> IDENTIFIER 
-%token <std::string> FUNCTION 
 %token <std::string> STRING_LITERAL NUMERIC_LITERAL REAL_LITERAL CHAR_LITERAL
 %nonassoc IFX
 %nonassoc IF ELSE ELSEIF DO WHILE FOR BREAK CONTINUE RETURN CASE SWITCH DEFAULT PRINT
 %left EQ NEQ GEQ LEQ LT GT ASSIGN
 %nonassoc  LPAREN RPAREN
-%nonassoc LPAREN_FUNC
 %left ADD SUB
 %left MUL DIV MOD
 %nonassoc UMINUS
@@ -185,7 +183,7 @@
 /* %type <std::string> access_modfiers */
 %type <std::string> access_modfier type_modifier modifiers
 %type <std::string> intregal_type
-%type <std::string> decel function_decel function_call
+%type <std::string> decel func_param_decels param_decels function_decel function_call
 %type <std::string> compiler
 %start compiler
 
@@ -287,9 +285,11 @@ stmt:
                                                                     lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
+    | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON   {
+                                                                            INFO("stmt: | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON");
+                                                                }
     | function_decel SEMI_COLON                                 {
                                                                     INFO("stmt: | function_decel SEMI_COLON");
-
                                                                 }
    | decel ASSIGN expr SEMI_COLON                               { 
                                                                     INFO("stmt: | decel ASSIGN expr SEMI_COLON"); 
@@ -301,6 +301,10 @@ stmt:
                                                                     // // testing lexer stream operator overload !
                                                                     // cout << lexer::instance();
                                                                 }
+    | decel ASSIGN params_list SEMI_COLON                       {
+                                                                    INFO("stmt: | decel ASSIGN params_list SEMI_COLON");
+                                                                }
+                                                                
     | assign_expr SEMI_COLON                                    { 
                                                                     INFO("stmt: assign_expr SEMI_COLON");
                                                                     INFO("stmt: IDENTIFIER ASSIGN expr SEMI_COLON"); 
@@ -482,10 +486,10 @@ expr[result]:
  * @name function_call
  */
 function_call:
-    FUNCTION[lhs] LPAREN_FUNC RPAREN                            {
+    IDENTIFIER[lhs] LPAREN RPAREN                                {
                                                                     INFO("function_call: IDENTIFIER[lhs] LPAREN RPAREN");
                                                                 }
-    | FUNCTION[lhs] params_list                                 {
+    | IDENTIFIER[lhs] params_list                                 {
                                                                     INFO("function_call: IDENTIFIER[lhs] params_list");
                                                                 } 
                                                                 ;
@@ -493,30 +497,30 @@ function_call:
  * @name function_decel
  */                                                                 
 function_decel:
-    intregal_type[type] FUNCTION[lhs] LPAREN_FUNC RPAREN        {
-                                                                    INFO("function_decel: | intregal_type[type] IDENTIFIER[lhs] LPAREN_FUNC RPAREN");
-                                                                    _symbol_t lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
-                                                                    _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
-                                                                
-                                                                    stringstream strm;
-                                                                    strm << $type << " " << $lhs << "()";
-                                                                    $function_decel = strm.str();
-                                                                    stringstream ss;
-                                                                    ss << "// " << "type<" << $type << "> " << "id<" << $lhs << "> ()";  
-                                                                    lexer::instance().write_ostream(ss.str());
-                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
-                                                                }
-    | intregal_type[type] FUNCTION[lhs] params_decel_list       {
-                                                                    INFO("function_decel: intregal_type[type] IDENTIFIER[lhs] params_decel_list");
+    decel LPAREN RPAREN                                         {
+                                                                    INFO("function_decel: | decl LPAREN_FUNC RPAREN");
                                                                     // _symbol_t lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
                                                                     // _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
                                                                 
                                                                     // stringstream strm;
                                                                     // strm << $type << " " << $lhs << "()";
                                                                     // $function_decel = strm.str();
+                                                                    // lexer::instance().write_ostream(strm.str());
                                                                     // stringstream ss;
                                                                     // ss << "// " << "type<" << $type << "> " << "id<" << $lhs << "> ()";  
-                                                                    // lexer::instance().write_ostream(ss.str());
+                                                                    // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                }
+    | decel func_param_decels                                   {
+                                                                    INFO("function_decel: intregal_type[type] IDENTIFIER[lhs] params_decel_list");
+                                                                    //_symbol_t lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
+                                                                    // _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
+                                                                
+                                                                    // stringstream strm;
+                                                                    // strm << $type << " " << $lhs << "()";
+                                                                    // $function_decel = strm.str();
+                                                                    // lexer::instance().write_ostream(strm.str());
+                                                                    // stringstream ss;
+                                                                    // ss << "// " << "type<" << $type << "> " << "id<" << $lhs << "> ()";  
                                                                     // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }                                                        
                                                                 ;
@@ -524,15 +528,18 @@ function_decel:
  * @name pramas_list
  */
 params_list:
-    LPAREN_FUNC params RPAREN                                   {
-                                                                    INFO("params_list: LPAREN_FUNC params RPAREN");
+    LPAREN params RPAREN                                   {
+                                                                    INFO("params_list: LPAREN params RPAREN");
+                                                                }
+    | LBRACE params RBRACE                                      {
+                                                                    INFO("params_list: LBRACKET params RBRACKET");
                                                                 }
                                                                 ;
 /**
  * @name params
  */
 params:
-    expr                                                        {
+    expr                                                        {       
                                                                       INFO("params: expr");
                                                                 }
     | params COMMA expr                                         {
@@ -542,19 +549,19 @@ params:
 /**
  * @name params_decel_list
  */
-params_decel_list:
-    LPAREN_FUNC params_decel RPAREN                             {
+func_param_decels:
+    LPAREN param_decels RPAREN                             {
                                                                     INFO("params_decel_list: LPAREN_FUNC params_decel RPAREN");
                                                                 }
                                                                 ;
 /**
  * @name params_decel
  */
-params_decel:
+param_decels:
     decel                                                       {
                                                                     INFO("params_decel: decel");
                                                                 }
-    | params_decel COMMA decel                                  {
+    | param_decels COMMA decel                                  {
                                                                     INFO("params_decel: params_decel COMMA decel");
                                                                 }
                                                                 ;
@@ -568,38 +575,108 @@ assign_expr:
                                                                     $$ = p;
                                                                 }
                                                                 ;
-/**
+ /**
  * @name decel
  * @brief decelration
  */                                                                
 decel:
-    intregal_type[type] IDENTIFIER[lhs]                         {
-                                                                    INFO("decel: | type IDENTIFIER");
-                                                                    _symbol_t lhs = { $lhs, $type, 0, 0 }; // new symbol, unassigned!
+    intregal_type IDENTIFIER                                       {
+                                                                        INFO("intregal_type: | INT IDENTIFIER");
+                                                                    }
+    | decel LBRACKET NUMERIC_LITERAL RBRACKET                           {
+
+                                                                    }
+    | INT IDENTIFIER[lhs]                                         {
+                                                                    INFO("decel: | INT IDENTIFIER");
+                                                                    _symbol_t lhs = { $lhs, "INT", eINT, 0 }; // new symbol, unassigned!
                                                                     _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
 
                                                                     stringstream ss;
-                                                                    ss << "type<" << $type << "> " << "id<" << $lhs << ">";  
+                                                                    ss << "type<" << "INT" << "> " << "id<" << $lhs << ">";  
                                                                     $decel = ss.str();   
                                                                     
                                                                     stringstream ostrm;
-                                                                    ostrm << $type << " " << $lhs << ";\n"; 
+                                                                    ostrm << "INT" << " " << $lhs << ";\n"; 
+                                                                    // write this to output
+                                                                    lexer::instance().write_ostream(ostrm.str());
+
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                }
+    | STRING IDENTIFIER[lhs]                                    {
+                                                                    INFO("decel: | STRING IDENTIFIER");
+                                                                    _symbol_t lhs = { $lhs, "STRING", 0, 0 }; // new symbol, unassigned!
+                                                                    _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
+
+                                                                    stringstream ss;
+                                                                    ss << "type<" << "STRING" << "> " << "id<" << $lhs << ">";  
+                                                                    $decel = ss.str();   
+                                                                    
+                                                                    stringstream ostrm;
+                                                                    ostrm << "STRING" << " " << $lhs << ";\n"; 
+                                                                    // write this to output
+                                                                    lexer::instance().write_ostream(ostrm.str());
+
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                }
+    | CHAR IDENTIFIER[lhs]                                       {
+                                                                    INFO("decel: | CHAR IDENTIFIER");
+                                                                    _symbol_t lhs = { $lhs, "CHAR", 0, 0 }; // new symbol, unassigned!
+                                                                    _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
+
+                                                                    stringstream ss;
+                                                                    ss << "type<" << "CHAR" << "> " << "id<" << $lhs << ">";  
+                                                                    $decel = ss.str();   
+                                                                    
+                                                                    stringstream ostrm;
+                                                                    ostrm << "CHAR" << " " << $lhs << ";\n"; 
+                                                                    // write this to output
+                                                                    lexer::instance().write_ostream(ostrm.str());
+
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                }
+    | FLOAT IDENTIFIER[lhs]                         {
+                                                                    INFO("decel: | FLOAT IDENTIFIER");
+                                                                    _symbol_t lhs = { $lhs, "FLOAT", 0, 0 }; // new symbol, unassigned!
+                                                                    _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
+
+                                                                    stringstream ss;
+                                                                    ss << "type<" << "FLOAT" << "> " << "id<" << $lhs << ">";  
+                                                                    $decel = ss.str();   
+                                                                    
+                                                                    stringstream ostrm;
+                                                                    ostrm << "FLOAT" << " " << $lhs << ";\n"; 
+                                                                    // write this to output
+                                                                    lexer::instance().write_ostream(ostrm.str());
+
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                }
+     | VOID IDENTIFIER[lhs]                                     {
+                                                                    INFO("decel: | VOID IDENTIFIER");
+                                                                    _symbol_t lhs = { $lhs, "VOID", eVOID | eFUNC, 0 }; // new symbol, unassigned!
+                                                                    _symtab[$lhs] = lhs;                                // add to symbol table, unassigned!
+
+                                                                    stringstream ss;
+                                                                    ss << "type<" << "VOID" << "> " << "id<" << $lhs << ">";  
+                                                                    $decel = ss.str();   
+                                                                    
+                                                                    stringstream ostrm;
+                                                                    ostrm << "VOID" << " " << $lhs << ";\n"; 
                                                                     // write this to output
                                                                     lexer::instance().write_ostream(ostrm.str());
 
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     |  intregal_type[type] PTR IDENTIFIER[lhs]                  {
-                                                                    INFO("decel: | type IDENTIFIER");
-                                                                    _symbol_t lhs = { $lhs, $type, 0, new int(0) }; // new symbol, unassigned!
+                                                                    INFO("decel | intregal_type[type] PTR IDENTIFIER[lhs]");
+                                                                    _symbol_t lhs = { $lhs, "PTR", ePTR, new int(0) }; // new symbol, unassigned!
                                                                     _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
 
-                                                                    // stringstream ss;
-                                                                    // ss << "type<" << $type << "> " << "id<" << $lhs << ">";  
-                                                                    // $decel = ss.str(); 
-                                                                    // // write this to output
-                                                                    // lexer::instance().write_ostream(ss.str());
-                                                                    // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+                                                                    // // stringstream ss;
+                                                                    // // ss << "type<" << "PTR" << "> " << "id<" << $lhs << ">";  
+                                                                    // // $decel = ss.str(); 
+                                                                    // // // write this to output
+                                                                    // // lexer::instance().write_ostream(ss.str());
+                                                                    // // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
                                                                 ;
 /**   
@@ -611,16 +688,6 @@ print_function:
                                                                     $$=$3;
                                                                 };
 
-/**
- * @name intreagl_type
- * @brief intergal type
- */
-intregal_type:
-    INT                                                         { INFO("intergal_type: | INT"); $$="int"; }
-    | FLOAT                                                     { INFO("intergal_type: | INT"); $$="float"; }
-    | CHAR                                                      { INFO("intergal_type: | INT"); $$="char"; }
-    | VOID
-                                                                ;
 /**
  * @name modifiers
  */
@@ -648,7 +715,18 @@ access_modfier:
     | STATIC 
     | REGISTER
     ;
-
+                                                               
+/**
+ * @name intreagl_type
+ * @brief intergal type
+ */
+intregal_type:
+    INT                                                         { INFO("intergal_type: | INT");  $$="int"; }
+    | FLOAT                                                     { INFO("intergal_type: | FLOAT"); $$="float"; }
+    | CHAR                                                      { INFO("intergal_type: | STRING"); $$="char"; }
+    | STRING                                                    { INFO("intergal_type: | VOID"); $$="char"; }
+    | VOID
+                                                                ;
 tokens:
     STRUCT
     | TYPEDEF
@@ -660,8 +738,6 @@ tokens:
     | DOUBLE_QUOTE
     | SINGLE_QUOTE
     | ASTERICK
-    | LBRACKET
-    | RBRACKET
     | ELSEIF
     | DO
     | FOR

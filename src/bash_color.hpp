@@ -15,6 +15,7 @@ using std::string;
 const string FMT_RESET = "\033[0m";
 const string FMT_RESET_BOLD = "\033[21m";
 const string FMT_RESET_DIM = "\033[22m";
+const string FMT_RESET_ITALIC = "\033[23m";
 const string FMT_RESET_UNDERLINE = "\033[24m";
 const string FMT_RESET_BLINK = "\033[25m";
 const string FMT_RESET_REVERSE = "\033[27m";
