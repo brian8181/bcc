@@ -12,7 +12,7 @@ c = (1 + 2) * 3;
 c = (2 == 1);
 c = b / 10;
 c = 70 / 10;
-c = 25 % 7;
+c                                          = 25 % 7;
 
 char c = 'S';
 int s = 42;
@@ -20,5 +20,5 @@ int foo();
 int boo(int x, int y);
 int abc[10];
 abc[0] = 42;
-int xyz[5] = { 1, 2, 3 };
+int xyz[5] =                                                                                     { 1, 2, 3 };
 

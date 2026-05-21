@@ -286,8 +286,8 @@ stmt:
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON   {
-                                                                            INFO("stmt: | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON");
-                                                                }
+                                                                                INFO("stmt: | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON");
+                                                                            }
     | function_decel SEMI_COLON                                 {
                                                                     INFO("stmt: | function_decel SEMI_COLON");
                                                                 }
@@ -486,10 +486,10 @@ expr[result]:
  * @name function_call
  */
 function_call:
-    IDENTIFIER[lhs] LPAREN RPAREN                                {
+    IDENTIFIER[lhs] LPAREN RPAREN                               {
                                                                     INFO("function_call: IDENTIFIER[lhs] LPAREN RPAREN");
                                                                 }
-    | IDENTIFIER[lhs] params_list                                 {
+    | IDENTIFIER[lhs] params_list                               {
                                                                     INFO("function_call: IDENTIFIER[lhs] params_list");
                                                                 } 
                                                                 ;
@@ -528,7 +528,7 @@ function_decel:
  * @name pramas_list
  */
 params_list:
-    LPAREN params RPAREN                                   {
+    LPAREN params RPAREN                                        {
                                                                     INFO("params_list: LPAREN params RPAREN");
                                                                 }
     | LBRACE params RBRACE                                      {
@@ -550,7 +550,7 @@ params:
  * @name params_decel_list
  */
 func_param_decels:
-    LPAREN param_decels RPAREN                             {
+    LPAREN param_decels RPAREN                                  {
                                                                     INFO("params_decel_list: LPAREN_FUNC params_decel RPAREN");
                                                                 }
                                                                 ;
@@ -580,12 +580,12 @@ assign_expr:
  * @brief decelration
  */                                                                
 decel:
-    intregal_type IDENTIFIER                                       {
+    intregal_type IDENTIFIER                                      {
                                                                         INFO("intregal_type: | INT IDENTIFIER");
-                                                                    }
-    | decel LBRACKET NUMERIC_LITERAL RBRACKET                           {
-
-                                                                    }
+                                                                  }
+    | decel LBRACKET NUMERIC_LITERAL RBRACKET                     { 
+                                                                        INFO("intregal_type: | decel LBRACKET NUMERIC_LITERAL RBRACKET");
+                                                                  }
     | INT IDENTIFIER[lhs]                                         {
                                                                     INFO("decel: | INT IDENTIFIER");
                                                                     _symbol_t lhs = { $lhs, "INT", eINT, 0 }; // new symbol, unassigned!
@@ -723,9 +723,9 @@ access_modfier:
 intregal_type:
     INT                                                         { INFO("intergal_type: | INT");  $$="int"; }
     | FLOAT                                                     { INFO("intergal_type: | FLOAT"); $$="float"; }
-    | CHAR                                                      { INFO("intergal_type: | STRING"); $$="char"; }
-    | STRING                                                    { INFO("intergal_type: | VOID"); $$="char"; }
-    | VOID
+    | CHAR                                                      { INFO("intergal_type: | CHAR"); $$="char"; }
+    | STRING                                                    { INFO("intergal_type: | STRING"); $$="STRING"; }
+    | VOID                                                      { INFO("intergal_type: | VOID"); $$="VOID"; }
                                                                 ;
 tokens:
     STRUCT
