@@ -169,6 +169,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define ASSIGN              	 150   
 #define HASH_IF					 151   
 #define HASH_INCLUDE             152   
+#define INCLUDE             1520   
 #define DEFINE              153 
 #define UNDEF               1530   
 #define IFDEF               154   
@@ -290,17 +291,19 @@ inline map<unsigned long, token> g_tokens =
 		{STRUCT, token{"STRUCT", S_TYPE, R"(\s*\<struct\>\s+)", __LINE__}},
 		{TYPEDEF, token{"TYPEDEF", S_TYPE, R"(\s*\<tyedef\>\s+)", __LINE__}},
 
-		{HASH_IF, token{"HASH_IF", S_TYPE, R"((#if|#IF)\>\s+)", __LINE__}},
-		{DEFINE, token{"DEFINE", S_TYPE, R"((#define|#DEFINE)\>\s+)", __LINE__}},
-		{IFDEF, token{"IFDEF", S_TYPE, R"((#ifdef|#IFDEF)\>\s+)", __LINE__}},
-		{IFNDEF, token{"IFNDEF", S_TYPE, R"((#ifndef|#IFNDEF)\>\s+)", __LINE__}},
-		{HASH_ELSE, token{"HASH_ELSE", S_TYPE, R"((#else|#ELSE)\>\s+)", __LINE__}},
-		{HASH_ELSEIF, token{"HASH_ELSEIF", S_TYPE, R"((#elseif|#ELSEIF)\>\s+)", __LINE__}},
-		{ENDIF, token{"ENDIF", S_TYPE, R"((#endif|#ENDIF)\>\s+)", __LINE__}},
-		{HASH_INCLUDE, token{"HASH_INCLUDE", S_TYPE, R"(#include\>\s)", __LINE__}},
-		{UNDEF, token{"UNDEF", S_TYPE, R"(#undef|#UNDEF\>\s)", __LINE__}},
-		{HASH_ERROR, token{"HASH_ERROR", S_TYPE, R"(#error\>\s)", __LINE__}},
-		{PRAGMA, token{"PRGAMA", S_TYPE, R"(#pargma\>\s)", __LINE__}}};
+		{HASH_IF, token{"HASH_IF", S_TYPE, R"(#if|#IF)", __LINE__}},
+		{DEFINE, token{"DEFINE", S_TYPE, R"(#define|#DEFINE)", __LINE__}},
+		{IFDEF, token{"IFDEF", S_TYPE, R"(#ifdef|#IFDEF)", __LINE__}},
+		{IFNDEF, token{"IFNDEF", S_TYPE, R"(#ifndef|#IFNDEF)", __LINE__}},
+		{HASH_ELSE, token{"HASH_ELSE", S_TYPE, R"(#else|#ELSE)", __LINE__}},
+		{HASH_ELSEIF, token{"HASH_ELSEIF", S_TYPE, R"(#elseif|#ELSEIF)", __LINE__}},
+		{ENDIF, token{"ENDIF", S_TYPE, R"(#endif|#ENDIF)", __LINE__}},
+		{HASH_INCLUDE, token{"HASH_INCLUDE", S_TYPE, R"(#include)", __LINE__}},
+		{INCLUDE, token{"INCLUDE", S_TYPE, R"(#include)", __LINE__}},
+		{UNDEF, token{"UNDEF", S_TYPE, R"(#undef|#UNDEF)", __LINE__}},
+		{UNDEF, token{"UNDEF", S_TYPE, R"(#undef|#UNDEF)", __LINE__}},
+		{HASH_ERROR, token{"HASH_ERROR", S_TYPE, R"(#error)", __LINE__}},
+		{PRAGMA, token{"PRGAMA", S_TYPE, R"(#pargma)", __LINE__}}};
 
 /**
  * @brief unsigned long states
@@ -342,8 +345,7 @@ inline vector<unsigned long> INITIAL_TOKENS = {		TEST_TOKEN, PRINT, INT, FLOAT, 
 													IF, ELSE, WHILE, DO, FOR, RETURN, BREAK, CONTINUE, 
 													SEMI_COLON, ASSIGN, 
 													HASH_INCLUDE, 		
-													// something is wrong here!! uncomment for error bison syntax error ...
-													//INCLUDE, IFDEF, IFNDEF, DEFINE, UNDEF, ENDIF, PRAGMA, HASH_ERROR, HASH_IF, HASH_ELSE, HASH_ELSEIF, 
+													INCLUDE, IFDEF, IFNDEF, DEFINE, UNDEF, ENDIF, PRAGMA, HASH_ERROR, HASH_IF, HASH_ELSE, HASH_ELSEIF, 
 												 	NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
 													EQ, NEQ, LEQ, GEQ, LT, GT,
 													MUL, DIV, DASH, ADD, MOD, LBRACKET, RBRACKET, LPAREN, RPAREN, LBRACE, RBRACE, 
