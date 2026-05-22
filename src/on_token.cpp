@@ -22,23 +22,55 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
     {
     case TEST_TOKEN:
         return parser::make_TEST_TOKEN(match);
-    case PRINT:
-        return parser::make_PRINT();
 
     case STRING:
         return parser::make_STRING();
+    case SHORT:
+        return parser::make_SHORT();
     case INT:
         return parser::make_INT();
+    case LONG:
+        return parser::make_LONG();
+    case SINGLE:
+        return parser::make_SINGLE();
     case FLOAT:
         return parser::make_FLOAT();
+    case DOUBLE:
+        return parser::make_DOUBLE();
     case CHAR:
         return parser::make_CHAR();
     case VOID:
         return parser::make_VOID();
+    case SIGNED:
+        return parser::make_SIGNED();
+    case UNSIGNED:
+        return parser::make_UNSIGNED();
+    case CONST:
+        return parser::make_CONST();
+    case STATIC:
+        return parser::make_STATIC();
+    case VOLATILE:
+        return parser::make_VOLATILE();
+    case REGISTER:
+        return parser::make_REGISTER();
+    case PTR:
+        return parser::make_PTR();
+    case STRUCT:
+        return parser::make_STRUCT();
+    case TYPEDEF:
+        return parser::make_TYPEDEF();
+    case PRINT:
+        return parser::make_PRINT();
 
-    case SEMI_COLON:
-        return parser::make_SEMI_COLON();
-
+    case STRING_LITERAL:
+        return parser::make_STRING_LITERAL(match);
+    case NUMERIC_LITERAL:
+        return parser::make_NUMERIC_LITERAL(match);
+    case REAL_LITERAL:
+        return parser::make_REAL_LITERAL(match);
+    case CHAR_LITERAL:
+        return parser::make_CHAR_LITERAL(match);
+   
     case LBRACE:
         return parser::make_LBRACE();
     case RBRACE:
@@ -51,7 +83,21 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_LPAREN();
     case RPAREN:
         return parser::make_RPAREN();
-    
+    case SEMI_COLON:
+        return parser::make_SEMI_COLON();
+    case COLON:
+        return parser::make_COLON();
+    case COMMA:
+        return parser::make_COMMA();
+    case QUESTION_MARK:
+        return parser::make_QUESTION_MARK();
+    case BACKSLASH:
+        return parser::make_BACKSLASH();
+    case DOT:
+        return parser::make_DOT();
+    case SINGLE_QUOTE:
+        return parser::make_SINGLE_QUOTE();
+        
     case FOR:
         return parser::make_FOR();
     case DO:
@@ -78,7 +124,6 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
     case INCLUDE:
         return parser::make_INCLUDE();
     
-
     case MOD:
         return parser::make_MOD();
     case ADD:
@@ -87,8 +132,6 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_DASH();
     case MUL:
         return parser::make_MUL();
-    case COMMA:
-        return parser::make_COMMA();
     case DIV:
         return parser::make_DIV();
     case EQ:
@@ -148,24 +191,12 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_RSFT_EQ();
     case TENERARY:    
         return parser::make_TENERARY();
-
     case ASSIGN:
         return parser::make_ASSIGN();
    
     case IDENTIFIER:
         return parser::make_IDENTIFIER(match);
-    case NUMERIC_LITERAL:
-        return parser::make_NUMERIC_LITERAL(match);
-    case REAL_LITERAL:
-        return parser::make_REAL_LITERAL(match);
-    case STRING_LITERAL:
-        return parser::make_STRING_LITERAL(match);
-    case CHAR_LITERAL:
-        return parser::make_CHAR_LITERAL(match);
-    case STRUCT:
-        return parser::make_STRUCT();
-    case TYPEDEF:
-        return parser::make_TYPEDEF();
+   
 
     case NEWLINE:
         m_line++;
