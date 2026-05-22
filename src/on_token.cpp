@@ -3,7 +3,7 @@
 #include <boost/regex.hpp>
 #include "lexer.hpp"
 #include "log.hpp"
-#include "definitions.hpp"
+#include "def.hpp"
 #include "on_token.hpp"
 
 using std::cout;
@@ -71,7 +71,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
     case CONTINUE:
         return parser::make_CONTINUE();
 
-    case HASH_INCLUDE:
+    case INCLUDE:
         return parser::make_INCLUDE();
     case HASH_IF:
         return parser::make_HASH_IF();
@@ -131,6 +131,20 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_LSHIFT();
     case RSHIFT:
         return parser::make_RSHIFT();
+    
+    case INC:    
+        return parser::make_INC();
+    case ADD_EQ:    
+        return parser::make_ADD_EQ();
+    case SUB_EQ:    
+        return parser::make_SUB_EQ();
+    case MUL_EQ:    
+        return parser::make_MUL_EQ();
+    case DIV_EQ:    
+        return parser::make_DIV_EQ();
+    case MOD_EQ:    
+        return parser::make_MOD_EQ();
+
 
     case ASSIGN:
         return parser::make_ASSIGN();

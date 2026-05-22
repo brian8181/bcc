@@ -146,13 +146,45 @@
 %token END_OF_FILES
 %token END_OF_FILE 0
 
+%token INC     
+%token ADD_EQ  
+%token SUB_EQ  
+%token MUL_EQ  
+%token DIV_EQ  
+%token MOD_EQ  
+%token OR_EQ   
+%token AND_EQ  
+%token NOT_EQ  
+%token XOR_EQ  
+%token LSFT_EQ 
+%token RSFT_EQ 
+%token TENERARY
+
+%token BIT_AND
+%token BIT_NOT
+%token BIT_OR 
+%token BIT_XOR
+%token LSHIFT 
+%token RSHIFT 
+%token LSFT	  
+%token RSFT  	
+
+%token DEREF		
+%token ADDR		 
+%token REF				
+%token STRUCT	
+%token TYPEDEF
+
+%token HEXADECIMAL_LITERAL 	
+%token OCTAL_DECIMAL_LITERAL
+         
+
 %token CONST VOLATILE STATIC
 %token UNSIGNED SIGNED LONG REGISTER SHORT
 %token INT FLOAT CHAR VOID STRING
-%token STRUCT TYPEDEF
 
 %token <std::string> INDIRECT_MEMBER 
-%token AND OR NOT BIT_AND BIT_OR BIT_XOR BIT_NOT RSHIFT LSHIFT
+%token AND OR NOT 
 %token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE
 %token COMMA LBRACKET RBRACKET LBRACE RBRACE DOT PTR ASTERICK
  

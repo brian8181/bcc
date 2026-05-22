@@ -1,5 +1,5 @@
 /**
- * @file    lexer.hpp
+ * @file    def.hpp
  * @version 0.0.1
  * @date    Fri, 26 Sep 2025 17:05:10
  */
@@ -82,6 +82,9 @@ typedef parser::token_type yytoken;
 typedef parser::symbol_type yysymbol;
 inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 
+/**
+ * @brief token definitions : unsigned long integers
+ */
 #define STRING                   0x10000
 #define SHORT               	 0x20000   
 #define INT					     0x40000 
@@ -100,22 +103,29 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define VOLATILE				 0x1000000000
 #define STRUCT                   0x2000000000
 
-/**
- * @brief token definitions : unsigned long integers
- */
 #define PRINT                     88
+
 #define ADD 					  89   
 #define DASH 					  90   
 #define MUL 					  91   
 #define DIV 					  92   
 #define MOD 					  93   
+
 #define LPAREN 				      94   
-#define LPAREN_FUNC 		      940   
 #define RPAREN 				      95   
 #define LBRACE 				      96   
 #define RBRACE 				      97   
 #define LBRACKET 				  98   
-#define RBRACKET 				  99   
+#define RBRACKET 				  99  
+#define DOT 					 159   
+#define QUESTION_MARK 		     160   
+#define BACKSLASH 			     161   
+#define UNDERSCORE 			     162   
+#define COMMA 				     163   
+#define COLON 				     164   
+#define SEMI_COLON 			     165   
+#define DOUBLE_QUOTE 			 166   
+#define SINGLE_QUOTE 			 167    
 
 #define BIT_AND 				 100   
 #define BIT_NOT 				 101   
@@ -123,6 +133,8 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define BIT_XOR 				 103   
 #define LSHIFT  				 104   
 #define RSHIFT  				 105   
+#define LSFT	  				 1040   
+#define RSFT  					 1050   
 
 #define AND 					 106   
 #define OR 					     107   
@@ -135,12 +147,28 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define GEQ             	     1120   
 #define LEQ             		 1130
 
+#define ASSIGN              	 150  
+#define INC                      1150
+#define ADD_EQ                   1153
+#define SUB_EQ              	 1156
+#define MUL_EQ              	 1159  
+#define DIV_EQ              	 1161 
+#define MOD_EQ              	 1164 
+#define OR_EQ              	 	 1167 
+#define AND_EQ              	 1170  
+#define NOT_EQ              	 1173
+#define XOR_EQ              	 1176
+#define LSFT_EQ              	 1179 
+#define RSFT_EQ              	 1182
+#define TENERARY                 1192    
+
 #define NUMERIC_LITERAL 		 114   
 #define REAL_LITERAL   		     115   
 #define STRING_LITERAL 		     116   
 #define HEXADECIMAL_LITERAL 	 117   
 #define OCTAL_DECIMAL_LITERAL    118 
 #define CHAR_LITERAL             1180
+
 #define IF 					     119   
 #define ELSE 					 120   
 #define ELSEIF 				     121   
@@ -152,23 +180,26 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define CASE 					 125   
 #define DEFAULT 				 126   
 #define BREAK 				     127   
-#define CONTINUE 				 128   
+#define CONTINUE 				 128  
+#define GOTO 				 1155   
+#define LABEL 				 1159   
+
 #define TRY 					 129   
 #define CATCH 				     130   
+
 #define IDENTIFIER 			     131   
 #define ARRAY 				     132   
 #define COMMENT 				 133   
 #define INDIRECT_MEMBER 		 134   
 
 //#define PTR					     145  
-#define DEREFERENCE 			 145 
+#define DEREF		 			 145 
+#define ADDR		 			 1450 
 #define REF					     146   
-//#define STRUCT				     147   
 #define TYPEDEF				     148   
 #define FUNCTION				 149   
-#define ASSIGN              	 150   
+
 #define HASH_IF					 151   
-#define HASH_INCLUDE             152   
 #define INCLUDE             1520   
 #define DEFINE              153 
 #define UNDEF               1530   
@@ -178,23 +209,16 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define HASH_ELSE                157   
 #define HASH_ELSEIF              158   
 #define PRAGMA              1580 
-#define HASH_ERROR               1581   
-#define DOT 					 159   
-#define QUESTION_MARK 		     160   
-#define BACKSLASH 			     161   
-#define UNDERSCORE 			     162   
-#define COMMA 				     163   
-#define COLON 				     164   
-#define SEMI_COLON 			     165   
-#define DOUBLE_QUOTE 			 166   
-#define SINGLE_QUOTE 			 167   
+#define HASH_ERROR               1581  
+
 #define ESC_SEQ      			 168   
 #define ESC_NLINE           	 169   
 #define ESC_BACKSLASH       	 170   
 #define ESC_NEWLINE 			 171   
 #define ESC_DOUBLE_QUOTE 		 172   
 #define ESC_SINGLE_QUOTE 		 173   
-#define ESC_TAB 				 174   
+#define ESC_TAB 				 174
+
 #define END_OF_FILE   		     175   
 #define END_OF_FILES   		     176   
 #define WHITESPACE 			     177   
@@ -205,6 +229,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define S_TYPE "string"
 
 
+// regex 
 #define R_TILDE 	   R"(~)"
 #define R_EXCLAMATION  R"(!)"
 #define R_NUMERIC_LITERAL R"([1-9]+[0-9]*|0)"
@@ -238,10 +263,21 @@ inline map<unsigned long, token> g_tokens =
 		{ADD, token{"ADD", S_TYPE, R"([+])", __LINE__}},
 		{MUL, token{"MUL", S_TYPE, R"([*])", __LINE__}},
 		{PTR, token{"PTR", S_TYPE, R"([*])", __LINE__}},
-		{DEREFERENCE, token{"DEREFERENCE", S_TYPE, R"([*])", __LINE__}},
+		{DEREF, token{"DEREF", S_TYPE, R"([*])", __LINE__}},
 		{DIV, token{"DIV", S_TYPE, R"([/])", __LINE__}},
 		{MOD, token{"MOD", S_TYPE, R"([%])", __LINE__}},
-		{ASSIGN, token{"ASSIGN", S_TYPE, R"([=])", __LINE__}},
+		{ASSIGN, token{"ASSIGN", S_TYPE, R"(=)", __LINE__}},
+		{ADD_EQ, token{"ADD_EQ", S_TYPE, R"(\+=)", __LINE__}},
+		{SUB_EQ, token{"SUB_EQ", S_TYPE, R"(\-=)", __LINE__}},
+		{MUL_EQ, token{"MUL_EQ", S_TYPE, R"(\*=)", __LINE__}},
+		{DIV_EQ, token{"DIV_EQ", S_TYPE, R"(\\=)", __LINE__}},
+		{MOD_EQ, token{"MOD_EQ", S_TYPE, R"(%=)", __LINE__}},
+		{AND_EQ, token{"AND_EQ", S_TYPE, R"(&=)", __LINE__}},
+		{OR_EQ, token{"OR_EQ", S_TYPE, R"(\|=)", __LINE__}},
+		{XOR_EQ, token{"XOR_EQ", S_TYPE, R"(\^=)", __LINE__}},
+		{NOT_EQ, token{"ASSIGN", S_TYPE, R"(\~=)", __LINE__}},
+		{LSFT_EQ, token{"LSFT_EQ", S_TYPE, R"(<<=)", __LINE__}},
+		{RSFT_EQ, token{"RSFT_EQ", S_TYPE, R"(>>=)", __LINE__}},
 
 		{LPAREN, token{"LPAREN", S_TYPE, "[(]", __LINE__}},
 		{RPAREN, token{"RPAREN", S_TYPE, "[)]", __LINE__}},
@@ -272,6 +308,8 @@ inline map<unsigned long, token> g_tokens =
 		{BIT_XOR, token{"BIT_XOR", S_TYPE, R"(^)", __LINE__}},
 		{LSHIFT, token{"LSHIFT", S_TYPE, R"([<]{2})", __LINE__}},
 		{RSHIFT, token{"RSHIFT", S_TYPE, R"([>]{2})", __LINE__}},
+		{LSFT, token{"LSFT", S_TYPE, R"(<<)", __LINE__}},
+		{RSFT, token{"RSFT", S_TYPE, R"(>>)", __LINE__}},
 
 		{IF, token{"IF", S_TYPE, R"(if)", __LINE__}},
 		{ELSE, token{"ELSE", S_TYPE, R"(else)", __LINE__}},
@@ -282,6 +320,11 @@ inline map<unsigned long, token> g_tokens =
 		{RETURN, token{"RETURN", S_TYPE, R"(return)", __LINE__}},
 		{BREAK, token{"BREAK", S_TYPE, R"(break)", __LINE__}},
 		{CONTINUE, token{"CONTINUE", S_TYPE, R"(continue)", __LINE__}},
+		{SWITCH, token{"SWITCH", S_TYPE, R"(switch)", __LINE__}},
+		{CASE, token{"CASE", S_TYPE, R"(case)", __LINE__}},
+		{DEFAULT, token{"DEFAULT", S_TYPE, R"(default)", __LINE__}},
+		{GOTO, token{"GOTO", S_TYPE, R"(goto)", __LINE__}},
+		{LABEL, token{"LABEL", S_TYPE, R"(^[A-Za-z]\w*:)", __LINE__}},
 
 		{STRING, token{"STRING", S_TYPE, R"(\s*\<STRING\>\s+)", __LINE__}},
 		{INT, token{"INT", S_TYPE, R"(\s*\<int\>\s+)", __LINE__}},
@@ -298,7 +341,6 @@ inline map<unsigned long, token> g_tokens =
 		{HASH_ELSE, token{"HASH_ELSE", S_TYPE, R"(#else|#ELSE)", __LINE__}},
 		{HASH_ELSEIF, token{"HASH_ELSEIF", S_TYPE, R"(#elseif|#ELSEIF)", __LINE__}},
 		{ENDIF, token{"ENDIF", S_TYPE, R"(#endif|#ENDIF)", __LINE__}},
-		{HASH_INCLUDE, token{"HASH_INCLUDE", S_TYPE, R"(#include)", __LINE__}},
 		{INCLUDE, token{"INCLUDE", S_TYPE, R"(#include)", __LINE__}},
 		{UNDEF, token{"UNDEF", S_TYPE, R"(#undef|#UNDEF)", __LINE__}},
 		{UNDEF, token{"UNDEF", S_TYPE, R"(#undef|#UNDEF)", __LINE__}},
@@ -332,7 +374,7 @@ inline vector<state_t> states__ = { PRE_PROCESS, INITIAL };
  * @brief token list -> by state
  */
 inline vector<unsigned long> PRE_PROCESS_TOKENS = {  	TEST_TOKEN, PRINT, STRING, INT, FLOAT, CHAR, VOID, SEMI_COLON, ASSIGN, 
-													 	HASH_INCLUDE, IFDEF, IFNDEF, DEFINE, UNDEF, ENDIF, PRAGMA, HASH_ERROR, HASH_IF, HASH_ELSE, HASH_ELSEIF,
+													 	INCLUDE, IFDEF, IFNDEF, DEFINE, UNDEF, ENDIF, PRAGMA, HASH_ERROR, HASH_IF, HASH_ELSE, HASH_ELSEIF,
 												 		NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
 												 		EQ, NEQ, LEQ, GEQ, LT, GT,
 												 		MUL, DIV, DASH, ADD, MOD, LPAREN, RPAREN, LBRACE, RBRACE, 
@@ -344,27 +386,12 @@ inline vector<unsigned long> PRE_PROCESS_TOKENS = {  	TEST_TOKEN, PRINT, STRING,
 inline vector<unsigned long> INITIAL_TOKENS = {		TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, 
 													IF, ELSE, WHILE, DO, FOR, RETURN, BREAK, CONTINUE, 
 													SEMI_COLON, ASSIGN, 
-													HASH_INCLUDE, 		
 													INCLUDE, IFDEF, IFNDEF, DEFINE, UNDEF, ENDIF, PRAGMA, HASH_ERROR, HASH_IF, HASH_ELSE, HASH_ELSEIF, 
 												 	NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
 													EQ, NEQ, LEQ, GEQ, LT, GT,
 													MUL, DIV, DASH, ADD, MOD, LBRACKET, RBRACKET, LPAREN, RPAREN, LBRACE, RBRACE, 
 													OR, AND, NOT, BIT_OR, BIT_AND, BIT_NOT, RSHIFT, LSHIFT, COMMA,
 													STRUCT, TYPEDEF, PTR	};
-
-// /**
-//  * @brief token list -> by state
-//  */
-// inline vector<unsigned long> INITIAL_TOKENS = {		TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, 
-// 													IF, ELSE, WHILE, DO, FOR, RETURN, BREAK, CONTINUE, 
-// 													SEMI_COLON, ASSIGN, 
-// 													INCLUDE, IFDEF, IFNDEF, DEFINE, UNDEF, ENDIF, PRAGMA, HASH_ERROR, HASH_IF, HASH_ELSE, HASH_ELSEIF, 
-// 													NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
-// 													EQ, NEQ, LEQ, GEQ, LT, GT,
-// 													MUL, DIV, DASH, ADD, MOD, LBRACKET, RBRACKET, LPAREN, RPAREN, LBRACE, RBRACE, 
-// 													OR, AND, NOT, BIT_OR, 	BIT_AND, BIT_NOT, RSHIFT, LSHIFT, COMMA,
-// 													STRUCT, TYPEDEF, PTR	};
-/**
 /**
  * @brief global state: state_id -> states
  * @name g_tokens_by_state_id

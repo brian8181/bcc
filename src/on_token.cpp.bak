@@ -3,7 +3,7 @@
 #include <boost/regex.hpp>
 #include "lexer.hpp"
 #include "log.hpp"
-#include "definitions.hpp"
+#include "def.hpp"
 #include "on_token.hpp"
 
 using std::cout;
