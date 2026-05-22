@@ -2,7 +2,7 @@
 #define __THE_TABLE_
 #include <set>
 #include <map>
-#include "definitions.hpp"
+#include "def.hpp"
 
 using std::set;
 using std::map;

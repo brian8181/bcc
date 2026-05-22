@@ -78,14 +78,14 @@ $(SRC)/parser.hpp \
 $(SRC)/lexer.hpp \
 $(SRC)/on_token.hpp \
 $(SRC)/driver.hpp \
-$(SRC)/definitions.hpp \
+$(SRC)/def.hpp \
 $(SRC)/table.hpp \
 $(SRC)/def.h \
 $(SRC)/find_substrs.hpp
 
 HEADER_ONLY= \
 $(BLD)/pparser.tab.hpp \
-$(SRC)/definitions.hpp \
+$(SRC)/def.hpp \
 $(SRC)/log.hpp \
 $(SRC)/table.hpp \
 $(SRC)/streamy.hpp
@@ -140,7 +140,7 @@ all: $(BLD)/$(APP) $(BLD)/TEST_lex
 
 world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
 
-$(BLD)/$(APP): $(OBJS) $(SRC)/definitions.hpp
+$(BLD)/$(APP): $(OBJS) $(SRC)/def.hpp
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 # $(TST)/%: $(OBJ)/%.o

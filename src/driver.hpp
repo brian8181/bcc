@@ -16,6 +16,16 @@ static string g_output_dir = "./test/build";
 static string g_output_file = "out.obj";
 static string g_input_file = "in.txt";
 
+//  // map
+// map<string, string> map_config;
+// // todo : revert to no configuration sections!
+// map<string, map<string, string>> map_sections_config;
+// map<string, string> map_vars;
+// map<string, string> map_const;
+// map<string, vector<string>> map_arrays;
+// map<string, pair<string, vector<string>>> map_objects;
+// map<int, string> token_map;
+
 /**
  * @brief parse command line options
  * @param argc

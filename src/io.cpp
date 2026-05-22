@@ -19,28 +19,6 @@ io::io(const string& ifile) : file(infile)
 }
 
 /**
- * @name read
- */
-void io::read()
-{
-	stream( file, mode );
-	if( stream.is_open() )
-	{
-		stringstream ss;
-		char c;
-		while( stream.get( c ) != '\n')
-		{
-			ss << c;
-		}
-		out = ss.str();
-		stream.close();
-		return static_cast<int>( ss.str().size() );
-	}
-	return -1;
-}
-
-
-/**
  * @name read_istream
  * @brief read input file into string object
  */

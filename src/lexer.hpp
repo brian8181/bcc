@@ -33,7 +33,7 @@
 #include <iomanip>
 #include <boost/regex.hpp>
 #include "fileio.hpp"
-#include "definitions.hpp"
+#include "def.hpp"
 #include "pparser.tab.hpp"
 
 using std::list;

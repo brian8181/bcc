@@ -140,55 +140,26 @@
 }
 
 %token SKIP_TOKEN UNDEFINED
-%token INCLUDE DEFINE UNDEF HASH_IF IFDEF IFNDEF HASH_ERROR PRAGMA
+%token HASH_INCLUDE HASH_DEFINE HASH_UNDEF HASH_IF HASH_IFDEF HASH_IFNDEF
 %token <std::string> TEST_TOKEN 
 
 %token END_OF_FILES
 %token END_OF_FILE 0
 
-%token INC     
-%token ADD_EQ  
-%token SUB_EQ  
-%token MUL_EQ  
-%token DIV_EQ  
-%token MOD_EQ  
-%token OR_EQ   
-%token AND_EQ  
-%token NOT_EQ  
-%token XOR_EQ  
-%token LSFT_EQ 
-%token RSFT_EQ 
-%token TENERARY
-
-%token AND OR NOT 
-%token BIT_AND
-%token BIT_NOT
-%token BIT_OR 
-%token BIT_XOR
-%token LSHIFT 
-%token RSHIFT 
-%token LSFT	  
-%token RSFT  	
-
-%token DEREF		
-%token ADDR		 
-%token REF				
-%token STRUCT	
-%token TYPEDEF
-
-%token CONST VOLATILE STATIC 
+%token CONST VOLATILE STATIC
 %token UNSIGNED SIGNED LONG REGISTER SHORT
-%token INT FLOAT CHAR VOID STRING DOUBLE SINGLE
+%token INT FLOAT CHAR VOID STRING
+%token STRUCT TYPEDEF
 
 %token <std::string> INDIRECT_MEMBER 
-
+%token AND OR NOT BIT_AND BIT_OR BIT_XOR BIT_NOT RSHIFT LSHIFT
 %token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE
 %token COMMA LBRACKET RBRACKET LBRACE RBRACE DOT PTR ASTERICK
  
 %token <std::string> IDENTIFIER 
-%token <std::string> STRING_LITERAL NUMERIC_LITERAL REAL_LITERAL CHAR_LITERAL HEXADECIMAL_LITERAL OCTAL_DECIMAL_LITERAL
+%token <std::string> STRING_LITERAL NUMERIC_LITERAL REAL_LITERAL CHAR_LITERAL
 %nonassoc IFX
-%nonassoc IF ELSE ELSEIF DO WHILE FOR BREAK CONTINUE RETURN CASE SWITCH DEFAULT LABEL GOTO PRINT
+%nonassoc IF ELSE ELSEIF DO WHILE FOR BREAK CONTINUE RETURN CASE SWITCH DEFAULT PRINT
 %left EQ NEQ GEQ LEQ LT GT ASSIGN
 %nonassoc  LPAREN RPAREN
 %left ADD DASH
@@ -197,8 +168,6 @@
 
 /* %type <std::string> param
 %type < std::vector< std::string> > params */
-%type < std::list< std::string > > args
-%type < std::string > arg
 %type <std::string> file
 %type < std::vector< std::string > > files
 %type <std::string> stmt
@@ -213,7 +182,7 @@
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
 %type <std::string> access_modfier type_modifier modifiers
-%type intregal_type
+%type <int> intregal_type
 %type <std::string> decel func_param_decels param_decels function_decel function_call
 %type <std::string> compiler
 %start compiler
@@ -248,7 +217,6 @@ compiler:
 /**
  * @name files
  * @brief files list
- * @type std::vector< std::string >
  */
 files[result]:
 	file                                                        {
@@ -263,8 +231,6 @@ files[result]:
                                                                 ;
 /**
  * @name file
- * @brief input file
- * @type std::string : "file path"
  */
 file:
 	stmts END_OF_FILE
@@ -325,7 +291,7 @@ stmt:
     | function_decel SEMI_COLON                                 {
                                                                     INFO("stmt: | function_decel SEMI_COLON");
                                                                 }
-    | decel ASSIGN expr SEMI_COLON                               { 
+   | decel ASSIGN expr SEMI_COLON                               { 
                                                                     INFO("stmt: | decel ASSIGN expr SEMI_COLON"); 
                                                                     // _symtab[$decel].val = new int(std::atoi($expr.c_str()));
                                                                     // stringstream ss;
@@ -361,8 +327,8 @@ stmt:
                                                                         INFO("UNDEFINED symbol");
                                                                     }
                                                                 }
-    | INCLUDE STRING_LITERAL                               {
-                                                                    INFO("stmt: | INCLUDE STRING_LITERAL=" << $2 << " SEMI_COLON");
+    | HASH_INCLUDE STRING_LITERAL                               {
+                                                                    INFO("stmt: | HASH_INCLUDE STRING_LITERAL=" << $2 << " SEMI_COLON");
                                                                     lexer::instance().push_include($STRING_LITERAL);
                                                                     $$ = $STRING_LITERAL;
                                                                 }
@@ -668,7 +634,7 @@ decel:
 
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
-    | FLOAT IDENTIFIER[lhs]                                     {
+    | FLOAT IDENTIFIER[lhs]                         {
                                                                     INFO("decel: | FLOAT IDENTIFIER");
                                                                     _symbol_t lhs = { $lhs, "FLOAT", 0, 0 }; // new symbol, unassigned!
                                                                     _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
@@ -730,23 +696,6 @@ modifiers:
     | modifiers type_modifier
     | modifiers access_modfier
     ;
-
-/**
- * @name args
- * @type std::vector< std::string >
- */
-args[list]:
-    arg                                                        { $list.push_back($arg); }
-    | args arg                                                 { $args.push_back($arg); $list == $args; }
-    ;
-/**
- * @name arg
- * @type std::string
- */
-arg:
-    '#' STRING_LITERAL '#'
-    ;
-
 /**
  * @name type_modfier
  */
@@ -772,11 +721,11 @@ access_modfier:
  * @brief intergal type
  */
 intregal_type:
-    INT                                                         { INFO("intergal_type: | INT");  /*$$=1*/; }
-    | FLOAT                                                     { INFO("intergal_type: | FLOAT"); /*$$=FLOAT;*/ }
-    | CHAR                                                      { INFO("intergal_type: | CHAR"); /*$$=CHAR;*/ }
-    | STRING                                                    { INFO("intergal_type: | STRING"); /*$$=STRING;*/ }
-    | VOID                                                      { INFO("intergal_type: | VOID"); /*$$=VOID;*/ }
+    INT                                                         { INFO("intergal_type: | INT");  $$=INT; }
+    | FLOAT                                                     { INFO("intergal_type: | FLOAT"); $$=FLOAT; }
+    | CHAR                                                      { INFO("intergal_type: | CHAR"); $$=CHAR; }
+    | STRING                                                    { INFO("intergal_type: | STRING"); $$=STRING; }
+    | VOID                                                      { INFO("intergal_type: | VOID"); $$=VOID; }
                                                                 ;
 tokens:
     STRUCT

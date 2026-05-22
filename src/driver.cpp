@@ -59,11 +59,57 @@ yy::parser::symbol_type lex()
 	return lexer::instance().get_token();
 }
 
+// /**
+//  * @name load_config
+//  * @param const string& path
+//  * @return void
+//  */
+// void streamy::load_config(const string& path)
+// {
+//     const unsigned int ID_NAME_VALUE_PAIR = 0;
+//     const unsigned int ID_NAME            = 1;
+//     const unsigned int ID_VALUE           = 2;
+//     const unsigned int ID_NUMERIC_LITERAL = 2;
+//     const unsigned int ID_STRING_LITERAL  = 3;
+
+//     // get configuration file by lines
+//     vector<string> lines;
+//     read_lines(path, lines);
+//     // create one only section (global)
+//     string section_name = "global";
+//     map<string, string> section_map;
+//     pair<string, map<string, string>> sp(section_name, section_map);
+//     map_sections_config.insert(sp);
+
+//     int len = lines.size();
+//     for(int i = 0; i < len; ++i)
+//     {
+//         string line = lines[i];
+//         regex rgx = regex(CONFIG_PAIR);
+//         smatch match;
+//         regex_match(line, match, rgx);
+
+//         if(match[ID_NAME_VALUE_PAIR].matched)
+//         {
+//             // get name
+//             string symbol_name = match[ID_NAME].str();
+
+//             // get value
+//             string value = (match[ID_VALUE].matched) ?
+//                 match[ID_NUMERIC_LITERAL].str() : match[ID_STRING_LITERAL].str();
+
+//             // create pair
+//             pair<string, string> p(symbol_name, value);
+//             map_sections_config[section_name].insert(p);
+//         }
+//     }
+// }
+
 /**
  * @brief parse command line options
  * @param argc
  * @param argv
- * @return
+ * @return int 
  */
 int parse_options(const int argc, char *argv[])
 {
