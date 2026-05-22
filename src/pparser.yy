@@ -372,7 +372,21 @@ stmt:
                                                                      $$ = $1;
                                                                 }
     | WHILE LPAREN expr RPAREN stmt                             { INFO("expr: | WHILE LPAREN expr RPAREN stmt"); }
-    | IF LPAREN expr RPAREN stmt %prec IFX                      { INFO("expr: | IF LPAREN expr RPAREN stmt %prec IFX"); }
+    | IF LPAREN expr RPAREN stmt %prec IFX                      {
+                                                                    INFO("expr: | IF LPAREN expr RPAREN stmt %prec IFX");
+                                                                    stringstream ss;
+                                                                    ss  << "\n"
+                                                                        << "__asm {\n"
+                                                                        << "    cmp alm op1    ; al < op1\n" 
+                                                                        << "    jng L1\n"
+                                                                        << "    cmp al, op2\n"
+                                                                        << "    jnge L1        ; else\n"
+                                                                        << "    <stmt>         ; \"$stmt\"\n"
+                                                                        << "L1:                ; exit label\n"
+                                                                        << "}\n";
+                                                                    INFO(ss.str());
+                                                                    lexer::instance().write_ostream(ss.str());
+                                                                }
 |   | IF LPAREN expr RPAREN stmt ELSE stmt                      { INFO("expr: | IF LPAREN expr RPAREN stmt ELSE stmt"); }
     | LBRACE stmts RBRACE                                       { INFO("expr: | LBRACE stmts RBRACE"); }
     // | error SEMI_COLON                                          
