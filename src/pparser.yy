@@ -191,7 +191,7 @@
 %token <std::string> IDENTIFIER 
 %token <std::string> STRING_LITERAL NUMERIC_LITERAL REAL_LITERAL CHAR_LITERAL
 %nonassoc IFX
-%nonassoc IF ELSE ELSEIF DO WHILE FOR BREAK CONTINUE RETURN CASE SWITCH DEFAULT PRINT
+%nonassoc IF ELSE ELSEIF DO WHILE FOR BREAK CONTINUE RETURN CASE SWITCH DEFAULT LABEL GOTO PRINT
 %left EQ NEQ GEQ LEQ LT GT ASSIGN
 %nonassoc  LPAREN RPAREN
 %left ADD DASH
@@ -251,6 +251,7 @@ compiler:
 /**
  * @name files
  * @brief files list
+ * @type std::vector< std::string >
  */
 files[result]:
 	file                                                        {
@@ -265,6 +266,8 @@ files[result]:
                                                                 ;
 /**
  * @name file
+ * @brief input file
+ * @type std::string : "file path"
  */
 file:
 	stmts END_OF_FILE
@@ -668,7 +671,7 @@ decel:
 
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
-    | FLOAT IDENTIFIER[lhs]                         {
+    | FLOAT IDENTIFIER[lhs]                                     {
                                                                     INFO("decel: | FLOAT IDENTIFIER");
                                                                     _symbol_t lhs = { $lhs, "FLOAT", 0, 0 }; // new symbol, unassigned!
                                                                     _symtab[$lhs] = lhs;                   // add to symbol table, unassigned!
@@ -731,11 +734,18 @@ modifiers:
     | modifiers access_modfier
     ;
 
+/**
+ * @name args
+ * @type std::vector< std::string >
+ */
 args[list]:
     arg                                                        { $list.push_back($arg); }
     | args arg                                                 { $args.push_back($arg); $list == $args; }
     ;
-
+/**
+ * @name arg
+ * @type std::string
+ */
 arg:
     '#' STRING_LITERAL '#'
     ;

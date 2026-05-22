@@ -70,23 +70,13 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_BREAK();
     case CONTINUE:
         return parser::make_CONTINUE();
+    case GOTO:
+        return parser::make_GOTO();
+    case LABEL:
+        return parser::make_LABEL();
 
     case INCLUDE:
         return parser::make_INCLUDE();
-    case HASH_IF:
-        return parser::make_HASH_IF();
-    case DEFINE:
-        return parser::make_DEFINE();
-    case IFDEF:
-        return parser::make_IFDEF();
-    case IFNDEF:
-        return parser::make_IFNDEF();
-    case UNDEF:
-        return parser::make_UNDEF();
-    case HASH_ERROR:
-        return parser::make_HASH_ERROR();
-    case PRAGMA:
-        return parser::make_PRAGMA();
     
 
     case MOD:
@@ -127,10 +117,10 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_BIT_NOT();
     case BIT_XOR:
         return parser::make_BIT_XOR();
-    case LSHIFT:
-        return parser::make_LSHIFT();
-    case RSHIFT:
-        return parser::make_RSHIFT();
+    case LSFT:
+        return parser::make_LSFT();
+    case RSFT:
+        return parser::make_RSFT();
     
     case INC:    
         return parser::make_INC();
@@ -144,7 +134,20 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         return parser::make_DIV_EQ();
     case MOD_EQ:    
         return parser::make_MOD_EQ();
-
+    case OR_EQ:    
+        return parser::make_OR_EQ();
+    case AND_EQ:    
+        return parser::make_AND_EQ();
+    case NOT_EQ:    
+        return parser::make_NOT_EQ();
+    case XOR_EQ:    
+        return parser::make_XOR_EQ();
+    case LSFT_EQ:    
+        return parser::make_LSFT_EQ();
+    case RSFT_EQ:    
+        return parser::make_RSFT_EQ();
+    case TENERARY:    
+        return parser::make_TENERARY();
 
     case ASSIGN:
         return parser::make_ASSIGN();
