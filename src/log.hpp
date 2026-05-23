@@ -26,6 +26,8 @@ inline std::ostream *DEFAULT_OUT_STREAM = &std::cout;
 inline std::stringstream STROUT;
 // namespace bkp {
 
+//#define _LOG DEFAULT_OUT_STREAM;
+
 void log(const std::string &msg, int line_number);
 
 #define ITALIC(str) FMT_ITALIC << str << FMT_RESET

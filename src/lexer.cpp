@@ -83,6 +83,7 @@ void lexer::load_config( const string& file )
 			string stype = token_match["type"].str();
 			string test_val = token_match["test"].str();
 			auto* ptoken = new token_t {
+				0,
 				string( name ),
 				stype,
 				string( expr ),
