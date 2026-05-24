@@ -402,7 +402,7 @@ stmt:
                                                                     ss  << "\n"
                                                                         << "_asm\n"
                                                                         << "{\n"
-                                                                        << "        cmp alm op1    ; al < op1\n" 
+                                                                        << "        cmp al, op1    ; al < op1\n" 
                                                                         << "        jng L1\n"
                                                                         << "        cmp al, op2\n"
                                                                         << "        jnge L1        ; else\n"
@@ -417,9 +417,45 @@ stmt:
                                                                 }
     | FOR LPAREN stmt stmt stmt RPAREN stmt                     { 
                                                                     INFO("stmt: | FOR LPAREN stmt stmt stmt RPAREN stmt"); 
+                                                                    stringstream ss;
+                                                                    ss  << "\n"
+                                                                        << "_asm\n"
+                                                                        << "{\n"
+                                                                        << "    .data               ; data segement\n"
+                                                                        << "     len db 10          ; data lenght\n"
+                                                                        << "    .code               ; code segement\n"
+                                                                        << "\n"
+                                                                        << "    move ecx, len\n"
+                                                                        << "    FOR:\n"
+                                                                        << "        cmp op1, len    ; al < op1\n" 
+                                                                        << "        jne END\n"
+                                                                        << "        <stmt>          ; \"$stmt\"\n"
+                                                                        << "        jmp FOR         ; continue loop\n"
+                                                                        << "    END:                ; exit label\n"
+                                                                        << "}\n";
+                                                                    INFO(ss.str());
+                                                                    lexer::instance().write_ostream(ss.str());
                                                                 }
     | FOR LPAREN stmt stmt stmt RPAREN LBRACKET stmts RBRACKET  {
                                                                    INFO("stmt: | FOR LPAREN stmt stmt stmt RPAREN LBRACKET stmts RBRACKET"); 
+                                                                    stringstream ss;
+                                                                    ss  << "\n"
+                                                                        << "_asm\n"
+                                                                        << "{\n"
+                                                                        << "    .data               ; data segement\n"
+                                                                        << "     len db 10          ; data lenght\n"
+                                                                        << "    .code               ; code segement\n"
+                                                                        << "\n"
+                                                                        << "    move ecx, len\n"
+                                                                        << "    FOR:\n"
+                                                                        << "        cmp op1, len    ; al < op1\n" 
+                                                                        << "        jne END\n"
+                                                                        << "        <stmts>          ; \"$stmts\"\n"
+                                                                        << "        jmp FOR         ; continue loop\n"
+                                                                        << "    END:                ; exit label\n"
+                                                                        << "}\n";
+                                                                    INFO(ss.str());
+                                                                    lexer::instance().write_ostream(ss.str());
                                                                 }
     | LBRACE stmts RBRACE                                       { INFO("stmt: | LBRACE stmts RBRACE"); }
     // | error SEMI_COLON                                          

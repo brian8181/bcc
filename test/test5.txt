@@ -37,8 +37,3 @@ else
 
 while(x==3)
     a=5;
-
-for(int i =0; i < 10; i = i +1)
-{
-    a = 0;
-}
