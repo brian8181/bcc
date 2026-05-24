@@ -55,6 +55,16 @@ static yy::parser yyparser;
  * @name lex
  * @return yy::parser::symbol_type
  */
+// yy::parser::symbol_type pp_lex()
+// {
+//     TRACE();
+// 	return lexer::instance().get_token();
+// }
+
+/**
+ * @name lex
+ * @return yy::parser::symbol_type
+ */
 yy::parser::symbol_type lex()
 {
     TRACE();

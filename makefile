@@ -81,7 +81,8 @@ $(SRC)/driver.hpp \
 $(SRC)/def.hpp \
 $(SRC)/table.hpp \
 $(SRC)/def.h \
-$(SRC)/find_substrs.hpp
+$(SRC)/find_substrs.hpp \
+$(SRC)/toggle.hpp 
 
 HEADER_ONLY= \
 //$(BLD)/cpp.tab.hpp \
@@ -102,7 +103,8 @@ $(OBJ)/on_token.o \
 $(OBJ)/driver.o \
 $(OBJ)/symtab.o \
 $(OBJ)/streamy.o \
-$(OBJ)/find_substrs.o
+$(OBJ)/find_substrs.o \
+$(OBJ)/toggle.o 
 #$(OBJ)/index.o
 #$(OBJ)/def.o
 
@@ -115,12 +117,14 @@ $(OBJ)/lexer.o \
 $(OBJ)/on_token.o \
 $(OBJ)/ast.o \
 $(OBJ)/find_substrs.o \
+$(OBJ)/toggle.o \
 $(OBJ)/TEST_lex.o \
 $(OBJ)/TEST_general.o \
 $(OBJ)/TEST_symbol_table.o \
 $(OBJ)/TEST_ast.o \
 $(OBJ)/TEST_assign_expr.o \
 $(OBJ)/TEST_scoped_ptr.o \
+$(OBJ)/TEST_toggle.o \
 $(OBJ)/TEST_expr.o
 
 # SOURCES=$(SRC)/bash_color.hpp \
@@ -135,7 +139,8 @@ $(OBJ)/TEST_expr.o
 # $(BLD)/pparser.tab.hpp $(BLD)/pparser.tab.o \
 # $(SRC)/parser.hpp $(OBJ)/parser.o \
 # $(SRC)/lexer.hpp $(OBJ)/lexer.o \
-# $(SRC)/driver.hpp $(OBJ)/driver.o 
+# $(SRC)/driver.hpp $(OBJ)/driver.o \
+# $(SRC)/toggle.hpp $(OBJ)/toggle.o \
 SOURCES=$(HEADERS) $(OBJS)
 
 all: $(BLD)/$(APP) $(BLD)/TEST_lex
@@ -157,8 +162,8 @@ $(BLD)/path_append: $(OBJ)/path_append.o
 $(BLD)/cpp.tab.cpp $(BLD)/cpp.tab.hpp: $(SRC)/cpp.yy $(SRC)/lexer.cpp
 	$(YACC) --debug $(SRC)/cpp.yy --header=$(BLD)/cpp.tab.hpp -o $(BLD)/cpp.tab.cpp
 
-# $(OBJ)/cpp.tab.o: $(OBJ)/cpp.tab.cpp $(BLD)/cpp.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
-# 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -DYYDEBUG -c $< -o $@
+$(OBJ)/cpp.tab.o: $(OBJ)/cpp.tab.cpp $(BLD)/cpp.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -DYYDEBUG -c $< -o $@
 
 $(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cpp
 	$(YACC) --debug $(SRC)/pparser.yy --header=$(BLD)/pparser.tab.hpp -o $(BLD)/pparser.tab.cpp

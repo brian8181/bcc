@@ -10,6 +10,7 @@
 
 #include "fileio.hpp"
 #include "pparser.tab.hpp"
+//#include "cpp.tab.hpp"
 
 static string g_config_file = "default.conf";
 static string g_output_dir = "./test/build";
@@ -57,5 +58,5 @@ int main(int argc, char* argv[]);
  */
 
 yy::parser::symbol_type lex();
-//yy::preprocessor::symbol_type lex();
+//yy::preprocessor::symbol_type pp_lex();
 #endif // SCANNER_HPP_

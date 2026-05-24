@@ -324,7 +324,7 @@ stmt:
                                                                     INFO("stmt: | decel SEMI_COLON"); 
                                                                     stringstream ss;
                                                                     ss << "// " << $decel  << ";"; 
-                                                                    lexer::instance().write_ostream(ss.str());
+                                                                    //lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON   {
@@ -361,7 +361,7 @@ stmt:
                                                                         
                                                                         stringstream ostrm;
                                                                         ostrm << _symtab[$assign_expr.first].stype << " " << $assign_expr.first << " = " <<  $assign_expr.second << ";\n";
-                                                                        lexer::instance().write_ostream(ostrm.str());
+                                                                        //lexer::instance().write_ostream(ostrm.str());
                                                                         INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                     }
                                                                     else
@@ -614,18 +614,61 @@ expr[result]:
     | expr[lhs] BIT_AND[op] expr[rhs]                           {
 																	INFO("PARSER expr: | expr BIT_AND expr");
 																	$result = (std::atoi($lhs.c_str()) & std::atoi($rhs.c_str()));
+                                                                    stringstream ss;
+                                                                    ss  << "\n"
+                                                                        << "_asm\n"
+                                                                        << "{\n"
+                                                                        << "    mov cx, lhs      ; load lhs in cx register\n"
+                                                                        << "    mov bx, rhs      ; load rhs in bx register\n"
+                                                                        << "    and cx, bx       ; and cx(dest), bx(src)\n"
+                                                                        << "                     ; result is now in cx\n"
+                                                                        << "}\n";
+                                                                    INFO(ss.str());
+                                                                    lexer::instance().write_ostream(ss.str());
 																}
     | expr[lhs] BIT_OR[op] expr[rhs]                            {
 																	INFO("PARSER expr: | expr BIT_OR expr");
 																	$result = (std::atoi($lhs.c_str()) | std::atoi($rhs.c_str()));
+                                                                     stringstream ss;
+                                                                    ss  << "\n"
+                                                                        << "_asm\n"
+                                                                        << "{\n"
+                                                                        << "    mov cx, lhs      ; load lhs in cx register\n"
+                                                                        << "    mov bx, rhs      ; load rhs in bx register\n"
+                                                                        << "    or cx, bx        ; or cx(dest), bx(src)\n"
+                                                                        << "                     ; result is now in cx\n"
+                                                                        << "}\n";
+                                                                    INFO(ss.str());
+                                                                    lexer::instance().write_ostream(ss.str());
 																}
      | expr[lhs] BIT_XOR[op] expr[rhs]                          {
 																	INFO("PARSER expr: | expr BIT_XOR expr");
 																	$result = (std::atoi($lhs.c_str()) ^ std::atoi($rhs.c_str()));
+                                                                     stringstream ss;
+                                                                    ss  << "\n"
+                                                                        << "_asm\n"
+                                                                        << "{\n"
+                                                                        << "    mov cx, lhs      ; load lhs in cx register\n"
+                                                                        << "    mov bx, rhs      ; load rhs in bx register\n"
+                                                                        << "    xor cx, bx       ; xor cx(dest), bx(src)\n"
+                                                                        << "                     ; result is now in cx\n"
+                                                                        << "}\n";
+                                                                    INFO(ss.str());
+                                                                    lexer::instance().write_ostream(ss.str());
 																}
     | BIT_NOT expr[lhs]                                         {
 																	INFO("PARSER expr: | BIT_NOT expr");
 																	$result = ~(std::atoi($lhs.c_str()));
+                                                                    stringstream ss;
+                                                                    ss  << "\n"
+                                                                        << "_asm\n"
+                                                                        << "{\n"
+                                                                        << "    mov cx, lhs      ; load lhs in cx register\n"
+                                                                        << "    not cx           ; not cx(dest)\n"
+                                                                        << "                     ; result is now in cx\n"
+                                                                        << "}\n";
+                                                                    INFO(ss.str());
+                                                                    lexer::instance().write_ostream(ss.str());
 																}
     | LPAREN expr[exp] RPAREN                                   {
 																	INFO("PARSER expr: | LPAREN expr RPAREN");
@@ -767,7 +810,7 @@ decel:
                                                                     stringstream ostrm;
                                                                     ostrm << "INT" << " " << $lhs << ";\n"; 
                                                                     // write this to output
-                                                                    lexer::instance().write_ostream(ostrm.str());
+                                                                    //lexer::instance().write_ostream(ostrm.str());
 
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
@@ -783,7 +826,7 @@ decel:
                                                                     stringstream ostrm;
                                                                     ostrm << "STRING" << " " << $lhs << ";\n"; 
                                                                     // write this to output
-                                                                    lexer::instance().write_ostream(ostrm.str());
+                                                                    //lexer::instance().write_ostream(ostrm.str());
 
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
@@ -799,7 +842,7 @@ decel:
                                                                     stringstream ostrm;
                                                                     ostrm << "CHAR" << " " << $lhs << ";\n"; 
                                                                     // write this to output
-                                                                    lexer::instance().write_ostream(ostrm.str());
+                                                                    //lexer::instance().write_ostream(ostrm.str());
 
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
@@ -815,7 +858,7 @@ decel:
                                                                     stringstream ostrm;
                                                                     ostrm << "FLOAT" << " " << $lhs << ";\n"; 
                                                                     // write this to output
-                                                                    lexer::instance().write_ostream(ostrm.str());
+                                                                    //lexer::instance().write_ostream(ostrm.str());
 
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
@@ -831,7 +874,7 @@ decel:
                                                                     stringstream ostrm;
                                                                     ostrm << "VOID" << " " << $lhs << ";\n"; 
                                                                     // write this to output
-                                                                    lexer::instance().write_ostream(ostrm.str());
+                                                                    //lexer::instance().write_ostream(ostrm.str());
 
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }

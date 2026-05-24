@@ -196,7 +196,6 @@ bool lexer::next_file()
 			m_fstream.close();
 		}
 		m_fstream.open("out.c", std::ios_base::out | std::ios::trunc);
-		m_fstream << "testing ...";
 		return (m_fstream.is_open() && !m_buffer.empty());
 	}
 	return false;
