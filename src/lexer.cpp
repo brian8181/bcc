@@ -147,6 +147,13 @@ bool lexer::init( const int argc, char* argv[] )
 		}
 		m_input_paths.push_back(p);
 	}
+	m_current_file_idx = 0;
+	m_line = 0;
+	m_buffer.clear();
+	m_ifile = "";
+	m_ofile = "";
+	lexer::
+
 	initalized = true;
 	return next_file();
 }
@@ -158,8 +165,14 @@ bool lexer::init( const int argc, char* argv[] )
  */
 bool lexer::next_file()
 {
+	static int i = 0;
+	if(initalized)
+	{
+		i = 0;
+		initalized = false;
+	}
 	int sz = m_input_paths.size();
-	if (static int i = 0; i < sz)
+	if (i < sz)
 	{
 		m_ifile = string( m_input_paths[i] );
 		m_buffer.clear();

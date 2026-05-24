@@ -462,3 +462,19 @@ int read_bits(const smatch &m)
     }
     return bits;
 }
+
+int seeda = 42;
+int /*__cdecl*/ randa (void)
+{
+    return seeda = ( ((seeda * 214013L+ 2531011L) >> 16) & 0x7fff );
+}
+
+unsigned int seedc = 42;
+unsigned int randc()
+{
+    unsigned int x = seedc;
+	x ^= x << 13;
+	x ^= x >> 17;
+	x ^= x << 5;
+	return seedc = x;
+}

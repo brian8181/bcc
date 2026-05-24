@@ -24,6 +24,7 @@
 #include "driver.hpp"
 #include "lexer.hpp"
 #include "pparser.tab.hpp"
+//#include "cpp.tab.hpp"
 #include "parser.hpp"
 #include "bash_color.hpp"
 #include "utility.hpp"
@@ -48,6 +49,7 @@ static bool verbose_flag = false;
 
 // create parser
 static yy::parser yyparser;
+//static yy::preprocessor pparser;
 
 /**
  * @name lex
@@ -174,8 +176,13 @@ int parse_options(const int argc, char *argv[])
     
            
     const int offset = optind + SRC_IDX_OFFSET-1;
-	lexer::instance().init(argc-offset-1, argv+offset+1);
-  	yyparser.parse();
+	// lexer::instance().init(argc-offset-1, argv+offset+1);
+    // lexer::instance().set_state(&PRE_PROCESS);
+    
+    lexer::instance().init(argc-offset-1, argv+offset+1);
+    lexer::instance().set_state(&INITIAL);
+    yyparser.parse();
+    
 
 	return 0;
 }

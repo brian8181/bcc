@@ -84,6 +84,7 @@ $(SRC)/def.h \
 $(SRC)/find_substrs.hpp
 
 HEADER_ONLY= \
+//$(BLD)/cpp.tab.hpp \
 $(BLD)/pparser.tab.hpp \
 $(SRC)/def.hpp \
 $(SRC)/log.hpp \
@@ -130,6 +131,7 @@ $(OBJ)/TEST_expr.o
 # $(SRC)/utility.hpp $(OBJ)/utility.o \
 # $(SRC)/find_substrs.hpp $(OBJ)/find_substrs.o \
 # $(SRC)/ast.hpp \
+# $(BLD)/cpp.tab.hpp $(BLD)/cpp.tab.o \
 # $(BLD)/pparser.tab.hpp $(BLD)/pparser.tab.o \
 # $(SRC)/parser.hpp $(OBJ)/parser.o \
 # $(SRC)/lexer.hpp $(OBJ)/lexer.o \
@@ -151,6 +153,12 @@ $(BLD)/path_append: $(OBJ)/path_append.o
 
 # $(BLD)/p2: $(OBJS)
 # 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
+$(BLD)/cpp.tab.cpp $(BLD)/cpp.tab.hpp: $(SRC)/cpp.yy $(SRC)/lexer.cpp
+	$(YACC) --debug $(SRC)/cpp.yy --header=$(BLD)/cpp.tab.hpp -o $(BLD)/cpp.tab.cpp
+
+# $(OBJ)/cpp.tab.o: $(OBJ)/cpp.tab.cpp $(BLD)/cpp.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
+# 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -DYYDEBUG -c $< -o $@
 
 $(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cpp
 	$(YACC) --debug $(SRC)/pparser.yy --header=$(BLD)/pparser.tab.hpp -o $(BLD)/pparser.tab.cpp

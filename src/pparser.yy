@@ -384,7 +384,7 @@ stmt:
                                                                     // check! this does not look right ("if" or "if else" or "if elseif" ...) 
                                                                     stringstream ss;
                                                                     ss  << "\n"
-                                                                        << "__asm\n"
+                                                                        << "_asm\n"
                                                                         << "{\n"
                                                                         << "    WHILE:\n"
                                                                         << "        cmp op1, op2    ; al < op1\n" 
@@ -400,7 +400,7 @@ stmt:
                                                                     INFO("expr: | IF LPAREN expr RPAREN stmt %prec IFX");
                                                                     stringstream ss;
                                                                     ss  << "\n"
-                                                                        << "__asm\n"
+                                                                        << "_asm\n"
                                                                         << "{\n"
                                                                         << "        cmp alm op1    ; al < op1\n" 
                                                                         << "        jng L1\n"
@@ -412,8 +412,16 @@ stmt:
                                                                     INFO(ss.str());
                                                                     lexer::instance().write_ostream(ss.str());
                                                                 }
-|   | IF LPAREN expr RPAREN stmt ELSE stmt                      { INFO("expr: | IF LPAREN expr RPAREN stmt ELSE stmt"); }
-    | LBRACE stmts RBRACE                                       { INFO("expr: | LBRACE stmts RBRACE"); }
+|   | IF LPAREN expr RPAREN stmt ELSE stmt                      { 
+                                                                    INFO("stmt: | IF LPAREN expr RPAREN stmt ELSE stmt"); 
+                                                                }
+    | FOR LPAREN stmt stmt stmt RPAREN stmt                     { 
+                                                                    INFO("stmt: | FOR LPAREN stmt stmt stmt RPAREN stmt"); 
+                                                                }
+    | FOR LPAREN stmt stmt stmt RPAREN LBRACKET stmts RBRACKET  {
+                                                                   INFO("stmt: | FOR LPAREN stmt stmt stmt RPAREN LBRACKET stmts RBRACKET"); 
+                                                                }
+    | LBRACE stmts RBRACE                                       { INFO("stmt: | LBRACE stmts RBRACE"); }
     // | error SEMI_COLON                                          
     // | error RBRACE                                               
                                                                 ;
@@ -460,7 +468,7 @@ expr[result]:
                                                                     INFO("$result=" << $result);
                                                                     stringstream ss;
                                                                     ss  << "\n"
-                                                                        << "__asm\n"
+                                                                        << "_asm\n"
                                                                         << "{\n"
                                                                         << "    L1: move eax, [si]    ; get first operand\n"
                                                                         << "        adc  eax, [di]    ; get second operand\n"
@@ -483,7 +491,7 @@ expr[result]:
                                                                     INFO("$result=" << $result);
                                                                     stringstream ss;
                                                                     ss  << "\n"
-                                                                        << "__asm\n"
+                                                                        << "_asm\n"
                                                                         << "{\n"
                                                                         << "    L1: move eax, [si]    ; get first operand\n"
                                                                         << "        adc  eax, [di]    ; get second operand\n"
@@ -596,7 +604,7 @@ function_call:
                                                                     INFO("function_call: IDENTIFIER[lhs] LPAREN RPAREN");
                                                                     stringstream ss;
                                                                     ss  << "\n"
-                                                                        << "__asm\n"
+                                                                        << "_asm\n"
                                                                         << "{\n"
                                                                         << "    call " << $lhs << ":\n"
                                                                         << "}\n";
@@ -607,7 +615,7 @@ function_call:
                                                                     INFO("function_call: IDENTIFIER[lhs] params");
                                                                     stringstream ss;
                                                                     ss  << "\n"
-                                                                        << "__asm\n"
+                                                                        << "_asm\n"
                                                                         << "{\n"
                                                                         << "    call " << $lhs << "(" << "todo params" << "):\n"
                                                                         << "}\n";

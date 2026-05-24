@@ -105,7 +105,6 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define STRUCT                   0x2000000000
 
 #define PRINT                     88
-
 #define ADD 					  89   
 #define DASH 					  90   
 #define MUL 					  91   
@@ -182,8 +181,8 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define DEFAULT 				 126   
 #define BREAK 				     127   
 #define CONTINUE 				 128  
-#define GOTO 				 1155   
-#define LABEL 				 11590   
+#define GOTO 				 	 1155   
+#define LABEL 				 	 11590   
 
 #define TRY 					 129   
 #define CATCH 				     130   
@@ -193,7 +192,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define COMMENT 				 133   
 #define INDIRECT_MEMBER 		 134   
 
-//#define PTR					     145  
+//#define PTR					 145  
 #define DEREF		 			 145 
 #define ADDR		 			 1450 
 #define REF					     146   
@@ -201,15 +200,15 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define FUNCTION				 149   
 
 #define HASH_IF					 151   
-#define INCLUDE             1520   
-#define DEFINE              153 
-#define UNDEF               1530   
-#define IFDEF               154   
-#define IFNDEF	             155   
-#define ENDIF               156   
+#define INCLUDE                  1520   
+#define DEFINE                   153 
+#define UNDEF                    1530   
+#define IFDEF                    154   
+#define IFNDEF	             	 155   
+#define ENDIF               	 156   
 #define HASH_ELSE                157   
 #define HASH_ELSEIF              158   
-#define PRAGMA              1580 
+#define PRAGMA              	 1580 
 #define HASH_ERROR               1581  
 
 #define ESC_SEQ      			 168   

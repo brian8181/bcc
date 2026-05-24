@@ -221,6 +221,22 @@ string itos(int i);
  */
 int atoi(const char *ptr);
 
+//int seeda = 42;
+/**
+ * @brief randa
+ * 
+ * @return int 
+ */
+int /*__cdecl*/ randa (void);
+
+//unsigned int seedc = 42;
+/**
+ * @brief randc
+ * 
+ * @return unsigned int 
+ */
+unsigned int randc();
+
 typedef string line_t;
 typedef vector<line_t> lines_t;
 typedef string field_t;

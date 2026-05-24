@@ -57,5 +57,5 @@ int main(int argc, char* argv[]);
  */
 
 yy::parser::symbol_type lex();
-
+//yy::preprocessor::symbol_type lex();
 #endif // SCANNER_HPP_
