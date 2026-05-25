@@ -218,7 +218,7 @@
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
 %type <std::string> access_modfier type_modifier modifiers
-%type intregal_type
+%type <std::string> intregal_type
 %type <std::string> decel func_param_decels param_decels function_decel function_call
 %type <std::string> compiler
 %start compiler
@@ -328,8 +328,9 @@ stmt:
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON   {
-                                                                                INFO("stmt: | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON");
-                                                                            }
+                                                                                
+                                                                    INFO("stmt: | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON");
+                                                                }
     | function_decel SEMI_COLON                                 {
                                                                     INFO("stmt: | function_decel SEMI_COLON");
                                                                 }
@@ -412,7 +413,7 @@ stmt:
                                                                     INFO(ss.str());
                                                                     lexer::instance().write_ostream(ss.str());
                                                                 }
-|   | IF LPAREN expr RPAREN stmt ELSE stmt                      { 
+    | IF LPAREN expr RPAREN stmt ELSE stmt                      { 
                                                                     INFO("stmt: | IF LPAREN expr RPAREN stmt ELSE stmt"); 
                                                                 }
     | FOR LPAREN stmt stmt stmt RPAREN stmt                     { 
@@ -690,7 +691,7 @@ function_call:
                                                                     INFO(ss.str());
                                                                     lexer::instance().write_ostream(ss.str());
                                                                 }
-    | IDENTIFIER[lhs] params                               {
+    | IDENTIFIER[lhs] params                                    {
                                                                     INFO("function_call: IDENTIFIER[lhs] params");
                                                                     stringstream ss;
                                                                     ss  << "\n"
