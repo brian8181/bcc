@@ -795,14 +795,6 @@ params_list:
                                                                 }
     | LBRACE params RBRACE                                      {
                                                                     INFO("params_list: LBRACKET params RBRACKET");
-                                                                    stringstream ss;
-                                                                    ss  << "\n"
-                                                                        << "_asm\n"
-                                                                        << "{\n"
-                                                                        << "    todo\n"
-                                                                        << "}\n";
-                                                                    INFO(ss.str());
-                                                                    lexer::instance().write_ostream(ss.str());
                                                                 }
                                                                 ;
 /**
@@ -812,27 +804,11 @@ params[params]:
     expr                                                        {       
                                                                     INFO("params: expr");
                                                                     //$params.push_back($expr);
-                                                                    stringstream ss;
-                                                                    ss  << "\n"
-                                                                        << "_asm\n"
-                                                                        << "{\n"
-                                                                        << "    todo\n"
-                                                                        << "}\n";
-                                                                    INFO(ss.str());
-                                                                    lexer::instance().write_ostream(ss.str());
                                                                 }
     | params[list] COMMA expr                                   {
                                                                     INFO("params: params COMMA expr");
                                                                     //$list.push_back($expr);
                                                                     //$params = $list;
-                                                                    stringstream ss;
-                                                                    ss  << "\n"
-                                                                        << "_asm\n"
-                                                                        << "{\n"
-                                                                        << "    todo\n"
-                                                                        << "}\n";
-                                                                    INFO(ss.str());
-                                                                    lexer::instance().write_ostream(ss.str());
                                                                 }
                                                                 ;
 /**
@@ -862,14 +838,6 @@ assign_expr:
                                                                     INFO("assign_expr: IDENTIFIER ASSIGN expr");
                                                                     std::pair<std::string, std::string> p = { $1, $3 };
                                                                     $$ = p;
-                                                                    stringstream ss;
-                                                                    ss  << "\n"
-                                                                        << "_asm\n"
-                                                                        << "{\n"
-                                                                        << "    todo\n"
-                                                                        << "}\n";
-                                                                    INFO(ss.str());
-                                                                    lexer::instance().write_ostream(ss.str());
                                                                 }
                                                                 ;
  /**
@@ -879,14 +847,6 @@ assign_expr:
 decel:
     intregal_type IDENTIFIER                                      {
                                                                         INFO("intregal_type: | INT IDENTIFIER");
-                                                                        stringstream ss;
-                                                                        ss  << "\n"
-                                                                            << "_asm\n"
-                                                                            << "{\n"
-                                                                            << "    todo\n"
-                                                                            << "}\n";
-                                                                        INFO(ss.str());
-                                                                        lexer::instance().write_ostream(ss.str());
                                                                   }
     | decel LBRACKET NUMERIC_LITERAL RBRACKET                     { 
                                                                         INFO("intregal_type: | decel LBRACKET NUMERIC_LITERAL RBRACKET");

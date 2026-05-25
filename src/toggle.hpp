@@ -78,10 +78,14 @@ public:
 	 */
 	bool set();
 
+	void chain(toggle t);
+
 private:
 	bool _val = false;
 	bool _ci = false;
 	bool _co = false;
+	bool* _pci = 0;
+	bool* _pco = 0;
 };
 
 #endif

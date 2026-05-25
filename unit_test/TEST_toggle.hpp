@@ -34,6 +34,7 @@ public:
   CPPUNIT_TEST_SUITE( TEST_toggle );
   CPPUNIT_TEST( TEST_set );
   CPPUNIT_TEST( TEST_get );
+  CPPUNIT_TEST( TEST_get_co );
   CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -43,6 +44,7 @@ public:
 protected:
   void TEST_set();
   void TEST_get();
+  void TEST_get_co();
       
 private:
 

@@ -3,21 +3,24 @@
  * @version 0.0.1
  * @date    Sun, 24 May 2026 19:06:31 +0000
  */
+#include <iostream>
 #include "toggle.hpp"
 
 /**
  * @brief Construct a new toggle::toggle object
  * 
  */
-toggle::toggle() : _val(false), _ci(false), _co(false)
+toggle::toggle() : _val(false), _ci(false), _co(false), _pci(&_ci)
 {
+    _ci = true;
+    _pci = &_ci;
 }
 
 /**
 	 * @brief Construct a new toggle object
 	 * @param val 
 	 */
-toggle::toggle(bool val) : _val(val), _ci(false), _co(false)
+toggle::toggle(bool val) : _val(val), _ci(false), _co(false), _pci(&_ci)
 {
 }
 
@@ -26,7 +29,7 @@ toggle::toggle(bool val) : _val(val), _ci(false), _co(false)
  * @param co 
  * @param ci 
  */
-toggle::toggle(bool ci, bool co) : _val(false), _ci(ci), _co(co)
+toggle::toggle(bool ci, bool co) : _val(false), _ci(ci), _co(co), _pci(&_ci)
 {
 }
 
@@ -36,8 +39,13 @@ toggle::toggle(bool ci, bool co) : _val(false), _ci(ci), _co(co)
  * @param co 
  * @param ci 
  */
-toggle::toggle(bool val, bool co, bool ci) : _val(val), _ci(ci), _co(co)
+toggle::toggle(bool val, bool co, bool ci) : _val(val), _ci(ci), _co(co), _pci(&_ci)
 {
+}
+
+void toggle::chain(toggle t)
+{
+    t._pci = &_co;
 }
 
 /** 
@@ -56,8 +64,7 @@ bool toggle::get()
 bool toggle::set()
 {
     _val = !_val;
-    //_co = !_val || _ci;
-    //_val == _co && !_val;
+    _co = _val && _ci;
     return _val;
 }
 

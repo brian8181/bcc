@@ -49,6 +49,9 @@ void TEST_toggle::tearDown()
 {
 }
 
+/**
+ * @name TEST_set
+ */
 void TEST_toggle::TEST_set()
 {
     toggle t;
@@ -66,7 +69,7 @@ void TEST_toggle::TEST_set()
 }
 
 /**
- *
+ * @name TEST_get
  */
 void TEST_toggle::TEST_get()
 {
@@ -84,5 +87,15 @@ void TEST_toggle::TEST_get()
     t2.set();
     actual = t2.get();
     CPPUNIT_ASSERT(expected == actual);
+}
 
+/**
+ * @name TEST_get_co
+ */
+void TEST_toggle::TEST_get_co()
+{
+    toggle t;
+    bool expected = true;
+    bool actual = true;
+    CPPUNIT_ASSERT(expected == actual);
 }

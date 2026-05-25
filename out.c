@@ -12,6 +12,11 @@ _asm
         popf              ; restore carry flag
         jmp L1            ; repeat to count
 }
+
+_asm
+{
+    todo
+}
 // line:2
 
 _asm
@@ -25,6 +30,11 @@ _asm
         add bx, 4
         popf              ; restore carry flag
         jmp L1            ; repeat to count
+}
+
+_asm
+{
+    todo
 }
 // line:3
 
@@ -40,6 +50,11 @@ _asm
         popf              ; restore carry flag
         jmp L1            ; repeat to count
 }
+
+_asm
+{
+    todo
+}
 // line:4
 
 _asm
@@ -54,7 +69,17 @@ _asm
         popf              ; restore carry flag
         jmp L1            ; repeat to count
 }
+
+_asm
+{
+    todo
+}
 // line:5
+
+_asm
+{
+    todo
+}
 // line:6
 
 _asm
@@ -82,6 +107,11 @@ _asm
         popf              ; restore carry flag
         jmp L1            ; repeat to count
 }
+
+_asm
+{
+    todo
+}
 // line:7
 
 _asm
@@ -96,14 +126,74 @@ _asm
         popf              ; restore carry flag
         jmp L1            ; repeat to count
 }
+
+_asm
+{
+    todo
+}
 // line:8
+
+_asm
+{
+    todo
+}
 // line:9
+
+_asm
+{
+    todo
+}
 // line:10
+
+_asm
+{
+    todo
+}
 // line:11
+
+_asm
+{
+    todo
+}
+
+_asm
+{
+    todo
+}
+
+_asm
+{
+    todo
+}
 // line:12
+
+_asm
+{
+    todo
+}
+
+_asm
+{
+    todo
+}
+
+_asm
+{
+    todo
+}
+
+_asm
+{
+    todo
+}
 // line:13
 // line:14
 // line:15
+
+_asm
+{
+    todo
+}
 // line:16
 // line:17
 
@@ -113,15 +203,25 @@ _asm
         jng L1
         cmp al, op2
         jnge L1        ; else
-        <stmt>         ; "$stmt"
+        {$stmts}       ; "$stmt"
     L1:                ; exit label
 }
 // line:18
 // line:19
+
+_asm
+{
+    todo
+}
 // line:20
 // line:21
 // line:22
 // line:23
+
+_asm
+{
+    todo
+}
 // line:24
 // line:25
 // line:26
@@ -144,10 +244,15 @@ _asm
 
 _asm
 {
+    todo
+}
+
+_asm
+{
     WHILE:
-        cmp op1, op2    ; al < op1
+        cmp op1, op2   ; al < op1
         jne END
-        <stmt>         ; "$stmt"
+        {$stmts}       ; "$stmt"
         jmp WHILE      ; continue loop
-    END:                ; exit label
+    END:               ; exit label
 }

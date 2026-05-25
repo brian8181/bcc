@@ -15,6 +15,7 @@ constexpr const unsigned long eFUNC   = 0x100;
 constexpr const unsigned long eVAR    =  0x200;
 constexpr const unsigned long eARRAY  = 0x400;
 constexpr const unsigned long ePTR    = 0x800;
+constexpr const unsigned long eSTRING  = 0x1000;
 constexpr const unsigned long eVOID_PTR_FUNC = eVOID | ePTR | eFUNC;
 
 
