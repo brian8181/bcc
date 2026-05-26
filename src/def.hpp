@@ -364,7 +364,7 @@ inline state_t PARSER = { UL_PARSER, "PARSER", {	 				gt(TEST_TOKEN), gt(PRINT),
 																	gt(INCLUDE),
 																	gt(NEWLINE), gt(WHITESPACE), gt(CHAR_LITERAL), gt(STRING_LITERAL), gt(NUMERIC_LITERAL), gt(REAL_LITERAL), gt(IDENTIFIER),
 																	gt(EQ), gt(NEQ), gt(LEQ), gt(GEQ), gt(LT), gt(GT),
-																	gt(INC), gt(ADD_EQ), gt(SUB_EQ), gt(MUL_EQ), gt(DIV_EQ), gt(MOD_EQ), gt(OR_EQ), gt(AND_EQ), gt(NOT_EQ), gt(XOR_EQ), gt(LSFT_EQ), gt(RSFT_EQ), gt(TENERARY),
+																	gt(INC), gt(ADD_EQ), gt(SUB_EQ), gt(MUL_EQ), gt(DIV_EQ), gt(MOD_EQ), gt(OR_EQ), gt(AND_EQ), gt(NOT_EQ), gt(XOR_EQ), gt(LSFT_EQ), gt(RSFT_EQ), 
 																	gt(MUL), gt(DIV), gt(DASH), gt(ADD), gt(MOD), gt(LBRACKET), gt(RBRACKET), gt(LPAREN), gt(RPAREN), gt(LBRACE), gt(RBRACE),
 																	gt(OR), gt(AND), gt(NOT), gt(BIT_OR), gt(BIT_AND), gt(BIT_NOT), gt(RSHIFT), gt(LSHIFT), gt(COMMA),
 																	gt(STRUCT), gt(TYPEDEF), gt(PTR) } };

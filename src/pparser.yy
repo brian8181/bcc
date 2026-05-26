@@ -48,6 +48,9 @@
 
     typedef std::string arg_t;
     typedef std::vector<arg_t> args_t;
+    typedef std::string param_t;
+    typedef std::vector<param_t> params_t;
+
 
     
 }
@@ -173,8 +176,8 @@
 %type <std::string> params_list 
 %type <std::string> case cases
 %type < mytype > test;
-//%type <std::string> param
-//%type < std::vector< std::string> > params 
+%type <std::string> param
+%type < std::vector< std::string > > params
 %type < args_t > args
 %type < arg_t > arg
 %type <std::string> file
@@ -1050,7 +1053,8 @@ intregal_type:
 
 //typedef std::string stmt_t;
 //typedef std::vector< std::string > stmts_t;
-
+typedef std::string param_t;
+typedef std::vector<param_t> params_t;
 typedef std::string arg_t;
 typedef std::vector<arg_t> args_t;
 

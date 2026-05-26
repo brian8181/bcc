@@ -206,6 +206,16 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
     case SKIP_TOK:
         TRACE();
         return get_token();
+    case END_OF_FILE:
+        if(p_state->id == UL_PRE_PROCESSOR)
+        {
+            ATTN("END_OF_FILE in PRE_PROCESSOR state, returning to INITIAL state");
+            set_state( &INITIAL );
+            return get_token();
+        }   
+        return parser::make_END_OF_FILE();
+    case END_OF_FILES:
+        return parser::make_END_OF_FILES();
     default:;
     } // END switch
     cout << "UNDEFINED symbol found... id=" << id << ",  match=" << match << endl;

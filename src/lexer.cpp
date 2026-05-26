@@ -177,8 +177,6 @@ bool lexer::next_file()
 		m_buffer.clear();
 		read_str( m_ifile, m_buffer );
 
-		// set state
-		//set_state( &INITIAL );
 		m_line = 0;
 		++i;
 		m_current_file_idx = i;
@@ -212,7 +210,7 @@ void lexer::set_state( state_t* pstate )
 	// just update for now
 	stringstream ss;
 	const unsigned long len = p_state->tokens.size();
-		string e;
+	string e;
 	//build_search_expression(p_state->tokens, g_tokens, e);
 	ATTN(e);
 
@@ -229,7 +227,6 @@ void lexer::set_state( state_t* pstate )
 
 		cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
 			<< info.str() << FMT_RESET << endl;
-
 		ss << "(" << ptoken->rexp << ")|";
 	}
 
@@ -294,13 +291,13 @@ parser::symbol_type lexer::get_token()
 {
 	if( EOFS )
 	{
-		return parser::make_END_OF_FILES();
+		return on_token( *gt(END_OF_FILES).id, "" );
 	}
 
 	if( m_buffer.empty() )
 	{
 		EOFS = !next_file();
-		return parser::make_END_OF_FILE();
+		return on_token( *gt(END_OF_FILE).id, "" );
 	}
 
 	auto rexp = boost::regex( m_regex_str, boost::regex::extended );
