@@ -63,9 +63,9 @@ _asm
         adc  eax, [di]    ; get second operand
         pushf             ; save carry flag
         move [bx], eax    ; store result
-        add si, 4         ; advance all 3 pointers
-        add di, 4
-        add bx, 4
+        sub si, 4         ; advance all 3 pointers
+        sub di, 4
+        sub bx, 4
         popf              ; restore carry flag
         jmp L1            ; repeat to count
 }
@@ -269,3 +269,18 @@ _asm
     call foo()
 }
 // line:30
+
+_asm
+{
+    todo
+}
+
+_asm
+{
+    todo
+}
+
+_asm
+{
+    call bar(todo params):
+}

@@ -152,8 +152,7 @@ bool lexer::init( const int argc, char* argv[] )
 	m_buffer.clear();
 	m_ifile = "";
 	m_ofile = "";
-	lexer::
-
+	
 	initalized = true;
 	return next_file();
 }
@@ -179,7 +178,7 @@ bool lexer::next_file()
 		read_str( m_ifile, m_buffer );
 
 		// set state
-		set_state( &INITIAL );
+		//set_state( &INITIAL );
 		m_line = 0;
 		++i;
 		m_current_file_idx = i;

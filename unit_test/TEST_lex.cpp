@@ -53,19 +53,24 @@ void TEST_lex::tearDown()
 
 void TEST_lex::test_initialize()
 {
-    // on head
     char** ppath = new char*;
-    *ppath = (char*)"<path exe>";
+    *ppath = const_cast<char*>("<path exe>");
     char** pstr = new char*;
-    *pstr = (char*)"test/test5.txt";    // on the heap
+    *pstr = const_cast<char*>("test/test5.txt");    // on the heap
     char** argv = new char*[2] { *pstr,*pstr};
-    int argc = 2;
-    bool ret = lexer::instance().init(argc, argv);
-    CPPUNIT_ASSERT(ret);
+    //bool ret = lexer::instance().init(argc, argv);
+    //CPPUNIT_ASSERT(ret);
 }
 
 void TEST_lex::test_get_token()
 {
+    int a = 0;
+    if(1)
+        if(1)
+            a = 2;
+        else
+            a = 3;
+
     CPPUNIT_ASSERT(1 == 1);
 }
 

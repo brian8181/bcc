@@ -347,13 +347,18 @@ inline map<unsigned long, token> g_tokens =
  * @brief unsigned long states
  */
 constexpr unsigned long UL_INITIAL = 0x10;
-constexpr unsigned long UL_PRE_PROCESS = 0x20;
+constexpr unsigned long UL_PRE_PROCESSOR = 0x20;
+constexpr unsigned long UL_PARSER = 0x40;
+
 
 #define gt(n) &g_tokens[n]
+
+inline state_t INITIAL = {};
+
 /**
  * @brief state_t states
  */
-inline state_t INITIAL = { UL_INITIAL, "INITIAL", {	 				gt(TEST_TOKEN), gt(PRINT), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID),
+inline state_t PARSER = { UL_PARSER, "PARSER", {	 				gt(TEST_TOKEN), gt(PRINT), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID),
 																	gt(IF), gt(ELSE), gt(WHILE), gt(DO), gt(FOR), gt(RETURN), gt(BREAK), gt(CONTINUE), gt(SWITCH), gt(CASE), gt(DEFAULT), gt(GOTO), gt(LABEL),
 																	gt(SEMI_COLON), gt(ASSIGN),
 																	gt(INCLUDE),
@@ -364,7 +369,8 @@ inline state_t INITIAL = { UL_INITIAL, "INITIAL", {	 				gt(TEST_TOKEN), gt(PRIN
 																	gt(OR), gt(AND), gt(NOT), gt(BIT_OR), gt(BIT_AND), gt(BIT_NOT), gt(RSHIFT), gt(LSHIFT), gt(COMMA),
 																	gt(STRUCT), gt(TYPEDEF), gt(PTR) } };
 
-inline state_t PRE_PROCESS = { UL_PRE_PROCESS, "PRE_PROCESS", {  	gt(TEST_TOKEN), gt(PRINT), gt(STRING), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID), gt(SEMI_COLON), gt(ASSIGN),
+
+inline state_t PRE_PROCESSOR = { UL_PRE_PROCESSOR, "PRE_PROCESSOR", {  	gt(TEST_TOKEN), gt(PRINT), gt(STRING), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID), gt(SEMI_COLON), gt(ASSIGN),
 																	gt(INCLUDE), gt(IFDEF), gt(IFNDEF), gt(DEFINE), gt(UNDEF), gt(ENDIF), gt(PRAGMA), gt(HASH_ERROR), gt(HASH_IF), gt(HASH_ELSE), gt(HASH_ELSEIF),
 																	gt(NEWLINE), gt(WHITESPACE), gt(CHAR_LITERAL), gt(STRING_LITERAL), gt(NUMERIC_LITERAL), gt(REAL_LITERAL), gt(IDENTIFIER) } };
 #endif

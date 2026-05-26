@@ -190,7 +190,7 @@ int parse_options(const int argc, char *argv[])
     // lexer::instance().set_state(&PRE_PROCESS);
     
     lexer::instance().init(argc-offset-1, argv+offset+1);
-    lexer::instance().set_state(&INITIAL);
+    lexer::instance().set_state(&PARSER);
     yyparser.parse();
     
 
