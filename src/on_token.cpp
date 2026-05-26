@@ -22,7 +22,6 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
     {
     case TEST_TOKEN:
         return parser::make_TEST_TOKEN(match);
-
     case STRING:
         return parser::make_STRING();
     case SHORT:
@@ -203,6 +202,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         m_fstream << "// line:" << m_line << endl;
         return get_token();
     case WHITESPACE:
+        return get_token();
     case SKIP_TOK:
         TRACE();
         return get_token();

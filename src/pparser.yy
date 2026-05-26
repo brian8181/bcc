@@ -39,28 +39,15 @@
     #undef INFO_COLOR
     #define INFO_COLOR FMT_FG_BLUE
 
-	typedef std::pair< std::string, std::string > attribute;
-	//typedef std::string stmt_t;
-	//typedef std::vector< std::string > stmts_t;
-    typedef std::pair< std::string, std::string > attrib_t;
-    typedef std::vector< attrib_t > attributes_t;
-
     std::map<string, string> stab;
 
-    typedef struct symbol_t
-    {
-        std::string name;
-        symbol_t* parent;
-        std::vector<symbol_t> members;
-    } symbol_t;
-
-    typedef struct modifier_t
-    {
-        std::string name;
-        std::string params;
-    } modifier_t;
-
+    
     struct mytype;
+    struct symbol_t;
+    struct modifier_t;
+
+    typedef std::string arg_t;
+    typedef std::vector<arg_t> args_t;
 
     
 }
@@ -90,7 +77,7 @@
     // declare yylex
     namespace yy
     {
-        auto yylex() -> parser::symbol_type;
+         auto yylex() -> parser::symbol_type;
     }
 
     char* STRDUP(char* s);
@@ -120,28 +107,10 @@
 	static int m_file_count = 0;
     void print_symtab();
 
+    
+
 }
 
-%code
-{
-	/* namespace yy
-	{
-		// Return the next token.
-		auto yylex () -> parser::symbol_type
-		static int count = 0;
-		switch (int stage = count++)
-		{
-		case 0:
-		return parser::make_TEXT ("I have three numbers for you.");
-		case 1: case 2: case 3:
-			return parser::make_NUMBER (stage);
-		case 4:
-		return parser::make_TEXT ("And that’s all!");
-		default:
-			return parser::make_YYEOF ();
-		}
-	} */
-}
 
 %token SKIP_TOKEN UNDEFINED
 %token INCLUDE DEFINE UNDEF HASH_IF IFDEF IFNDEF HASH_ERROR PRAGMA
@@ -199,12 +168,15 @@
 %left MUL DIV MOD
 %nonassoc UMINUS
 
-%type case cases
+
+%type <std::string> operand
+%type <std::string> params_list 
+%type <std::string> case cases
 %type < mytype > test;
 //%type <std::string> param
 //%type < std::vector< std::string> > params 
-%type < std::list< std::string > > args
-%type < std::string > arg
+%type < args_t > args
+%type < arg_t > arg
 %type <std::string> file
 %type < std::vector< std::string > > files
 %type <std::string> stmt
@@ -223,6 +195,7 @@
 %type <std::string> decel func_param_decels param_decels function_decel function_call
 %type <std::string> compiler
 %start compiler
+
 
 %%
 /**
@@ -322,6 +295,9 @@ stmt:
                                                                     INFO("stmt: | expr=" << $expr << " SEMI_COLON");
                                                                     WARN("expr: not an l-side"); 
                                                                 }
+    | function_call SEMI_COLON                                 {
+                                                                    INFO("stmt: | function_call SEMI_COLON");
+                                                                }
     | decel SEMI_COLON                                          { 
                                                                     INFO("stmt: | decel SEMI_COLON"); 
                                                                     stringstream ss;
@@ -418,6 +394,9 @@ stmt:
     | IF LPAREN expr RPAREN stmt ELSE stmt                      { 
                                                                     INFO("stmt: | IF LPAREN expr RPAREN stmt ELSE stmt"); 
                                                                 }
+    | expr QUESTION_MARK expr COLON expr                        { 
+                                                                    INFO("expr: | expr QUESTION_MARK expr COLON expr"); 
+                                                                }
     | FOR LPAREN stmt stmt stmt RPAREN stmt                     { 
                                                                     INFO("stmt: | FOR LPAREN stmt stmt stmt RPAREN stmt"); 
                                                                     stringstream ss;
@@ -496,27 +475,16 @@ case:
  * @brief Numerical / logical exprssions
  */
 expr[result]:
-    IDENTIFIER                                                  { 
-                                                                    INFO("PARSER expr: | IDENTIFIER");
-                                                                    //$$ = *((int*)_symtab[$IDENTIFIER].val); //? val may not be int
+   operand                                                   {
+                                                                    INFO("expr: | operand=" << $operand);
+                                                                    $result = $operand;
                                                                 }
-    | NUMERIC_LITERAL                                           {
-                                                                    INFO("PARSER expr: | NUMERICAL_LITERAL");
-                                                                    stringstream ss;
-                                                                    ss << std::atoi($NUMERIC_LITERAL.c_str());
-                                                                    $result= ss.str();
-                                                                }
-    | REAL_LITERAL                                              {
-                                                                    INFO("PARSER expr: | REAL_LITERAL");
-                                                                    stringstream ss;
-                                                                    ss << std::atof($REAL_LITERAL.c_str());
-                                                                    $result = ss.str();
-                                                                }
-    | CHAR_LITERAL                                              {
-                                                                    INFO("PARSER expr: | CHAR_LITERAL");
-                                                                    stringstream ss;
-                                                                    ss << $CHAR_LITERAL;
-                                                                    $result = ss.str();
+   | expr[lhs] INC[op]                                              {
+                                                                    INFO("expr: | expr INC");
+                                                                    stringstream result;
+                                                                    result << (std::atoi($lhs.c_str()) + 1);
+                                                                    $result = result.str();
+                                                                    INFO("$result=" << $result);
                                                                 }
     | DASH expr %prec UMINUS                                     {
                                                                     INFO("expr: | DASH expr %prec UMINUS");
@@ -708,18 +676,18 @@ expr[result]:
  * @name function_call
  */
 function_call:
-    IDENTIFIER[lhs] LPAREN RPAREN                               {
-                                                                    INFO("function_call: IDENTIFIER[lhs] LPAREN RPAREN");
+     IDENTIFIER LPAREN RPAREN                                  {
+                                                                    INFO("function_call: IDENTIFIER LPAREN RPAREN");
                                                                     stringstream ss;
                                                                     ss  << "\n"
                                                                         << "_asm\n"
                                                                         << "{\n"
-                                                                        << "    call " << $lhs << ":\n"
+                                                                        << "    call " << $IDENTIFIER << "()\n"
                                                                         << "}\n";
                                                                     INFO(ss.str());
                                                                     lexer::instance().write_ostream(ss.str());
                                                                 }
-    | IDENTIFIER[lhs] params                                    {
+   | IDENTIFIER[lhs] params                                    {
                                                                     INFO("function_call: IDENTIFIER[lhs] params");
                                                                     stringstream ss;
                                                                     ss  << "\n"
@@ -731,6 +699,29 @@ function_call:
                                                                     lexer::instance().write_ostream(ss.str());
                                                                 } 
                                                                 ;
+operand:
+  IDENTIFIER                                                  { 
+                                                                    INFO("operand: | IDENTIFIER");
+                                                                    //$$ = *((int*)_symtab[$IDENTIFIER].val); //? val may not be int
+                                                                }
+    | NUMERIC_LITERAL                                           {
+                                                                    INFO("operand: | NUMERICAL_LITERAL");
+                                                                    stringstream ss;
+                                                                    ss << std::atoi($NUMERIC_LITERAL.c_str());
+                                                                    $operand= ss.str();
+                                                                }
+    | REAL_LITERAL                                              {
+                                                                    INFO("operand: | REAL_LITERAL");
+                                                                    stringstream ss;
+                                                                    ss << std::atof($REAL_LITERAL.c_str());
+                                                                    $operand = ss.str();
+                                                                }
+    | CHAR_LITERAL                                              {
+                                                                    INFO("operand: | CHAR_LITERAL");
+                                                                    stringstream ss;
+                                                                    ss << $CHAR_LITERAL;
+                                                                    $operand = ss.str();
+                                                                }
 /**
  * @name function_decel
  */                                                                 
@@ -782,7 +773,7 @@ function_decel:
  * @name pramas_list
  */
 params_list:
-    LPAREN params RPAREN                                        {
+   LPAREN params RPAREN                                        {
                                                                     INFO("params_list: LPAREN params RPAREN");
                                                                     stringstream ss;
                                                                     ss  << "\n"
@@ -907,83 +898,83 @@ decel:
 
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
-    | STRING IDENTIFIER[lhs]                                    {
-                                                                    INFO("decel: | STRING IDENTIFIER");
-                                                                    _symbol_t lhs = { $lhs, "STRING", eSTRING, 0 }; // new symbol, unassigned!
-                                                                    _symtab[$lhs] = lhs;                     // add to symbol table, unassigned!
+    // | STRING IDENTIFIER[lhs]                                    {
+    //                                                                 INFO("decel: | STRING IDENTIFIER");
+    //                                                                 _symbol_t lhs = { $lhs, "STRING", eSTRING, 0 }; // new symbol, unassigned!
+    //                                                                 _symtab[$lhs] = lhs;                     // add to symbol table, unassigned!
 
-                                                                    stringstream ss;
-                                                                    ss << "type<" << "STRING" << "> " << "id<" << $lhs << ">";  
-                                                                    $decel = ss.str();   
+    //                                                                 stringstream ss;
+    //                                                                 ss << "type<" << "STRING" << "> " << "id<" << $lhs << ">";  
+    //                                                                 $decel = ss.str();   
                                                                     
-                                                                    stringstream ostrm;
-                                                                    ostrm << "STRING" << " " << $lhs << ";\n"; 
-                                                                    // write this to output
-                                                                    //lexer::instance().write_ostream(ostrm.str());
+    //                                                                 stringstream ostrm;
+    //                                                                 ostrm << "STRING" << " " << $lhs << ";\n"; 
+    //                                                                 // write this to output
+    //                                                                 //lexer::instance().write_ostream(ostrm.str());
 
-                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
-                                                                }
-    | CHAR IDENTIFIER[lhs]                                       {
-                                                                    INFO("decel: | CHAR IDENTIFIER");
-                                                                    _symbol_t lhs = { $lhs, "CHAR", 0, 0 }; // new symbol, unassigned!
-                                                                    _symtab[$lhs] = lhs;                    // add to symbol table, unassigned!
+    //                                                                 INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+    //                                                             }
+    // | CHAR IDENTIFIER[lhs]                                       {
+    //                                                                 INFO("decel: | CHAR IDENTIFIER");
+    //                                                                 _symbol_t lhs = { $lhs, "CHAR", 0, 0 }; // new symbol, unassigned!
+    //                                                                 _symtab[$lhs] = lhs;                    // add to symbol table, unassigned!
 
-                                                                    stringstream ss;
-                                                                    ss << "type<" << "CHAR" << "> " << "id<" << $lhs << ">";  
-                                                                    $decel = ss.str();   
+    //                                                                 stringstream ss;
+    //                                                                 ss << "type<" << "CHAR" << "> " << "id<" << $lhs << ">";  
+    //                                                                 $decel = ss.str();   
                                                                     
-                                                                    stringstream ostrm;
-                                                                    ostrm << "CHAR" << " " << $lhs << ";\n"; 
-                                                                    // write this to output
-                                                                    //lexer::instance().write_ostream(ostrm.str());
+    //                                                                 stringstream ostrm;
+    //                                                                 ostrm << "CHAR" << " " << $lhs << ";\n"; 
+    //                                                                 // write this to output
+    //                                                                 //lexer::instance().write_ostream(ostrm.str());
 
-                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
-                                                                }
-    | FLOAT IDENTIFIER[lhs]                                     {
-                                                                    INFO("decel: | FLOAT IDENTIFIER");
-                                                                    _symbol_t lhs = { $lhs, "FLOAT", 0, 0 }; // new symbol, unassigned!
-                                                                    _symtab[$lhs] = lhs;                     // add to symbol table, unassigned!
+    //                                                                 INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+    //                                                             }
+    // | FLOAT IDENTIFIER[lhs]                                     {
+    //                                                                 INFO("decel: | FLOAT IDENTIFIER");
+    //                                                                 _symbol_t lhs = { $lhs, "FLOAT", 0, 0 }; // new symbol, unassigned!
+    //                                                                 _symtab[$lhs] = lhs;                     // add to symbol table, unassigned!
 
-                                                                    stringstream ss;
-                                                                    ss << "type<" << "FLOAT" << "> " << "id<" << $lhs << ">";  
-                                                                    $decel = ss.str();   
+    //                                                                 stringstream ss;
+    //                                                                 ss << "type<" << "FLOAT" << "> " << "id<" << $lhs << ">";  
+    //                                                                 $decel = ss.str();   
                                                                     
-                                                                    stringstream ostrm;
-                                                                    ostrm << "FLOAT" << " " << $lhs << ";\n"; 
-                                                                    // write this to output
-                                                                    //lexer::instance().write_ostream(ostrm.str());
+    //                                                                 stringstream ostrm;
+    //                                                                 ostrm << "FLOAT" << " " << $lhs << ";\n"; 
+    //                                                                 // write this to output
+    //                                                                 //lexer::instance().write_ostream(ostrm.str());
 
-                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
-                                                                }
-     | VOID IDENTIFIER[lhs]                                     {
-                                                                    INFO("decel: | VOID IDENTIFIER");
-                                                                    _symbol_t lhs = { $lhs, "VOID", eVOID | eFUNC, 0 }; // new symbol, unassigned!
-                                                                    _symtab[$lhs] = lhs;                                // add to symbol table, unassigned!
+    //                                                                 INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+    //                                                             }
+    //  | VOID IDENTIFIER[lhs]                                     {
+    //                                                                 INFO("decel: | VOID IDENTIFIER");
+    //                                                                 _symbol_t lhs = { $lhs, "VOID", eVOID | eFUNC, 0 }; // new symbol, unassigned!
+    //                                                                 _symtab[$lhs] = lhs;                                // add to symbol table, unassigned!
 
-                                                                    stringstream ss;
-                                                                    ss << "type<" << "VOID" << "> " << "id<" << $lhs << ">";  
-                                                                    $decel = ss.str();   
+    //                                                                 stringstream ss;
+    //                                                                 ss << "type<" << "VOID" << "> " << "id<" << $lhs << ">";  
+    //                                                                 $decel = ss.str();   
                                                                     
-                                                                    stringstream ostrm;
-                                                                    ostrm << "VOID" << " " << $lhs << ";\n"; 
-                                                                    // write this to output
-                                                                    //lexer::instance().write_ostream(ostrm.str());
+    //                                                                 stringstream ostrm;
+    //                                                                 ostrm << "VOID" << " " << $lhs << ";\n"; 
+    //                                                                 // write this to output
+    //                                                                 //lexer::instance().write_ostream(ostrm.str());
 
-                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
-                                                                }
-    |  intregal_type[type] PTR IDENTIFIER[lhs]                  {
-                                                                    INFO("decel | intregal_type[type] PTR IDENTIFIER[lhs]");
-                                                                    _symbol_t lhs = { $lhs, "PTR", ePTR, new int(0) }; // new symbol, unassigned!
-                                                                    _symtab[$lhs] = lhs;                               // add to symbol table, unassigned!
+    //                                                                 INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+    //                                                             }
+    // |  intregal_type[type] PTR IDENTIFIER[lhs]                  {
+    //                                                                 INFO("decel | intregal_type[type] PTR IDENTIFIER[lhs]");
+    //                                                                 _symbol_t lhs = { $lhs, "PTR", ePTR, new int(0) }; // new symbol, unassigned!
+    //                                                                 _symtab[$lhs] = lhs;                               // add to symbol table, unassigned!
 
-                                                                    // // stringstream ss;
-                                                                    // // ss << "type<" << "PTR" << "> " << "id<" << $lhs << ">";  
-                                                                    // // $decel = ss.str(); 
-                                                                    // // // write this to output
-                                                                    // // lexer::instance().write_ostream(ss.str());
-                                                                    // // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
-                                                                }
-                                                                ;
+    //                                                                 // // stringstream ss;
+    //                                                                 // // ss << "type<" << "PTR" << "> " << "id<" << $lhs << ">";  
+    //                                                                 // // $decel = ss.str(); 
+    //                                                                 // // // write this to output
+    //                                                                 // // lexer::instance().write_ostream(ss.str());
+    //                                                                 // // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
+    //                                                             }
+                                                                    ;
 /**   
  * @name print_function   
  */   
@@ -1051,32 +1042,29 @@ intregal_type:
     | SINGLE                                                    { INFO("intergal_type: | SINGLE"); /*$$=SINGLE;*/ }
     | DOUBLE                                                    { INFO("intergal_type: | DOUBLE"); /*$$=DOUBLE;*/ }
                                                                 ;
-tokens:
-    STRUCT
-    | TYPEDEF
-    | BACKSLASH
-    | QUESTION_MARK
-    | DOT
-    | COLON
-    | INDIRECT_MEMBER
-    | DOUBLE_QUOTE
-    | SINGLE_QUOTE
-    | ASTERICK
-    | ELSEIF
-    | DO
-    | FOR
-    | BREAK
-    | CONTINUE
-    | RETURN
-    | SWITCH
-    | CASE
-    | DEFAULT
-    ;
 %%
 
 #include "table.hpp"
-
 #undef PARSER_LOG
+
+//typedef std::string stmt_t;
+//typedef std::vector< std::string > stmts_t;
+
+typedef std::string arg_t;
+typedef std::vector<arg_t> args_t;
+
+typedef struct symbol_t
+{
+    std::string name;
+    symbol_t* parent;
+    std::vector<symbol_t> members;
+} symbol_t;
+
+typedef struct modifier_t
+{
+    std::string name;
+    std::string params;
+} modifier_t;
 
 typedef struct mytype
 { 

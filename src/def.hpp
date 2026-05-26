@@ -76,6 +76,7 @@ typedef struct state_t
 {
 	unsigned long id;
 	string name;
+	vector<token_t*> tokens;
 } state_t;
 
 typedef token_t token;
@@ -290,9 +291,9 @@ inline map<unsigned long, token> g_tokens =
 		{COMMA, token{COMMA, "COMMA", S_TYPE, R"([,])", __LINE__}},
 		{DOT, token{DOT, "DOT", S_TYPE, R"(\.)", __LINE__}},
 		{EQ, token{EQ, "EQ", S_TYPE, R"(==)", __LINE__}},
+		{INC, token{INC, "INC", S_TYPE, R"(\+\+)", __LINE__}},
 		{NEQ, token{NEQ, "NEQ", S_TYPE, R"(!=)", __LINE__}},
-		{LT, token{LT, "LT", S_TYPE, R"([>])", __LINE__}},
-		{LT, token{LT, "LT", S_TYPE, R"([>])", __LINE__}},
+		{LT, token{LT, "LT", S_TYPE, R"([<])", __LINE__}},
 		{GT, token{GT, "GT", S_TYPE, R"([>])", __LINE__}},
 		{GEQ, token{GEQ, "GEQ", S_TYPE, R"(>=)", __LINE__}},
 		{LEQ, token{LEQ, "LEQ", S_TYPE, R"(<=)", __LINE__}},
@@ -342,63 +343,28 @@ inline map<unsigned long, token> g_tokens =
 		{PRAGMA, token{PRAGMA, "PRAGMA", S_TYPE, R"(#pargma)", __LINE__}}
 	};
 
-
-
 /**
  * @brief unsigned long states
  */
 constexpr unsigned long UL_INITIAL = 0x10;
 constexpr unsigned long UL_PRE_PROCESS = 0x20;
 
-/**
- * @brief global state IDs
- */
-inline vector<unsigned long> state_ids = { UL_INITIAL, UL_PRE_PROCESS };
-
+#define gt(n) &g_tokens[n]
 /**
  * @brief state_t states
  */
+inline state_t INITIAL = { UL_INITIAL, "INITIAL", {	 				gt(TEST_TOKEN), gt(PRINT), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID),
+																	gt(IF), gt(ELSE), gt(WHILE), gt(DO), gt(FOR), gt(RETURN), gt(BREAK), gt(CONTINUE), gt(SWITCH), gt(CASE), gt(DEFAULT), gt(GOTO), gt(LABEL),
+																	gt(SEMI_COLON), gt(ASSIGN),
+																	gt(INCLUDE),
+																	gt(NEWLINE), gt(WHITESPACE), gt(CHAR_LITERAL), gt(STRING_LITERAL), gt(NUMERIC_LITERAL), gt(REAL_LITERAL), gt(IDENTIFIER),
+																	gt(EQ), gt(NEQ), gt(LEQ), gt(GEQ), gt(LT), gt(GT),
+																	gt(INC), gt(ADD_EQ), gt(SUB_EQ), gt(MUL_EQ), gt(DIV_EQ), gt(MOD_EQ), gt(OR_EQ), gt(AND_EQ), gt(NOT_EQ), gt(XOR_EQ), gt(LSFT_EQ), gt(RSFT_EQ), gt(TENERARY),
+																	gt(MUL), gt(DIV), gt(DASH), gt(ADD), gt(MOD), gt(LBRACKET), gt(RBRACKET), gt(LPAREN), gt(RPAREN), gt(LBRACE), gt(RBRACE),
+																	gt(OR), gt(AND), gt(NOT), gt(BIT_OR), gt(BIT_AND), gt(BIT_NOT), gt(RSHIFT), gt(LSHIFT), gt(COMMA),
+																	gt(STRUCT), gt(TYPEDEF), gt(PTR) } };
 
-inline state_t INITIAL = { UL_INITIAL, "INITIAL" };
-inline state_t PRE_PROCESS = { UL_PRE_PROCESS, "PRE_PROCESS" };
-
-/**
- * @brief global state vector
- */
-inline vector<state_t> states__ = { PRE_PROCESS, INITIAL };
-
-/**
- * @brief token list -> by state
- */
-inline vector<unsigned long> PRE_PROCESS_TOKENS = {  	TEST_TOKEN, PRINT, STRING, INT, FLOAT, CHAR, VOID, SEMI_COLON, ASSIGN, 
-													 	INCLUDE, IFDEF, IFNDEF, DEFINE, UNDEF, ENDIF, PRAGMA, HASH_ERROR, HASH_IF, HASH_ELSE, HASH_ELSEIF,
-												 		NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER };
-
-/**
- * @brief token list -> by state
- */
-inline vector<unsigned long> INITIAL_TOKENS = {		TEST_TOKEN, PRINT, INT, FLOAT, CHAR, VOID, 
-													IF, ELSE, WHILE, DO, FOR, RETURN, BREAK, CONTINUE, SWITCH, CASE, DEFAULT, GOTO, LABEL,  
-													SEMI_COLON, ASSIGN, 
-													INCLUDE,
-												 	NEWLINE, WHITESPACE, CHAR_LITERAL, STRING_LITERAL, NUMERIC_LITERAL, REAL_LITERAL, IDENTIFIER,
-													EQ, NEQ, LEQ, GEQ, LT, GT,
-													INC, ADD_EQ, SUB_EQ, MUL_EQ, DIV_EQ, MOD_EQ, OR_EQ, AND_EQ, NOT_EQ, XOR_EQ, LSFT_EQ, RSFT_EQ, TENERARY,
-													MUL, DIV, DASH, ADD, MOD, LBRACKET, RBRACKET, LPAREN, RPAREN, LBRACE, RBRACE, 
-													OR, AND, NOT, BIT_OR, BIT_AND, BIT_NOT, RSHIFT, LSHIFT, COMMA,
-													STRUCT, TYPEDEF, PTR	};
-/**
- * @brief global state: state_id -> states
- * @name g_tokens_by_state_id
- */
-inline map<unsigned long, vector<unsigned long>*> g_state_tokens {  {UL_PRE_PROCESS, &PRE_PROCESS_TOKENS}, {UL_INITIAL, &INITIAL_TOKENS} };
-/**
- *
- */
-
-typedef unsigned long type_t;
-typedef unsigned long terminal_t;
-typedef vector<terminal_t> terminals_t;
-typedef vector<type_t> types_t;
-
+inline state_t PRE_PROCESS = { UL_PRE_PROCESS, "PRE_PROCESS", {  	gt(TEST_TOKEN), gt(PRINT), gt(STRING), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID), gt(SEMI_COLON), gt(ASSIGN),
+																	gt(INCLUDE), gt(IFDEF), gt(IFNDEF), gt(DEFINE), gt(UNDEF), gt(ENDIF), gt(PRAGMA), gt(HASH_ERROR), gt(HASH_IF), gt(HASH_ELSE), gt(HASH_ELSEIF),
+																	gt(NEWLINE), gt(WHITESPACE), gt(CHAR_LITERAL), gt(STRING_LITERAL), gt(NUMERIC_LITERAL), gt(REAL_LITERAL), gt(IDENTIFIER) } };
 #endif

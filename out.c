@@ -165,6 +165,11 @@ _asm
 {
     todo
 }
+
+_asm
+{
+    todo
+}
 // line:12
 
 _asm
@@ -256,3 +261,11 @@ _asm
         jmp WHILE      ; continue loop
     END:               ; exit label
 }
+// line:28
+// line:29
+
+_asm
+{
+    call foo()
+}
+// line:30

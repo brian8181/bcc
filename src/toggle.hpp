@@ -86,6 +86,7 @@ private:
 	bool _co = false;
 	bool* _pci = 0;
 	bool* _pco = 0;
+	toggle* next = 0;
 };
 
 #endif

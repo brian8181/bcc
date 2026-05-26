@@ -212,27 +212,21 @@ void lexer::set_state( state_t* pstate )
 	p_state = pstate;
 	// just update for now
 	stringstream ss;
-	const vector<unsigned long>* STATE_TOKENS = g_state_tokens[p_state->id];
-	const unsigned long len = STATE_TOKENS->size();
-
-	string e;
-	build_search_expression(*STATE_TOKENS, g_tokens, e);
+	const unsigned long len = p_state->tokens.size();
+		string e;
+	//build_search_expression(p_state->tokens, g_tokens, e);
 	ATTN(e);
 
 	for( unsigned long i = 0; i < len; i++ )
 	{
-		unsigned long id = ( *STATE_TOKENS )[i];
-		token_t* ptoken = &g_tokens[id];
-
-		stringstream rstr;
-		rstr << "\"" << ptoken->rexp << "\"";
+		token_t* ptoken = p_state->tokens[i];
 		stringstream info;
 		info << std::left << "#" << setw(2)  << i << "   "
-			<< "id:   " << std::setw( 4 ) << std::right << id
+			<< "id:   " << std::setw( 4 ) << std::right << ptoken->id
 			<< "    ~    " << std::right << "idx: " << std::setw( 3 ) << std::left << ptoken->index
 			<< "    ~    " << std::left << "name: " << std::setw( 18 ) << std::left << ptoken->name
 			<< "    ~    " << std::left << "type: " << std::setw( 10 ) << ptoken->stype
-			<< "    ~    " << std::left << "regex: " << std::left << std::setw( 44 ) << rstr.str() << std::right;
+			<< "    ~    " << std::left << "regex: " << std::left << std::setw( 44 ) << ptoken->rexp << std::right;
 
 		cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
 			<< info.str() << FMT_RESET << endl;
@@ -261,7 +255,7 @@ string& lexer::build_search_expression(const vector<unsigned long>& tokens, map<
 	// get / append first string
 	unsigned long id = tokens[0];
 	stringstream ss;
-	ss << table[id].rexp;
+	ss << gt(id).rexp;
 	// get / append remaining strings 
 	for(int i = 1; i < sz; ++i)
 	{
@@ -330,12 +324,11 @@ parser::symbol_type lexer::get_token()
 					return EOF;
 				}
 				// get match : by sub_match index (i)
-				unsigned long id = ( *g_state_tokens[p_state->id] )[i - 1];
-				token_t token = g_tokens[id];
-				print_smatch(token,  m );
+				token_t* token =  p_state->tokens[i - 1];
+				print_smatch(*token,  m );
 				// set buffer to suffix
 				m_buffer = m.suffix();
-				return on_token( id, match );
+				return on_token( token->id, match );
 			}
 		}
 		return parser::make_YYerror(); // no sub match?, should not happen
@@ -349,7 +342,7 @@ parser::symbol_type lexer::get_token()
  * @brief print token to stdout
  * @param token_match m
  */
-void lexer::print_smatch(token_t t, boost::smatch m)
+void lexer::print_smatch(const token_t& t, boost::smatch m)
 {
 	// INFO(	"match.pos:" << m.position()   << " - match.sz:"  << m.str().size()
 	// 								       << " - prefix.sz:" << m.prefix().str().size()
@@ -360,6 +353,20 @@ void lexer::print_smatch(token_t t, boost::smatch m)
 					<< FMT_FG_GREEN <<  " - prefix" << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\""    << esc_nl( m.prefix() ).get_val() << "\"" << FMT_RESET_ITALIC << " ](" << m.prefix().str().size() << ")" << FMT_RESET \
 					<< FMT_FG_GREEN <<  " - suffix" << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\""    << esc_nl( m.suffix() ).get_val() << "\"" << FMT_RESET_ITALIC << " ](" << m.suffix().str().size() << ")" << FMT_RESET		);
 }
+
+// void lexer::print_token()
+// {
+// 	// stringstream info;
+// 	// 	info << std::left << "#" << setw(2)  << i << "   "
+// 	// 		<< "id:   " << std::setw( 4 ) << std::right << id
+// 	// 		<< "    ~    " << std::right << "idx: " << std::setw( 3 ) << std::left << ptoken->index
+// 	// 		<< "    ~    " << std::left << "name: " << std::setw( 18 ) << std::left << ptoken->name
+// 	// 		<< "    ~    " << std::left << "type: " << std::setw( 10 ) << ptoken->stype
+// 	// 		<< "    ~    " << std::left << "regex: " << std::left << std::setw( 44 ) << rstr.str() << std::right;
+
+// 	// 	cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
+// 	// 		<< info.str() << FMT_RESET << endl;
+// }
 
 // Overload definition
 std::ostream& operator<<(std::ostream& os, const lexer& lex) 

@@ -6,13 +6,15 @@
 #include <iostream>
 #include "toggle.hpp"
 
+using std::cout;
+using std::endl;
+
 /**
  * @brief Construct a new toggle::toggle object
  * 
  */
-toggle::toggle() : _val(false), _ci(false), _co(false), _pci(&_ci)
+toggle::toggle() : _val(false), _ci(false), _co(false)//, _pci(&_ci)
 {
-    _ci = true;
     _pci = &_ci;
 }
 
@@ -45,6 +47,7 @@ toggle::toggle(bool val, bool co, bool ci) : _val(val), _ci(ci), _co(co), _pci(&
 
 void toggle::chain(toggle t)
 {
+    next = &t;
     t._pci = &_co;
 }
 
@@ -65,7 +68,16 @@ bool toggle::set()
 {
     _val = !_val;
     _co = _val && _ci;
-    return _val;
+    if (next) 
+    {
+        next->_ci = _co;
+        next->set();
+    }
+    else
+    {
+        cout << _val << endl;
+        return _val;
+    }
 }
 
 /**

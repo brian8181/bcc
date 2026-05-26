@@ -99,3 +99,31 @@ void TEST_toggle::TEST_get_co()
     bool actual = true;
     CPPUNIT_ASSERT(expected == actual);
 }
+/**
+ * @name TEST_get_ci
+ */
+void TEST_toggle::TEST_get_ci()
+{
+    toggle t;
+    bool expected = true;
+    bool actual = true;
+    CPPUNIT_ASSERT(expected == actual);
+}
+
+
+void TEST_toggle::TEST_chain()
+{
+    toggle t1;
+    toggle t2;
+    t1.chain(t2);
+    CPPUNIT_ASSERT(t1.get_co() == t2.get_ci());
+    t1.set();
+    CPPUNIT_ASSERT(t1.get_co() == t2.get_ci());
+    t1.set();
+    CPPUNIT_ASSERT(t1.get_co() == t2.get_ci());
+    t1.set();
+    CPPUNIT_ASSERT(t1.get_co() == t2.get_ci());
+    t1.set();
+    CPPUNIT_ASSERT(t1.get_co() == t2.get_ci());
+    
+}
