@@ -115,19 +115,35 @@ int parse_options(const int argc, char *argv[])
 	const int offset = optind;
     // call c preprocessor
 	SYST("Starting pre-processing phase...");
-	stringstream ss;
-	fs::path p = argv[offset];
-	fs::path out_path = p.replace_extension(".i");
-	ss << "cpp -E -P -C -I./include/ " << string(argv[offset]) << " > " << out_path.string();
-	ss.flush();
-	system(ss.str().c_str());
+	vector<string> files;
+	for(int i = 0; (i+offset) < argc; ++i)
+	{
+		TRACE();
+		std::stringstream ss;
+		string file = fs::path(argv[i+offset]).stem().string();
+		cout << "debug: argc=" << argc << ", i=" << i << ", offset=" << offset << endl;
+		cout << "debug: " << file << endl;
+		string path = "build/";
+		path.append(file);
+		files.push_back(path);
+		ss << "cpp -E -P -I./include/ " << argv[i+offset] << " > ";
+		ss << "build/" << file << ".i";
+		cout << "debug: " << ss.str() << endl;
+		system(ss.str().c_str());
+		cout << "debug: " << ss.str() << endl;
+	}
 	SYST("Pre-processing phase completed.");
 
 	// lex, parse ...
 	SYST("Compiling...");
-	lexer::instance().init(argc - offset, argv + offset);
-    lexer::instance().set_state(&PARSER);
-    yyparser.parse();
+	for(int i = 0; i < files.size(); ++i)
+	{
+		lexer::instance().init(files[i]);
+    	lexer::instance().set_state(&PARSER);
+		TRACE();
+    	yyparser.parse();
+	}
+	TRACE();
 
 	SYST("finished.");
 

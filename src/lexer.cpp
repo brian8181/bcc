@@ -131,6 +131,30 @@ void lexer::load_config( const string& file )
 /**
  * @name  init
  * @brief initialize input
+ * @param const string& file
+ * @return bool
+ */
+bool lexer::init(const string& file)
+{
+	// input stream
+	fs::path p = file;
+	m_ifile = p.replace_extension("i");
+	INFO(m_ifile);
+	m_buffer.clear();
+	read_str( m_ifile, m_buffer );
+
+	// output stream
+	m_ofile = p.replace_extension("asm");
+	INFO(m_ofile);
+	m_fstream.open(m_ofile, std::ios_base::out | std::ios::trunc);
+	initalized = m_fstream.is_open();
+	TRACE();
+	return initalized;
+}
+
+/**
+ * @name  init
+ * @brief initialize input
  * @param argc, input file count
  * @param argv, const char* file names
  * @return void
@@ -138,16 +162,16 @@ void lexer::load_config( const string& file )
 bool lexer::init( const int argc, char* argv[] )
 {
 	//cout << BEG_STATE(INITIAL) << END_STATE() << endl;
-	for(int i = 0; i < argc; ++i)
-	{
-		fs::path p = argv[i];
-		if(!fs::exists(p))
-		{
-			ERROR("file error: \"" << p << "\" does not exist. ");
-			return false;
-		}
-		m_input_paths.push_back(p);
-	}
+	// for(int i = 0; i < argc; ++i)
+	// {
+	// 	fs::path p = argv[i];
+	// 	if(!fs::exists(p))
+	// 	{
+	// 		ERROR("file error: \"" << p << "\" does not exist. ");
+	// 		return false;
+	// 	}
+	// 	m_input_paths.push_back(p);
+	// }
 	m_current_file_idx = 0;
 	m_line = 0;
 	m_buffer.clear();
@@ -165,6 +189,7 @@ bool lexer::init( const int argc, char* argv[] )
  */
 bool lexer::next_file()
 {
+	TRACE();
 	static int i = 0;
 	if(initalized)
 	{
@@ -174,25 +199,19 @@ bool lexer::next_file()
 	int sz = m_input_paths.size();
 	if (i < sz)
 	{
-		m_ifile = string( m_input_paths[i] );
-		fs::path p = m_ifile;
-		if (!fs::exists(p))
-		{
-			cerr << "File not found: " <<  m_ifile << endl;
-			return 1;
-		}
-		// todo
-		//fs::path out_path = p.replace_extension(".i");
+		fs::path p = m_input_paths[i];
+		std::stringstream infile, outfile;
+		infile << "build/" << p.stem().string() << ".i";
+		outfile << "build/" << p.stem().string() << ".asm";
+		m_ifile = infile.str();
+		m_ofile = outfile.str();
+
 		m_buffer.clear();
-		read_str( p.string(), m_buffer );
+		read_str( m_ifile, m_buffer );
 
 		m_line = 0;
 		++i;
 		m_current_file_idx = i;
-
-		// todo close open stream & open one for next file
-		p.replace_extension(".asm");
-		m_ofile = (string)p;
 
 		// flush close current
 		if (m_fstream.is_open())
@@ -200,7 +219,7 @@ bool lexer::next_file()
 			m_fstream.flush();
 			m_fstream.close();
 		}
-		m_fstream.open((string)p, std::ios_base::out | std::ios::trunc);
+		m_fstream.open(m_ofile, std::ios_base::out | std::ios::trunc);
 		return (m_fstream.is_open() && !m_buffer.empty());
 	}
 	return false;
@@ -297,24 +316,35 @@ void lexer::push_include( const string& file )
  */
 parser::symbol_type lexer::get_token()
 {
-	if( EOFS )
-	{
-		return on_token( *gt(END_OF_FILES).id, 0 );
-	}
+	TRACE();
+	// if( EOFS )
+	// {
+	// 	return on_token( *gt(END_OF_FILES).id, 0 );
+	// }
 
 	if( m_buffer.empty() )
 	{
-		EOFS = !next_file();
-		return on_token( *gt(END_OF_FILE).id, 0 );
+		//EOFS = !next_file();
+		return 0;  // this fucking works ...
+		// parser::make_YYerror();
+		// return on_token( *gt(END_OF_FILE).id, 0 );
 	}
 
+	INFO(m_regex_str);
 	auto rexp = boost::regex( m_regex_str, boost::regex::extended );
+	TRACE();
+	INFO(m_buffer.size());
 	auto iter = boost::sregex_iterator( m_buffer.begin(), m_buffer.end(), rexp );
+	TRACE();
 	auto end = boost::sregex_iterator();
+	TRACE();
 	boost::smatch m( *iter );
+	TRACE();
 	string match = m.str();
+	TRACE();
 	const size_t len = m.size();
 
+	TRACE();
 	if( iter != end )
 	{
 		for( int i = 1; i < len; ++i )
@@ -338,6 +368,7 @@ parser::symbol_type lexer::get_token()
 		return parser::make_YYerror(); // no sub match?, should not happen
 	}
 	ATTN( "END_OF_FILE" );
+	TRACE();
 	return parser::make_END_OF_FILE();
 }
 

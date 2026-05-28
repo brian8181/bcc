@@ -1,7 +1,6 @@
 #ifndef _SYMTAB_H_
 #define _SYMTAB_H_
 
-
 typedef struct symbol
 {
     char* id;
@@ -12,34 +11,6 @@ typedef struct symbol
 	struct symbol *next;
     struct symbol *prev;
 } symbol;
-
-// typedef struct binary_node
-// {
-//     void *data;
-//     struct node *left;
-//     struct node *right;
-// } binary_node;
-
-// typedef struct tree_node
-// {
-//     void *data;
-//     int count;
-//     struct tree_node *nodes;
-// } tree_node;
-
-// typedef struct map_node
-// {
-//     int key;
-//     char *name;
-//     symbol *sym;
-// } map_node;
-
-// typedef struct object
-// {
-//     char *fields[255];
-//     symbol symbols[255];
-//     node *next;
-// } object;
 
 typedef struct symbol_tab
 {

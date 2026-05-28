@@ -125,11 +125,22 @@ public:
 	void load_config( const string& file );
 
 	/**
+	* @name  init
+	* @brief initialize input
+	* @param const string& file
+	* @return bool
+	*/
+	bool init(const string& file);
+
+
+	/**
+	 * @deprecated use overload - "init(const vector<string> files)"
+	 *
 	 * @name  init
 	 * @brief initialize input
 	 * @param argc, input file count
 	 * @param argv, onst char* file names
-	 * @return void
+	 * @return bool
 	 */
 	bool init(const int argc, char* argv[]);
 
