@@ -153,79 +153,6 @@ bool lexer::init(const string& file)
 }
 
 /**
- * @name  init
- * @brief initialize input
- * @param argc, input file count
- * @param argv, const char* file names
- * @return void
- */
-bool lexer::init( const int argc, char* argv[] )
-{
-	//cout << BEG_STATE(INITIAL) << END_STATE() << endl;
-	// for(int i = 0; i < argc; ++i)
-	// {
-	// 	fs::path p = argv[i];
-	// 	if(!fs::exists(p))
-	// 	{
-	// 		ERROR("file error: \"" << p << "\" does not exist. ");
-	// 		return false;
-	// 	}
-	// 	m_input_paths.push_back(p);
-	// }
-	m_current_file_idx = 0;
-	m_line = 0;
-	m_buffer.clear();
-	m_ifile = "";
-	m_ofile = "";
-
-	initalized = true;
-	return next_file();
-}
-
-/**
- * @name   next_file
- * @brief  moves lexer to next file
- * @return bool
- */
-bool lexer::next_file()
-{
-	TRACE();
-	static int i = 0;
-	if(initalized)
-	{
-		i = 0;
-		initalized = false;
-	}
-	int sz = m_input_paths.size();
-	if (i < sz)
-	{
-		fs::path p = m_input_paths[i];
-		std::stringstream infile, outfile;
-		infile << "build/" << p.stem().string() << ".i";
-		outfile << "build/" << p.stem().string() << ".asm";
-		m_ifile = infile.str();
-		m_ofile = outfile.str();
-
-		m_buffer.clear();
-		read_str( m_ifile, m_buffer );
-
-		m_line = 0;
-		++i;
-		m_current_file_idx = i;
-
-		// flush close current
-		if (m_fstream.is_open())
-		{
-			m_fstream.flush();
-			m_fstream.close();
-		}
-		m_fstream.open(m_ofile, std::ios_base::out | std::ios::trunc);
-		return (m_fstream.is_open() && !m_buffer.empty());
-	}
-	return false;
-}
-
-/**
  * @name   set_state_flag
  * @brief  void set_state(state_t* pstate)
  * @return void
@@ -316,7 +243,7 @@ void lexer::push_include( const string& file )
  */
 parser::symbol_type lexer::get_token()
 {
-	TRACE();
+	//TRACE();
 	// if( EOFS )
 	// {
 	// 	return on_token( *gt(END_OF_FILES).id, 0 );
@@ -330,21 +257,21 @@ parser::symbol_type lexer::get_token()
 		// return on_token( *gt(END_OF_FILE).id, 0 );
 	}
 
-	INFO(m_regex_str);
+	//INFO(m_regex_str);
 	auto rexp = boost::regex( m_regex_str, boost::regex::extended );
-	TRACE();
-	INFO(m_buffer.size());
+	//TRACE();
+	//INFO(m_buffer.size());
 	auto iter = boost::sregex_iterator( m_buffer.begin(), m_buffer.end(), rexp );
-	TRACE();
+	//TRACE();
 	auto end = boost::sregex_iterator();
-	TRACE();
+	//TRACE();
 	boost::smatch m( *iter );
-	TRACE();
+	//TRACE();
 	string match = m.str();
-	TRACE();
+	//TRACE();
 	const size_t len = m.size();
 
-	TRACE();
+	//TRACE();
 	if( iter != end )
 	{
 		for( int i = 1; i < len; ++i )
@@ -368,7 +295,7 @@ parser::symbol_type lexer::get_token()
 		return parser::make_YYerror(); // no sub match?, should not happen
 	}
 	ATTN( "END_OF_FILE" );
-	TRACE();
+	//TRACE();
 	return parser::make_END_OF_FILE();
 }
 
@@ -383,13 +310,17 @@ void lexer::print_smatch(const token_t& t, boost::smatch m)
 	string match = 	esc_nl( m.str() ).get_val();
 	string suffix = esc_nl( m.suffix() ).get_val();
 
-	int pw = prefix.size();
-	int mw  = pw + match.size();
-	int sw = mw + suffix.size();
+	// int pw = prefix.size();
+	// int mw  = pw + match.size();
+	// int sw = mw + suffix.size();
 
-	INFO(FMT_FG_GREEN <<  "prefix" << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\"" << setw(pw) << std::right << prefix << "\"" << FMT_RESET_ITALIC << " ](" << prefix.size() << ")" << FMT_RESET);
-	INFO(FMT_FG_GREEN <<  "match " << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\"" << setw(mw) << std::right << match  << "\"" << FMT_RESET_ITALIC << " ](" << match.size()          << ")" << FMT_RESET);
-	INFO(FMT_FG_GREEN <<  "suffix" << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\"" << setw(sw) << std::right << suffix  << "\"" << FMT_RESET_ITALIC << " ](" << suffix.size() << ")" << FMT_RESET);
+	prefix = prefix.size() != 0 ? ("\"" + prefix + "\"") : FMT_FG_RED + "null" + FMT_RESET;
+	match = match.size() != 0 ? ("\"" + match + "\"")  : FMT_FG_RED + "null" + FMT_RESET;
+	suffix = suffix.size() != 0 ? ("\"" + suffix + "\"")  : FMT_FG_RED +  "null" + FMT_RESET;
+
+	INFO(FMT_FG_GREEN << "prefix" << FMT_RESET << "[ " << FMT_ITALIC  << std::right << prefix << FMT_RESET_ITALIC << " ](" << prefix.size() << ")" << FMT_RESET);
+	INFO(FMT_FG_GREEN << "match " << FMT_RESET << "[ " << FMT_ITALIC  << std::right << match  << FMT_RESET_ITALIC << " ](" << match.size()  << ")" << FMT_RESET);
+	INFO(FMT_FG_GREEN << "suffix" << FMT_RESET  << "[ " << FMT_ITALIC << std::right << suffix << FMT_RESET_ITALIC << " ](" << suffix.size() << ")" << FMT_RESET);
 }
 
 /**

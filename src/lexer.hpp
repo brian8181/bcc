@@ -132,25 +132,6 @@ public:
 	*/
 	bool init(const string& file);
 
-
-	/**
-	 * @deprecated use overload - "init(const vector<string> files)"
-	 *
-	 * @name  init
-	 * @brief initialize input
-	 * @param argc, input file count
-	 * @param argv, onst char* file names
-	 * @return bool
-	 */
-	bool init(const int argc, char* argv[]);
-
-	/**
-	 * @name   next_file
-	 * @brief  moves lexer to next file
-	 * @return bool
-	 */
-	bool next_file();
-
 	/**
 	 * @name   set_state
 	 * @brief  void set_state(state_t* pstate)
@@ -269,7 +250,7 @@ private:
 	vector<state_t> m_states;
 
 	bool initalized = false;
-	bool EOFS = false;
+
 	vector<string> m_input_paths{};
 	string m_ifile{};
 	string m_ofile = "build/a.out";
@@ -281,7 +262,7 @@ private:
 	fstream m_fstream{};
 	//fstream ostrm;
 	int m_line = 0;
-	int m_current_file_idx = 0;
+//	int m_current_file_idx = 0;
 	state_t* p_state = &INITIAL;
 	stringstream g_stringstream{};
 };
