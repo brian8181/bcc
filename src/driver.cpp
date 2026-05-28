@@ -17,6 +17,7 @@
 // Other Unix-like systems (e.g., BSD, macOS)
 #include <sys/select.h>
 #endif
+#include <cstdlib>
 #include <string>
 #include <getopt.h>
 #include <set>
@@ -37,10 +38,13 @@ using std::endl;
 using std::string;
 namespace fs = std::filesystem;
 
+//string g_output_file;
+
 constexpr int SRC_IDX_OFFSET = 0;
 constexpr int CONFIG_IDX_OFFSET = 0;
 
-static bool config_flag = false;
+static bool preprocess_flag = false;
+static bool compile_flag = false;
 static bool output_file_flag = false;
 static bool dump_flag = false;
 static bool verbose_flag = false;
@@ -67,7 +71,6 @@ static yy::parser yyparser;
  */
 yy::parser::symbol_type lex()
 {
-    TRACE();
 	return lexer::instance().get_token();
 }
 
@@ -121,13 +124,13 @@ yy::parser::symbol_type lex()
  * @brief parse command line options
  * @param argc
  * @param argv
- * @return int 
+ * @return int
  */
 int parse_options(const int argc, char *argv[])
 {
     // TRACE();
     int option;
-    const auto options_string = "hVdc:o:v";
+    const auto options_string = "hVdpco:v";
     const struct option long_options[] = {
         {"help", no_argument, nullptr, 'h'},
         {"version", no_argument, nullptr, 'V'},
@@ -148,8 +151,10 @@ int parse_options(const int argc, char *argv[])
             cout << "Version 0.0.1" << endl;
             return 0;
         case 'c':
-            config_flag = true;
-            g_config_file = optarg;
+            compile_flag = true;
+            break;
+		case 'p':
+            preprocess_flag = true;
             break;
         case 'o':
             output_file_flag = true;
@@ -166,33 +171,39 @@ int parse_options(const int argc, char *argv[])
             return 1;
         }
     }
-    
-    streamy strmy;
-    strmy.load_config("test/config/test.conf");
-    strmy.assign("x", "this is x");
-    strmy.assign("y", "this is y");
-    string x = strmy.get_map_vars()["x"];
-    string y = strmy.get_map_vars()["y"];
-    strmy.display("test/templates/test_vars.tpl"); 
 
-    for (const auto& [key, value] : g_tokens) 
-    {
-        token_t tok = value;
-        std::cout << "key:" << key << " { name:" << tok.name << ", index:" << tok.index << " }\n";
-    }
+    // streamy strmy;
+    // strmy.load_config("test/config/test.conf");
+    // strmy.assign("x", "this is x");
+    // strmy.assign("y", "this is y");
+    // string x = strmy.get_map_vars()["x"];
+    // string y = strmy.get_map_vars()["y"];
+    // strmy.display("test/templates/test_vars.tpl");
 
+    // for (const auto& [key, value] : g_tokens)
+    // {
+    //     token_t tok = value;
+    //     std::cout << "key:" << key << " { name:" << tok.name << ", index:" << tok.index << " }\n";
+    // }
 
-    // do pre pocess
-    
-           
-    const int offset = optind + SRC_IDX_OFFSET-1;
-	// lexer::instance().init(argc-offset-1, argv+offset+1);
-    // lexer::instance().set_state(&PRE_PROCESS);
-    
-    lexer::instance().init(argc-offset-1, argv+offset+1);
+	const int offset = optind;
+    // call c preprocessor
+	SYST("Starting pre-processing phase...");
+	stringstream ss;
+	fs::path p = argv[offset];
+	fs::path out_path = p.replace_extension(".i");
+	ss << "cpp -E -P -C -I./include/ " << string(argv[offset]) << " > " << out_path.string();
+	ss.flush();
+	system(ss.str().c_str());
+	SYST("Pre-processing phase completed.");
+
+	// lex, parse ...
+	SYST("Compiling...");
+	lexer::instance().init(argc - offset, argv + offset);
     lexer::instance().set_state(&PARSER);
     yyparser.parse();
-    
+
+	SYST("finished.");
 
 	return 0;
 }

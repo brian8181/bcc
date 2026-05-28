@@ -43,13 +43,13 @@ using std::vector;
 using yy::parser;
 
 const string VALID_SYMBOL_CHARS = R"([A-Za-z0-9_])";  /** @note_to_self: ~~> \w == [A-Za-z0-9_] **/
-const string VALID_CHARS        = R"([[:punct:][:alnum:]])"; // [:punct:] = !"#$%&'()*+,-./:;<=>?@[\]^_{|}~`);
+const string R_VALID_CHARS        = R"([[:punct:][:alnum:]])"; // [:punct:] = !"#$%&'()*+,-./:;<=>?@[\]^_{|}~`);
 const string CONFIG_STATES      = R"((?<states>^\s*(?<state>[A-Za-z][A-Za-z0-9_]*)\s*=\s*\s*\{(?<tokens>[A-Za-z][A-Za-z0-9_]*(, [A-Za-z][A-Za-z0-9_]*)*)\}\s*\s*$))";
 const string CONFIG_SECTIONS    = R"(^\s*\[\s*(?<tokens>tokens)|(?<groups>groups)|(?<states>states)\s*\]\s*$)";
-const string CONFIG_PAIR        = R"(\s*(?<type>" + TOKEN_TYPE_ + ")\\s+(?<name>[A-Za-z])" + VALID_SYMBOL_CHARS + R"("*)\\s*=\\s*(?<rexp>)" + VALID_CHARS + R"(*)\s*\"(?<test>.*)\"\s*)";
+const string CONFIG_PAIR        = R"(\s*(?<type>" + TOKEN_TYPE_ + ")\\s+(?<name>[A-Za-z])" + VALID_SYMBOL_CHARS + R"("*)\\s*=\\s*(?<rexp>)" + R_VALID_CHARS + R"(*)\s*\"(?<test>.*)\"\s*)";
 const string CONFIG_COMMENT     = R"(^\s*#.*$)";
 const string CONFIG 			= R"((?<pairs>)" + CONFIG_PAIR + R"()|(?<comments>)" + CONFIG_COMMENT + R"())";
-const string qwerty 			= R"(ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890~!@#$%^&*()_+{}|:"<>?`-=[]\;',./')";
+//const string qwerty 			= R"(ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz1234567890~!@#$%^&*()_+{}|:"<>?`-=[]\;',./')";
 
 struct if_stmt
 {
@@ -88,8 +88,8 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
  * @brief token definitions : unsigned long integers
  */
 #define STRING                   0x10000
-#define SHORT               	 0x20000   
-#define INT					     0x40000 
+#define SHORT               	 0x20000
+#define INT					     0x40000
 #define LONG					 0x80000
 #define SINGLE              	 0x100000
 #define FLOAT					 0x200000
@@ -97,8 +97,8 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define CHAR					 0x8000000
 #define VOID                	 0x10000000
 #define UNSIGNED				 0x20000000
-#define SIGNED				     0x40000000 
-#define CONST                    0x80000000 
+#define SIGNED				     0x40000000
+#define CONST                    0x80000000
 #define STATIC					 0x200000000
 #define REGISTER				 0x400000000
 #define PTR						 0x800000000
@@ -106,131 +106,132 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define STRUCT                   0x2000000000
 
 #define PRINT                     88
-#define ADD 					  89   
-#define DASH 					  90   
-#define MUL 					  91   
-#define DIV 					  92   
-#define MOD 					  93   
+#define ADD 					  89
+#define DASH 					  90
+#define MUL 					  91
+#define DIV 					  92
+#define MOD 					  93
 
-#define LPAREN 				      94   
-#define RPAREN 				      95   
-#define LBRACE 				      96   
-#define RBRACE 				      97   
-#define LBRACKET 				  98   
-#define RBRACKET 				  99  
-#define DOT 					 159   
-#define QUESTION_MARK 		     160   
-#define BACKSLASH 			     161   
-#define UNDERSCORE 			     162   
-#define COMMA 				     163   
-#define COLON 				     164   
-#define SEMI_COLON 			     165   
-#define DOUBLE_QUOTE 			 166   
-#define SINGLE_QUOTE 			 167    
+#define LPAREN 				      94
+#define RPAREN 				      95
+#define LBRACE 				      96
+#define RBRACE 				      97
+#define LBRACKET 				  98
+#define RBRACKET 				  99
+#define DOT 					 159
+#define QUESTION_MARK 		     160
+#define BACKSLASH 			     161
+#define UNDERSCORE 			     162
+#define COMMA 				     163
+#define COLON 				     164
+#define SEMI_COLON 			     165
+#define DOUBLE_QUOTE 			 166
+#define SINGLE_QUOTE 			 167
 
-#define BIT_AND 				 100   
-#define BIT_NOT 				 101   
-#define BIT_OR 				     102   
-#define BIT_XOR 				 103   
-#define LSHIFT  				 104   
-#define RSHIFT  				 105   
-#define LSFT	  				 1040   
-#define RSFT  					 1050   
+#define BIT_AND 				 100
+#define BIT_NOT 				 101
+#define BIT_OR 				     102
+#define BIT_XOR 				 103
+#define LSHIFT  				 104
+#define RSHIFT  				 105
+#define LSFT	  				 1040
+#define RSFT  					 1050
 
-#define AND 					 106   
-#define OR 					     107   
-#define NOT 					 108   
+#define AND 					 106
+#define OR 					     107
+#define NOT 					 108
 
-#define EQ 					     109   
+#define EQ 					     109
 #define NEQ                      1090
-#define LT 	             		 1100   
-#define GT 	            		 1110   
-#define GEQ             	     1120   
+#define LT 	             		 1100
+#define GT 	            		 1110
+#define GEQ             	     1120
 #define LEQ             		 1130
 
-#define ASSIGN              	 150  
+#define ASSIGN              	 150
 #define INC                      1150
 #define ADD_EQ                   1153
 #define SUB_EQ              	 1156
-#define MUL_EQ              	 1159  
-#define DIV_EQ              	 1161 
-#define MOD_EQ              	 1164 
-#define OR_EQ              	 	 1167 
-#define AND_EQ              	 1170  
+#define MUL_EQ              	 1159
+#define DIV_EQ              	 1161
+#define MOD_EQ              	 1164
+#define OR_EQ              	 	 1167
+#define AND_EQ              	 1170
 #define NOT_EQ              	 1173
 #define XOR_EQ              	 1176
-#define LSFT_EQ              	 1179 
+#define LSFT_EQ              	 1179
 #define RSFT_EQ              	 1182
-#define TENERARY                 1192    
+#define TENERARY                 1192
 
-#define NUMERIC_LITERAL 		 114   
-#define REAL_LITERAL   		     115   
-#define STRING_LITERAL 		     116   
-#define HEXADECIMAL_LITERAL 	 117   
-#define OCTAL_DECIMAL_LITERAL    118 
+#define NUMERIC_LITERAL 		 114
+#define REAL_LITERAL   		     115
+#define STRING_LITERAL 		     116
+#define HEXADECIMAL_LITERAL 	 117
+#define OCTAL_DECIMAL_LITERAL    118
 #define CHAR_LITERAL             1180
 
-#define IF 					     119   
-#define ELSE 					 120   
-#define ELSEIF 				     121   
-#define DO 					     122   
-#define WHILE 				     123  
-#define FOR 				     1230  
-#define RETURN 				     1240   
-#define SWITCH				     124   
-#define CASE 					 125   
-#define DEFAULT 				 126   
-#define BREAK 				     127   
-#define CONTINUE 				 128  
-#define GOTO 				 	 1155   
-#define LABEL 				 	 11590   
+#define IF 					     119
+#define ELSE 					 120
+#define ELSEIF 				     121
+#define DO 					     122
+#define WHILE 				     123
+#define FOR 				     1230
+#define RETURN 				     1240
+#define SWITCH				     124
+#define CASE 					 125
+#define DEFAULT 				 126
+#define BREAK 				     127
+#define CONTINUE 				 128
+#define GOTO 				 	 1155
+#define LABEL 				 	 11590
 
-#define TRY 					 129   
-#define CATCH 				     130   
+#define TRY 					 129
+#define CATCH 				     130
 
-#define IDENTIFIER 			     131   
-#define ARRAY 				     132   
-#define COMMENT 				 133   
-#define INDIRECT_MEMBER 		 134   
+#define IDENTIFIER 			     131
+#define ARRAY 				     132
+#define COMMENT 				 133
+#define INDIRECT_MEMBER 		 134
 
-//#define PTR					 145  
-#define DEREF		 			 145 
-#define ADDR		 			 1450 
-#define REF					     146   
-#define TYPEDEF				     148   
-#define FUNCTION				 149   
+//#define PTR					 145
+#define DEREF		 			 145
+#define ADDR		 			 1450
+#define REF					     146
+#define TYPEDEF				     148
+#define FUNCTION				 149
 
-#define HASH_IF					 151   
-#define INCLUDE                  1520   
-#define DEFINE                   153 
-#define UNDEF                    1530   
-#define IFDEF                    154   
-#define IFNDEF	             	 155   
-#define ENDIF               	 156   
-#define HASH_ELSE                157   
-#define HASH_ELSEIF              158   
-#define PRAGMA              	 1580 
-#define HASH_ERROR               1581  
+#define HASH_IF					 151
+#define INCLUDE                  1520
+#define DEFINE                   153
+#define UNDEF                    1530
+#define IFDEF                    154
+#define IFNDEF	             	 155
+#define ENDIF               	 156
+#define HASH_ELSE                157
+#define HASH_ELSEIF              158
+#define PRAGMA              	 1580
+#define HASH_ERROR               1581
 
-#define ESC_SEQ      			 168   
-#define ESC_NLINE           	 169   
-#define ESC_BACKSLASH       	 170   
-#define ESC_NEWLINE 			 171   
-#define ESC_DOUBLE_QUOTE 		 172   
-#define ESC_SINGLE_QUOTE 		 173   
+#define ESC_SEQ      			 168
+#define ESC_NLINE           	 169
+#define ESC_BACKSLASH       	 170
+#define ESC_NEWLINE 			 171
+#define ESC_DOUBLE_QUOTE 		 172
+#define ESC_SINGLE_QUOTE 		 173
 #define ESC_TAB 				 174
+#define VALID_CHARS				 175
 
-#define END_OF_FILE   		     175   
-#define END_OF_FILES   		     176   
-#define WHITESPACE 			     177   
-#define NEWLINE 				 178   
-#define SKIP_TOK 				 179   
-#define UNDEFINED 			     180   
-#define TEST_TOKEN          	 181   
+#define END_OF_FILE   		     175
+#define END_OF_FILES   		     176
+#define WHITESPACE 			     177
+#define NEWLINE 				 178
+#define SKIP_TOK 				 179
+#define UNDEFINED 			     180
+#define TEST_TOKEN          	 181
 #define S_TYPE "string"
 
 
-// regex 
+// regex
 #define R_TILDE 	   R"(~)"
 #define R_EXCLAMATION  R"(!)"
 #define R_NUMERIC_LITERAL R"([1-9]+[0-9]*|0)"
@@ -248,8 +249,16 @@ inline map<unsigned long, token> g_tokens =
 	{
 		{TEST_TOKEN, token{TEST_TOKEN, "TEST_TOKEN", S_TYPE, R"(@@@)", __LINE__}},
 		{PRINT, token{PRINT, "PRINT", S_TYPE, R"(PRINT)", __LINE__}},
+		{DOUBLE_QUOTE, token{DOUBLE_QUOTE, "DOUBLE_QUOTE", S_TYPE, R"(")", __LINE__}},
+		{SINGLE_QUOTE, token{SINGLE_QUOTE, "SINGLE_QUOTE", S_TYPE, R"(')", __LINE__}},
 		{ESC_SEQ, token{ESC_SEQ, "ESC_SEQ", S_TYPE, R"(\\[^\n])", __LINE__}},
 		{ESC_NLINE, token{ESC_NLINE, "ESC_NLINE", S_TYPE, R"([^\\\n])", __LINE__}},
+		{ESC_BACKSLASH, token{ESC_BACKSLASH, "ESC_BACKSLASH", S_TYPE, R"(\\\\)", __LINE__}},
+		{ESC_NEWLINE, token{ESC_NEWLINE, "ESC_NEWLINE", S_TYPE, R"(\\\n)", __LINE__}},
+		{ESC_DOUBLE_QUOTE, token{ESC_DOUBLE_QUOTE, "ESC_DOUBLE_QUOTE", S_TYPE, R"(\\\")", __LINE__}},
+		{ESC_SINGLE_QUOTE, token{ESC_SINGLE_QUOTE, "ESC_SINGLE_QUOTE", S_TYPE, R"(\\\')", __LINE__}},
+		{ESC_TAB, token{ESC_TAB, "ESC_TAB", S_TYPE, R"(\\\t)", __LINE__}},
+		{VALID_CHARS, token{VALID_CHARS, "VALID_CHARS", S_TYPE, R"([[:punct:][:alnum:]])", __LINE__}},
 		{WHITESPACE, token{WHITESPACE, "WHITESPACE", S_TYPE, R"([ \t\r])", __LINE__}},
 		{NEWLINE, token{NEWLINE, "NEWLINE", S_TYPE, R"(\n)", __LINE__}},
 		{NUMERIC_LITERAL, token{NUMERIC_LITERAL, "NUMERIC_LITERAL", S_TYPE, R_NUMERIC_LITERAL, __LINE__}},
@@ -329,6 +338,12 @@ inline map<unsigned long, token> g_tokens =
 		{VOID, token{VOID, "VOID", S_TYPE, R"(\s*\<void\>\s+)", __LINE__}},
 		{STRUCT, token{STRUCT, "STRUCT", S_TYPE, R"(\s*\<struct\>\s+)", __LINE__}},
 		{TYPEDEF, token{TYPEDEF, "TYPEDEF", S_TYPE, R"(\s*\<tyedef\>\s+)", __LINE__}},
+		{STATIC, token{STATIC, "STATIC", S_TYPE, R"(\s*\<static\>\s+)", __LINE__}},
+		{REGISTER, token{REGISTER, "REGISTER", S_TYPE, R"(\s*\<register\>\s+)", __LINE__}},
+		{VOLATILE, token{VOLATILE, "VOLATILE", S_TYPE, R"(\s*\<volatile\>\s+)", __LINE__}},
+		{CONST, token{CONST, "CONST", S_TYPE, R"(\s*\<const\>\s+)", __LINE__}},
+		{UNSIGNED, token{UNSIGNED, "UNSIGNED", S_TYPE, R"(\s*\<unsigned\>\s+)", __LINE__}},
+		{SIGNED, token{SIGNED, "SIGNED", S_TYPE, R"(\s*\<signed\>\s+)", __LINE__}},
 		{HASH_IF, token{HASH_IF, "HASH_IF", S_TYPE, R"(#if|#IF)", __LINE__}},
 		{DEFINE, token{DEFINE, "DEFINE", S_TYPE, R"(#define|#DEFINE)", __LINE__}},
 		{IFDEF, token{IFDEF, "IFDEF", S_TYPE, R"(#ifdef|#IFDEF)", __LINE__}},
@@ -349,25 +364,38 @@ inline map<unsigned long, token> g_tokens =
 constexpr unsigned long UL_INITIAL = 0x10;
 constexpr unsigned long UL_PRE_PROCESSOR = 0x20;
 constexpr unsigned long UL_PARSER = 0x40;
+constexpr unsigned long UL_PARSE_DOUBLE_QUOTE = 0x80;
 
+#define TOK(n, r) token(n, #n, S_TYPE, R"(#pargma)", __LINE__ )
 
 #define gt(n) &g_tokens[n]
-
+#define RE
+#define REGEX_DEF(id, r) new 	pair<int, std::string>() {id, r}
+#define token_def(n, exp) {n, {n, #n, exp, __LINE__}}
+#define BEG_STATE(s) inline state_t s = inline state_t s = { 	UL_##s, #s, {
+#define END_STATE() }
 inline state_t INITIAL = {};
+
+
+
+//REGEX_DEF(INT, R"(\<int\>\s)");
 
 /**
  * @brief state_t states
  */
-inline state_t PARSER = { UL_PARSER, "PARSER", {	 				gt(TEST_TOKEN), gt(PRINT), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID),
+inline state_t PARSER = { UL_PARSER, "PARSER", {	 				gt(TEST_TOKEN), gt(PRINT), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID), gt(UNSIGNED), gt(SIGNED), gt(CONST), gt(STATIC), gt(REGISTER), gt(VOLATILE), gt(STRUCT), gt(TYPEDEF),
 																	gt(IF), gt(ELSE), gt(WHILE), gt(DO), gt(FOR), gt(RETURN), gt(BREAK), gt(CONTINUE), gt(SWITCH), gt(CASE), gt(DEFAULT), gt(GOTO), gt(LABEL),
 																	gt(SEMI_COLON), gt(ASSIGN),
 																	gt(INCLUDE),
-																	gt(NEWLINE), gt(WHITESPACE), gt(CHAR_LITERAL), gt(STRING_LITERAL), gt(NUMERIC_LITERAL), gt(REAL_LITERAL), gt(IDENTIFIER),
+																	gt(NEWLINE), gt(WHITESPACE),
 																	gt(EQ), gt(NEQ), gt(LEQ), gt(GEQ), gt(LT), gt(GT),
-																	gt(INC), gt(ADD_EQ), gt(SUB_EQ), gt(MUL_EQ), gt(DIV_EQ), gt(MOD_EQ), gt(OR_EQ), gt(AND_EQ), gt(NOT_EQ), gt(XOR_EQ), gt(LSFT_EQ), gt(RSFT_EQ), 
+																	gt(INC), gt(ADD_EQ), gt(SUB_EQ), gt(MUL_EQ), gt(DIV_EQ), gt(MOD_EQ), gt(OR_EQ), gt(AND_EQ), gt(NOT_EQ), gt(XOR_EQ), gt(LSFT_EQ), gt(RSFT_EQ),
 																	gt(MUL), gt(DIV), gt(DASH), gt(ADD), gt(MOD), gt(LBRACKET), gt(RBRACKET), gt(LPAREN), gt(RPAREN), gt(LBRACE), gt(RBRACE),
 																	gt(OR), gt(AND), gt(NOT), gt(BIT_OR), gt(BIT_AND), gt(BIT_NOT), gt(RSHIFT), gt(LSHIFT), gt(COMMA),
-																	gt(STRUCT), gt(TYPEDEF), gt(PTR) } };
+																	gt(STRUCT), gt(TYPEDEF), gt(PTR),
+																	gt(CHAR_LITERAL), gt(NUMERIC_LITERAL), gt(REAL_LITERAL), gt(IDENTIFIER), gt(DOUBLE_QUOTE) } };
+
+inline state_t PARSE_DOUBLE_QUOTE = { UL_PARSE_DOUBLE_QUOTE, "DOUBLE_QUOTE", { gt(VALID_CHARS), gt(ESC_BACKSLASH), gt(ESC_NEWLINE), gt(ESC_DOUBLE_QUOTE), gt(ESC_SINGLE_QUOTE), gt(ESC_TAB	) } };
 
 
 inline state_t PRE_PROCESSOR = { UL_PRE_PROCESSOR, "PRE_PROCESSOR", {  	gt(TEST_TOKEN), gt(PRINT), gt(STRING), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID), gt(SEMI_COLON), gt(ASSIGN),

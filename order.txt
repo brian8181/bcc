@@ -1,8 +1,0 @@
-abc
-bac
-bca
-cab
-cba
-aaa
-aab
-aaabc

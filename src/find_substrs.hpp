@@ -8,6 +8,11 @@ using std::string;
 using std::vector;
 
 /**
+ * @name FSM : finite state machine
+ */
+vector<vector<int>> FSM;
+
+/**
  * @name build_fsm 
  */
 void build_fsm();

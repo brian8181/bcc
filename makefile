@@ -81,7 +81,6 @@ $(SRC)/driver.hpp \
 $(SRC)/def.hpp \
 $(SRC)/table.hpp \
 $(SRC)/def.h \
-$(SRC)/find_substrs.hpp \
 $(SRC)/toggle.hpp 
 
 HEADER_ONLY= \
@@ -103,7 +102,6 @@ $(OBJ)/on_token.o \
 $(OBJ)/driver.o \
 $(OBJ)/symtab.o \
 $(OBJ)/streamy.o \
-$(OBJ)/find_substrs.o \
 $(OBJ)/toggle.o 
 #$(OBJ)/index.o
 #$(OBJ)/def.o
@@ -116,7 +114,6 @@ $(OBJ)/symtab.o \
 $(OBJ)/lexer.o \
 $(OBJ)/on_token.o \
 $(OBJ)/ast.o \
-$(OBJ)/find_substrs.o \
 $(OBJ)/toggle.o \
 $(OBJ)/TEST_lex.o \
 $(OBJ)/TEST_general.o \
@@ -170,6 +167,9 @@ $(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cp
 
 $(OBJ)/pparser.tab.o: $(OBJ)/pparser.tab.cpp $(BLD)/pparser.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -DYYDEBUG -c $< -o $@
+
+$(BLD)/find_find_substrs: $(OBJ)/find_substrs.o
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
 # $(BLD)/pparser2.tab.cpp $(BLD)/pparser2.tab.hh: $(SRC)/pparser2.yy $(SRC)/lexer.hpp $(SRC)/lexer.cpp
 # 	$(YACC) --debug -Wcounterexamples $(SRC)/pparser2.yy --header=$(BLD)/pparser2.tab.hpp -o $(BLD)/pparser2.tab.cpp

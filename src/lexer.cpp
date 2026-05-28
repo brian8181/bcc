@@ -137,6 +137,7 @@ void lexer::load_config( const string& file )
  */
 bool lexer::init( const int argc, char* argv[] )
 {
+	//cout << BEG_STATE(INITIAL) << END_STATE() << endl;
 	for(int i = 0; i < argc; ++i)
 	{
 		fs::path p = argv[i];
@@ -152,7 +153,7 @@ bool lexer::init( const int argc, char* argv[] )
 	m_buffer.clear();
 	m_ifile = "";
 	m_ofile = "";
-	
+
 	initalized = true;
 	return next_file();
 }
@@ -174,16 +175,23 @@ bool lexer::next_file()
 	if (i < sz)
 	{
 		m_ifile = string( m_input_paths[i] );
+		fs::path p = m_ifile;
+		if (!fs::exists(p))
+		{
+			cerr << "File not found: " <<  m_ifile << endl;
+			return 1;
+		}
+		// todo
+		//fs::path out_path = p.replace_extension(".i");
 		m_buffer.clear();
-		read_str( m_ifile, m_buffer );
+		read_str( p.string(), m_buffer );
 
 		m_line = 0;
 		++i;
 		m_current_file_idx = i;
 
 		// todo close open stream & open one for next file
-		fs::path p = m_ifile;
-		p.replace_extension(".html");
+		p.replace_extension(".asm");
 		m_ofile = (string)p;
 
 		// flush close current
@@ -192,7 +200,7 @@ bool lexer::next_file()
 			m_fstream.flush();
 			m_fstream.close();
 		}
-		m_fstream.open("out.c", std::ios_base::out | std::ios::trunc);
+		m_fstream.open((string)p, std::ios_base::out | std::ios::trunc);
 		return (m_fstream.is_open() && !m_buffer.empty());
 	}
 	return false;
@@ -252,7 +260,7 @@ string& lexer::build_search_expression(const vector<unsigned long>& tokens, map<
 	unsigned long id = tokens[0];
 	stringstream ss;
 	ss << gt(id).rexp;
-	// get / append remaining strings 
+	// get / append remaining strings
 	for(int i = 1; i < sz; ++i)
 	{
 		token_t token = table[tokens[i]];
@@ -275,7 +283,7 @@ void lexer::push_include( const string& file )
 	file_tmp.erase(file.size()-1,1);
 	file_tmp.erase(0,1);
 
-	stringstream ss; 
+	stringstream ss;
 	read_sstream(string(file_tmp), ss);  	       // read include file
 	ss << m_buffer;
 	m_buffer.clear();
@@ -291,13 +299,13 @@ parser::symbol_type lexer::get_token()
 {
 	if( EOFS )
 	{
-		return on_token( *gt(END_OF_FILES).id, "" );
+		return on_token( *gt(END_OF_FILES).id, 0 );
 	}
 
 	if( m_buffer.empty() )
 	{
 		EOFS = !next_file();
-		return on_token( *gt(END_OF_FILE).id, "" );
+		return on_token( *gt(END_OF_FILE).id, 0 );
 	}
 
 	auto rexp = boost::regex( m_regex_str, boost::regex::extended );
@@ -313,7 +321,7 @@ parser::symbol_type lexer::get_token()
 		{
 			if( m[i].matched )
 			{
-				assert(!m.prefix().matched); // unmatched, error
+				//assert(!m.prefix().matched); // unmatched, error
 				if( m.prefix().matched )
 				{
 					ERROR("PREFIX_ERROR");
@@ -321,7 +329,7 @@ parser::symbol_type lexer::get_token()
 				}
 				// get match : by sub_match index (i)
 				token_t* token =  p_state->tokens[i - 1];
-				print_smatch(*token,  m );
+				//print_smatch(*token,  m );
 				// set buffer to suffix
 				m_buffer = m.suffix();
 				return on_token( token->id, match );
@@ -365,9 +373,9 @@ void lexer::print_smatch(const token_t& t, boost::smatch m)
 // }
 
 // Overload definition
-std::ostream& operator<<(std::ostream& os, const lexer& lex) 
+std::ostream& operator<<(std::ostream& os, const lexer& lex)
 {
     return os; // Return stream to allow chaining
 }
 
-// 
+//
