@@ -78,7 +78,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
             return parser::make_REAL_LITERAL(match);
         case CHAR_LITERAL:
             return parser::make_CHAR_LITERAL(match);
-       
+
         case LBRACE:
             return parser::make_LBRACE();
         case RBRACE:
@@ -105,7 +105,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
             return parser::make_DOT();
         case SINGLE_QUOTE:
             return parser::make_SINGLE_QUOTE();
-            
+
         case FOR:
             return parser::make_FOR();
         case DO:
@@ -131,7 +131,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
 
         case INCLUDE:
             return parser::make_INCLUDE();
-        
+
         case MOD:
             return parser::make_MOD();
         case ADD:
@@ -172,39 +172,39 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
             return parser::make_LSFT();
         case RSFT:
             return parser::make_RSFT();
-        
-        case INC:    
+
+        case INC:
             return parser::make_INC();
-        case ADD_EQ:    
+        case ADD_EQ:
             return parser::make_ADD_EQ();
-        case SUB_EQ:    
+        case SUB_EQ:
             return parser::make_SUB_EQ();
-        case MUL_EQ:    
+        case MUL_EQ:
             return parser::make_MUL_EQ();
-        case DIV_EQ:    
+        case DIV_EQ:
             return parser::make_DIV_EQ();
-        case MOD_EQ:    
+        case MOD_EQ:
             return parser::make_MOD_EQ();
-        case OR_EQ:    
+        case OR_EQ:
             return parser::make_OR_EQ();
-        case AND_EQ:    
+        case AND_EQ:
             return parser::make_AND_EQ();
-        case NOT_EQ:    
+        case NOT_EQ:
             return parser::make_NOT_EQ();
-        case XOR_EQ:    
+        case XOR_EQ:
             return parser::make_XOR_EQ();
-        case LSFT_EQ:    
+        case LSFT_EQ:
             return parser::make_LSFT_EQ();
-        case RSFT_EQ:    
+        case RSFT_EQ:
             return parser::make_RSFT_EQ();
-        case TENERARY:    
+        case TENERARY:
             return parser::make_TENERARY();
         case ASSIGN:
             return parser::make_ASSIGN();
-       
+
         case IDENTIFIER:
             return parser::make_IDENTIFIER(match);
-       
+
 
         case NEWLINE:
             m_line++;
@@ -221,7 +221,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
                 ATTN("END_OF_FILE in PRE_PROCESSOR state, returning to INITIAL state");
                 set_state( &INITIAL );
                 return get_token();
-            }   
+            }
             return parser::make_END_OF_FILE();
         case END_OF_FILES:
             return parser::make_END_OF_FILES();
@@ -231,7 +231,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
     case UL_PARSE_DOUBLE_QUOTE:
     {
         switch(id)
-        {        
+        {
             case VALID_CHARS:
                 static string str;
                 str += match;
@@ -247,7 +247,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
                 return parser::make_ESC_DOUBLE_QUOTE();
             case ESC_SINGLE_QUOTE:
                 return parser::make_ESC_SINGLE_QUOTE();
-            case ESC_TAB:   
+            case ESC_TAB:
                 return parser::make_ESC_TAB();
             default: ;
         }

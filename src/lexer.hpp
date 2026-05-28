@@ -215,7 +215,7 @@ public:
 	inline fstream& out_strm()
 	{
 		return m_fstream;
-	} 
+	}
 
 	/**
 	 * @name  print_smatch
@@ -223,6 +223,12 @@ public:
 	 * @param token_match m
 	 */
 	void print_smatch(const token_t& t, boost::smatch m);
+
+	/**
+	* @brief print_token
+	*
+	*/
+	void print_token();
 
 	/**
 	 * @name  on_token
@@ -235,7 +241,13 @@ public:
 	 */
 	parser::symbol_type on_token( unsigned long id, const string& match = {} );
 
-	 // Declare the operator as a friend to access private members
+	/**
+	 * @brief stream operator
+	 *
+	 * @param os
+	 * @param lex
+	 * @return std::ostream&
+	 */
     friend std::ostream& operator<<(std::ostream& os, const lexer& lex);
 
 private:

@@ -329,7 +329,7 @@ parser::symbol_type lexer::get_token()
 				}
 				// get match : by sub_match index (i)
 				token_t* token =  p_state->tokens[i - 1];
-				//print_smatch(*token,  m );
+				print_smatch(*token,  m );
 				// set buffer to suffix
 				m_buffer = m.suffix();
 				return on_token( token->id, match );
@@ -348,31 +348,44 @@ parser::symbol_type lexer::get_token()
  */
 void lexer::print_smatch(const token_t& t, boost::smatch m)
 {
-	// INFO(	"match.pos:" << m.position()   << " - match.sz:"  << m.str().size()
-	// 								       << " - prefix.sz:" << m.prefix().str().size()
-	// 								       << " - suffix.sz:" << m.suffix().str().size()	);
+	string prefix = esc_nl( m.prefix() ).get_val();
+	string match = 	esc_nl( m.str() ).get_val();
+	string suffix = esc_nl( m.suffix() ).get_val();
 
-    INFO( FMT_RESET << FMT_FG_GREEN <<  "match" 	<< FMT_FG_CYAN << "[ " << FMT_ITALIC << t.index << " : "                          << t.name                   << " ]"\
-										            << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\""    << esc_nl( m.str()    ).get_val() << "\"" << FMT_RESET_ITALIC << " ](" << m.str().size() << ")" << FMT_RESET \
-					<< FMT_FG_GREEN <<  " - prefix" << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\""    << esc_nl( m.prefix() ).get_val() << "\"" << FMT_RESET_ITALIC << " ](" << m.prefix().str().size() << ")" << FMT_RESET \
-					<< FMT_FG_GREEN <<  " - suffix" << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\""    << esc_nl( m.suffix() ).get_val() << "\"" << FMT_RESET_ITALIC << " ](" << m.suffix().str().size() << ")" << FMT_RESET		);
+	int pw = prefix.size();
+	int mw  = pw + match.size();
+	int sw = mw + suffix.size();
+
+	INFO(FMT_FG_GREEN <<  "prefix" << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\"" << setw(pw) << std::right << prefix << "\"" << FMT_RESET_ITALIC << " ](" << prefix.size() << ")" << FMT_RESET);
+	INFO(FMT_FG_GREEN <<  "match " << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\"" << setw(mw) << std::right << match  << "\"" << FMT_RESET_ITALIC << " ](" << match.size()          << ")" << FMT_RESET);
+	INFO(FMT_FG_GREEN <<  "suffix" << FMT_FG_CYAN << "[ " << FMT_ITALIC << "\"" << setw(sw) << std::right << suffix  << "\"" << FMT_RESET_ITALIC << " ](" << suffix.size() << ")" << FMT_RESET);
 }
 
-// void lexer::print_token()
-// {
-// 	// stringstream info;
-// 	// 	info << std::left << "#" << setw(2)  << i << "   "
-// 	// 		<< "id:   " << std::setw( 4 ) << std::right << id
-// 	// 		<< "    ~    " << std::right << "idx: " << std::setw( 3 ) << std::left << ptoken->index
-// 	// 		<< "    ~    " << std::left << "name: " << std::setw( 18 ) << std::left << ptoken->name
-// 	// 		<< "    ~    " << std::left << "type: " << std::setw( 10 ) << ptoken->stype
-// 	// 		<< "    ~    " << std::left << "regex: " << std::left << std::setw( 44 ) << rstr.str() << std::right;
+/**
+ * @brief print_token
+ *
+ */
+void lexer::print_token()
+{
+	// stringstream info;
+	// 	info << std::left << "#" << setw(2)  << i << "   "
+	// 		<< "id:   " << std::setw( 4 ) << std::right << id
+	// 		<< "    ~    " << std::right << "idx: " << std::setw( 3 ) << std::left << ptoken->index
+	// 		<< "    ~    " << std::left << "name: " << std::setw( 18 ) << std::left << ptoken->name
+	// 		<< "    ~    " << std::left << "type: " << std::setw( 10 ) << ptoken->stype
+	// 		<< "    ~    " << std::left << "regex: " << std::left << std::setw( 44 ) << rstr.str() << std::right;
 
-// 	// 	cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
-// 	// 		<< info.str() << FMT_RESET << endl;
-// }
+	// 	cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
+	// 		<< info.str() << FMT_RESET << endl;
+}
 
-// Overload definition
+/**
+ * @brief stream operator
+ *
+ * @param os
+ * @param lex
+ * @return std::ostream&
+ */
 std::ostream& operator<<(std::ostream& os, const lexer& lex)
 {
     return os; // Return stream to allow chaining

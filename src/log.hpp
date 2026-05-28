@@ -99,6 +99,7 @@ void log(const std::string &msg, int line_number);
 #define ERROR(str) LOG("[ERROR] ", FMT_FG_RED, str)
 #endif
 
+#define LOGS *DEFAULT_OUT_STREAM
 //}
 
 #endif

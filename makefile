@@ -19,7 +19,7 @@ BLD = build
 OBJ = build
 SRC = src
 AST = ast
-TST = unit_test
+TST = $(SRC)/unit_test
 
 SRC_EXT=cpp
 HDR_EXT=hpp
@@ -70,7 +70,6 @@ $(SRC)/bash_color.hpp \
 $(SRC)/log.hpp \
 $(SRC)/fileio.hpp \
 $(SRC)/auto_ptr.hpp \
-$(SRC)/scoped_ptr.hpp \
 $(SRC)/utility.hpp \
 $(SRC)/ast.hpp \
 $(BLD)/pparser.tab.hpp \
@@ -81,19 +80,17 @@ $(SRC)/driver.hpp \
 $(SRC)/def.hpp \
 $(SRC)/table.hpp \
 $(SRC)/def.h \
-$(SRC)/toggle.hpp 
+
 
 HEADER_ONLY= \
 //$(BLD)/cpp.tab.hpp \
 $(BLD)/pparser.tab.hpp \
 $(SRC)/def.hpp \
 $(SRC)/log.hpp \
-$(SRC)/table.hpp \
-$(SRC)/streamy.hpp
+$(SRC)/table.hpp
 
 OBJS=$(OBJ)/fileio.o \
 $(OBJ)/auto_ptr.o \
-$(OBJ)/scoped_ptr.o \
 $(OBJ)/utility.o \
 $(BLD)/pparser.tab.o \
 $(OBJ)/parser.o \
@@ -101,43 +98,34 @@ $(OBJ)/lexer.o \
 $(OBJ)/on_token.o \
 $(OBJ)/driver.o \
 $(OBJ)/symtab.o \
-$(OBJ)/streamy.o \
-$(OBJ)/toggle.o 
 #$(OBJ)/index.o
 #$(OBJ)/def.o
 
 TST_OBJS=$(OBJ)/fileio.o \
 $(OBJ)/auto_ptr.o \
-$(OBJ)/scoped_ptr.o \
 $(OBJ)/utility.o \
 $(OBJ)/symtab.o \
 $(OBJ)/lexer.o \
 $(OBJ)/on_token.o \
 $(OBJ)/ast.o \
-$(OBJ)/toggle.o \
 $(OBJ)/TEST_lex.o \
 $(OBJ)/TEST_general.o \
 $(OBJ)/TEST_symbol_table.o \
 $(OBJ)/TEST_ast.o \
 $(OBJ)/TEST_assign_expr.o \
-$(OBJ)/TEST_scoped_ptr.o \
-$(OBJ)/TEST_toggle.o \
 $(OBJ)/TEST_expr.o
 
 # SOURCES=$(SRC)/bash_color.hpp \
 # $(SRC)/log.hpp \
 # $(SRC)/fileio.hpp $(OBJ)/fileio.o \
 # $(SRC)/auto_ptr.hpp $(OBJ)/auto_ptr.o \
-# $(SRC)/scoped_ptr.hpp $(OBJ)/scoped_ptr.o \
 # $(SRC)/utility.hpp $(OBJ)/utility.o \
-# $(SRC)/find_substrs.hpp $(OBJ)/find_substrs.o \
 # $(SRC)/ast.hpp \
 # $(BLD)/cpp.tab.hpp $(BLD)/cpp.tab.o \
 # $(BLD)/pparser.tab.hpp $(BLD)/pparser.tab.o \
 # $(SRC)/parser.hpp $(OBJ)/parser.o \
 # $(SRC)/lexer.hpp $(OBJ)/lexer.o \
 # $(SRC)/driver.hpp $(OBJ)/driver.o \
-# $(SRC)/toggle.hpp $(OBJ)/toggle.o \
 SOURCES=$(HEADERS) $(OBJS)
 
 all: $(BLD)/$(APP) $(BLD)/TEST_lex
@@ -156,11 +144,11 @@ $(BLD)/path_append: $(OBJ)/path_append.o
 # $(BLD)/p2: $(OBJS)
 # 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
-$(BLD)/cpp.tab.cpp $(BLD)/cpp.tab.hpp: $(SRC)/cpp.yy $(SRC)/lexer.cpp
-	$(YACC) --debug $(SRC)/cpp.yy --header=$(BLD)/cpp.tab.hpp -o $(BLD)/cpp.tab.cpp
+# $(BLD)/cpp.tab.cpp $(BLD)/cpp.tab.hpp: $(SRC)/cpp.yy $(SRC)/lexer.cpp
+# 	$(YACC) --debug $(SRC)/cpp.yy --header=$(BLD)/cpp.tab.hpp -o $(BLD)/cpp.tab.cpp
 
-$(OBJ)/cpp.tab.o: $(OBJ)/cpp.tab.cpp $(BLD)/cpp.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -DYYDEBUG -c $< -o $@
+# $(OBJ)/cpp.tab.o: $(OBJ)/cpp.tab.cpp $(BLD)/cpp.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
+# 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -DYYDEBUG -c $< -o $@
 
 $(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cpp
 	$(YACC) --debug $(SRC)/pparser.yy --header=$(BLD)/pparser.tab.hpp -o $(BLD)/pparser.tab.cpp
