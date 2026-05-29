@@ -20,8 +20,6 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
 {
     switch(p_state->id)
     {
-    case UL_PRE_PROCESSOR:
-        //return on_token_pre_processor(id, match);
     case UL_PARSER:
     {
         switch (id)
@@ -129,9 +127,6 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         case LABEL:
             return parser::make_LABEL();
 
-        case INCLUDE:
-            return parser::make_INCLUDE();
-
         case MOD:
             return parser::make_MOD();
         case ADD:
@@ -216,12 +211,6 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
             TRACE();
             return get_token();
         case END_OF_FILE:
-            if(p_state->id == UL_PRE_PROCESSOR)
-            {
-                ATTN("END_OF_FILE in PRE_PROCESSOR state, returning to INITIAL state");
-                set_state( &INITIAL );
-                return get_token();
-            }
             return parser::make_END_OF_FILE();
         case END_OF_FILES:
             return parser::make_END_OF_FILES();

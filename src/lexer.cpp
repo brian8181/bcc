@@ -252,26 +252,19 @@ parser::symbol_type lexer::get_token()
 	if( m_buffer.empty() )
 	{
 		//EOFS = !next_file();
-		return 0;  // this fucking works ...
+		return parser::make_END_OF_FILE();  // this fucking works ...
+
 		// parser::make_YYerror();
 		// return on_token( *gt(END_OF_FILE).id, 0 );
 	}
 
-	//INFO(m_regex_str);
 	auto rexp = boost::regex( m_regex_str, boost::regex::extended );
-	//TRACE();
-	//INFO(m_buffer.size());
 	auto iter = boost::sregex_iterator( m_buffer.begin(), m_buffer.end(), rexp );
-	//TRACE();
 	auto end = boost::sregex_iterator();
-	//TRACE();
 	boost::smatch m( *iter );
-	//TRACE();
 	string match = m.str();
-	//TRACE();
 	const size_t len = m.size();
 
-	//TRACE();
 	if( iter != end )
 	{
 		for( int i = 1; i < len; ++i )
@@ -295,7 +288,6 @@ parser::symbol_type lexer::get_token()
 		return parser::make_YYerror(); // no sub match?, should not happen
 	}
 	ATTN( "END_OF_FILE" );
-	//TRACE();
 	return parser::make_END_OF_FILE();
 }
 

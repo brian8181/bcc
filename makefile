@@ -11,15 +11,20 @@ LEX = flex
 YACC = bison
 YFLAGS = -YYDEBUG
 CXXFLAGS = -std=gnu++17 -fPIC
-CCFLAGS = -g -DLEX_TEST -DDEBUG
+CCFLAGS = -g -DLEX_TEST
 LDFLAGS =
 FLEXFLAGS = --flex
 BISONFLAGS = -y -d --html --graph
-BLD = build
-OBJ = build
-SRC = src
-AST = ast
-TST = $(SRC)/unit_test
+OPTIONS=
+DEBUG=
+WARN=
+
+PRJ = .
+BLD = $(PRJ)/build
+OBJ = $(PRJ)/$(BLD)
+SRC = $(PRJ)/src
+AST = $(PRJ)/ast
+TST = $(PRJ)/unit_test
 
 SRC_EXT=cpp
 HDR_EXT=hpp
@@ -40,8 +45,17 @@ FMT=$(FMT_INFO)
 INCLUDES=-I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I./$(SRC) -I./$(BLD) -I./$(TST)
 LIBS=-L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt
 
+ifdef OPTIONS
+	CXXFLAGS+=-DOPTIONS
+endif
+
 ifdef CLANG
+	@echo -e "$(FMT)CLANG ...$(FMT_RESET)"
 	CXX=clang++
+endif
+
+ifdef WARNING
+	CXXFLAGS+=-DWARNING
 endif
 
 ifndef RELEASE
@@ -49,11 +63,13 @@ ifndef RELEASE
 endif
 
 ifdef CYGWIN
+	@echo -e "$(FMT)CYGWIN ...$(FMT_RESET)"
 	CXXFLAGS += -DCYGWIN
 	INCLUDES += -I"/home/brian/src/boost_1_91_0"
 	LIBS += /usr/local/lib/libfmt.a -lcppunit.dll
 endif
 ifdef MSYS_UCRT
+	@echo -e "$(FMT)MSYS_UCRT ...$(FMT_RESET)"
 	INCLUDES += -I/ucrt64/include/boost
 	LIBS += /usr/lib/libfmt.dll.a
 endif
@@ -85,7 +101,6 @@ $(SRC)/def.h \
 
 
 HEADER_ONLY= \
-//$(BLD)/cpp.tab.hpp \
 $(BLD)/pparser.tab.hpp \
 $(SRC)/def.hpp \
 $(SRC)/log.hpp \
@@ -133,14 +148,14 @@ $(OBJ)/TEST_expr.o
 SOURCES=$(HEADERS) $(OBJS)
 
 # build everything
-world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
+#world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
 
 # build all
-all: $(BLD)/$(APP) $(BLD)/TEST_lex
+all: $(BLD)/$(APP) #$(BLD)/TEST_lex
 	@echo -e "$(FMT)finished building ...$(FMT_RESET)"
 
 $(BLD)/$(APP): $(OBJS) $(SRC)/def.hpp
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+#@echo -e "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 $(BLD)/path_append: $(OBJ)/path_append.o
@@ -189,11 +204,11 @@ $(OBJ)/%.o: $(SRC)/%.c $(SRC)/%.h
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(SRC)/%.cpp $(SRC)/%.hpp
-	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
+	@echo -e "$(FMT)building $< -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(TST)/%.cpp $(TST)/%.hpp # $(HEADERS)
-	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
+	@echo -e "$(FMT)building $< -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 .PHONY: all rebuild dist install uninstall clean help

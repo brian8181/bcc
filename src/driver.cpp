@@ -148,8 +148,6 @@ int parse_options(const int argc, char *argv[])
     	lexer::instance().set_state(&PARSER);
     	yyparser.parse();
 	}
-	TRACE();
-
 	SYST("finished.");
 
 	return 0;

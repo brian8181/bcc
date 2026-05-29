@@ -200,18 +200,6 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define TYPEDEF				     148
 #define FUNCTION				 149
 
-#define HASH_IF					 151
-#define INCLUDE                  1520
-#define DEFINE                   153
-#define UNDEF                    1530
-#define IFDEF                    154
-#define IFNDEF	             	 155
-#define ENDIF               	 156
-#define HASH_ELSE                157
-#define HASH_ELSEIF              158
-#define PRAGMA              	 1580
-#define HASH_ERROR               1581
-
 #define ESC_SEQ      			 168
 #define ESC_NLINE           	 169
 #define ESC_BACKSLASH       	 170
@@ -343,26 +331,13 @@ inline map<unsigned long, token> g_tokens =
 		{VOLATILE, token{VOLATILE, "VOLATILE", S_TYPE, R"(\s*\<volatile\>\s+)", __LINE__}},
 		{CONST, token{CONST, "CONST", S_TYPE, R"(\s*\<const\>\s+)", __LINE__}},
 		{UNSIGNED, token{UNSIGNED, "UNSIGNED", S_TYPE, R"(\s*\<unsigned\>\s+)", __LINE__}},
-		{SIGNED, token{SIGNED, "SIGNED", S_TYPE, R"(\s*\<signed\>\s+)", __LINE__}},
-		{HASH_IF, token{HASH_IF, "HASH_IF", S_TYPE, R"(#if|#IF)", __LINE__}},
-		{DEFINE, token{DEFINE, "DEFINE", S_TYPE, R"(#define|#DEFINE)", __LINE__}},
-		{IFDEF, token{IFDEF, "IFDEF", S_TYPE, R"(#ifdef|#IFDEF)", __LINE__}},
-		{IFNDEF, token{IFNDEF, "IFNDEF", S_TYPE, R"(#ifndef|#IFNDEF)", __LINE__}},
-		{HASH_ELSE, token{HASH_ELSE, "HASH_ELSE", S_TYPE, R"(#else|#ELSE)", __LINE__}},
-		{HASH_ELSEIF, token{HASH_ELSEIF, "HASH_ELSEIF", S_TYPE, R"(#elseif|#ELSEIF)", __LINE__}},
-		{ENDIF, token{ENDIF, "ENDIF", S_TYPE, R"(#endif|#ENDIF)", __LINE__}},
-		{INCLUDE, token{INCLUDE, "INCLUDE", S_TYPE, R"(#include)", __LINE__}},
-		{UNDEF, token{UNDEF, "UNDEF", S_TYPE, R"(#undef|#UNDEF)", __LINE__}},
-		{UNDEF, token{UNDEF, "UNDEF", S_TYPE, R"(#undef|#UNDEF)", __LINE__}},
-		{HASH_ERROR, token{HASH_ERROR, "HASH_ERROR", S_TYPE, R"(#error)", __LINE__}},
-		{PRAGMA, token{PRAGMA, "PRAGMA", S_TYPE, R"(#pargma)", __LINE__}}
+		{SIGNED, token{SIGNED, "SIGNED", S_TYPE, R"(\s*\<signed\>\s+)", __LINE__}}
 	};
 
 /**
  * @brief unsigned long states
  */
 constexpr unsigned long UL_INITIAL = 0x10;
-constexpr unsigned long UL_PRE_PROCESSOR = 0x20;
 constexpr unsigned long UL_PARSER = 0x40;
 constexpr unsigned long UL_PARSE_DOUBLE_QUOTE = 0x80;
 
@@ -386,7 +361,6 @@ inline state_t INITIAL = {};
 inline state_t PARSER = { UL_PARSER, "PARSER", {	 				gt(TEST_TOKEN), gt(PRINT), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID), gt(UNSIGNED), gt(SIGNED), gt(CONST), gt(STATIC), gt(REGISTER), gt(VOLATILE), gt(STRUCT), gt(TYPEDEF),
 																	gt(IF), gt(ELSE), gt(WHILE), gt(DO), gt(FOR), gt(RETURN), gt(BREAK), gt(CONTINUE), gt(SWITCH), gt(CASE), gt(DEFAULT), gt(GOTO), gt(LABEL),
 																	gt(SEMI_COLON), gt(ASSIGN),
-																	gt(INCLUDE),
 																	gt(NEWLINE), gt(WHITESPACE),
 																	gt(EQ), gt(NEQ), gt(LEQ), gt(GEQ), gt(LT), gt(GT),
 																	gt(INC), gt(ADD_EQ), gt(SUB_EQ), gt(MUL_EQ), gt(DIV_EQ), gt(MOD_EQ), gt(OR_EQ), gt(AND_EQ), gt(NOT_EQ), gt(XOR_EQ), gt(LSFT_EQ), gt(RSFT_EQ),
@@ -398,7 +372,4 @@ inline state_t PARSER = { UL_PARSER, "PARSER", {	 				gt(TEST_TOKEN), gt(PRINT),
 inline state_t PARSE_DOUBLE_QUOTE = { UL_PARSE_DOUBLE_QUOTE, "DOUBLE_QUOTE", { gt(VALID_CHARS), gt(ESC_BACKSLASH), gt(ESC_NEWLINE), gt(ESC_DOUBLE_QUOTE), gt(ESC_SINGLE_QUOTE), gt(ESC_TAB	) } };
 
 
-inline state_t PRE_PROCESSOR = { UL_PRE_PROCESSOR, "PRE_PROCESSOR", {  	gt(TEST_TOKEN), gt(PRINT), gt(STRING), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID), gt(SEMI_COLON), gt(ASSIGN),
-																	gt(INCLUDE), gt(IFDEF), gt(IFNDEF), gt(DEFINE), gt(UNDEF), gt(ENDIF), gt(PRAGMA), gt(HASH_ERROR), gt(HASH_IF), gt(HASH_ELSE), gt(HASH_ELSEIF),
-																	gt(NEWLINE), gt(WHITESPACE), gt(CHAR_LITERAL), gt(STRING_LITERAL), gt(NUMERIC_LITERAL), gt(REAL_LITERAL), gt(IDENTIFIER) } };
 #endif
