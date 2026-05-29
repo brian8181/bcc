@@ -176,19 +176,24 @@ $(BLD)/TEST_lex: $(TST_OBJS) $(OBJ)/main.o
 
 # copy header files
 $(BLD)/%.h : $(SRC)/%.h
+	@echo -e "$(FMT)copy $^ -> $@ ...$(FMT_RESET)"
 	cp $^ $@
 
 $(BLD)/%.hpp: $(SRC)/%.hpp
+	@echo -e "$(FMT)copy $^ -> $@ ...$(FMT_RESET)"
 	cp $^ $@
 
 # build object files
 $(OBJ)/%.o: $(SRC)/%.c $(SRC)/%.h
+	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(SRC)/%.cpp $(SRC)/%.hpp
+	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(TST)/%.cpp $(TST)/%.hpp # $(HEADERS)
+	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 .PHONY: all rebuild dist install uninstall clean help
