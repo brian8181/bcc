@@ -90,7 +90,8 @@ $(SRC)/def.hpp \
 $(SRC)/log.hpp \
 $(SRC)/table.hpp
 
-OBJS=$(OBJ)/fileio.o \
+OBJS= \
+$(OBJ)/fileio.o \
 $(OBJ)/auto_ptr.o \
 $(OBJ)/utility.o \
 $(BLD)/pparser.tab.o \
@@ -102,7 +103,8 @@ $(OBJ)/symtab.o \
 #$(OBJ)/index.o
 #$(OBJ)/def.o
 
-TST_OBJS=$(OBJ)/fileio.o \
+TST_OBJS= \
+$(OBJ)/fileio.o \
 $(OBJ)/auto_ptr.o \
 $(OBJ)/utility.o \
 $(OBJ)/symtab.o \
@@ -129,28 +131,17 @@ $(OBJ)/TEST_expr.o
 # $(SRC)/driver.hpp $(OBJ)/driver.o \
 SOURCES=$(HEADERS) $(OBJS)
 
-
-all: $(BLD)/$(APP) $(BLD)/TEST_lex
-
+# build everything
 world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
+
+# build all
+all: $(BLD)/$(APP) $(BLD)/TEST_lex
 
 $(BLD)/$(APP): $(OBJS) $(SRC)/def.hpp
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
-# $(TST)/%: $(OBJ)/%.o
-# 	$(CXX) $(CXXFLAGS) $< -o $@
-
 $(BLD)/path_append: $(OBJ)/path_append.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
-
-# $(BLD)/p2: $(OBJS)
-# 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
-
-# $(BLD)/cpp.tab.cpp $(BLD)/cpp.tab.hpp: $(SRC)/cpp.yy $(SRC)/lexer.cpp
-# 	$(YACC) --debug $(SRC)/cpp.yy --header=$(BLD)/cpp.tab.hpp -o $(BLD)/cpp.tab.cpp
-
-# $(OBJ)/cpp.tab.o: $(OBJ)/cpp.tab.cpp $(BLD)/cpp.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
-# 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -DYYDEBUG -c $< -o $@
 
 $(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cpp
 	$(YACC) --debug $(SRC)/pparser.yy --header=$(BLD)/pparser.tab.hpp -o $(BLD)/pparser.tab.cpp
@@ -161,21 +152,15 @@ $(OBJ)/pparser.tab.o: $(OBJ)/pparser.tab.cpp $(BLD)/pparser.tab.hpp $(BLD)/bash_
 $(BLD)/find_find_substrs: $(OBJ)/find_substrs.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
-# $(BLD)/pparser2.tab.cpp $(BLD)/pparser2.tab.hh: $(SRC)/pparser2.yy $(SRC)/lexer.hpp $(SRC)/lexer.cpp
-# 	$(YACC) --debug -Wcounterexamples $(SRC)/pparser2.yy --header=$(BLD)/pparser2.tab.hpp -o $(BLD)/pparser2.tab.cpp
-
-# $(OBJ)/pparser2.tab.o: $(OBJ)/pparser2.tab.cpp $(SRC)/bash_color.hpp $(SRC)/log.hpp
-# 	$(CXX) $(CXXFLAGS) -DYYDEBUG -c $< -o $@
-
 $(BLD)/ast: $(OBJ)/ast.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(BLD)/lib$(APP).so: $(BLD)/$(APP).o
-	$(CXX) $(CXXFLAGS) --shared $(OBJ)/$(APP).o -o $(BLD)/lib$(APP).so
+$(BLD)/lib$(APP).so: $(OBJS) $(SRC)/def.h
+	$(CXX) $(CXXFLAGS) --shared $(OBJS) -o $(BLD)/lib$(APP).so
 	chmod 755 $(BLD)/lib$(APP).so
 
-$(BLD)/lib$(APP).a: $(BLD)/$(APP).o
-	ar rvs $(BLD)/lib$(APP).a $(OBJ)/$(APP).o
+$(BLD)/lib$(APP).a:
+	ar rvs $(BLD)/lib$(APP).a $(OBJS)
 	chmod 755 $(BLD)/lib$(APP).a
 
 $(BLD)/TEST_lex: $(TST_OBJS) $(OBJ)/main.o
