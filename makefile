@@ -34,6 +34,7 @@ FMT_BLUE='\e[34m'
 FMT_CYAN='\e[36m'
 FMT_INFO=$(FMT_ITALIC)$(FMT_GREEN)
 FMT_WARN=$(FMT_ITALIC)$(FMT_YELLOW)
+FMT=$(FMT_INFO)
 
 # lib settings
 INCLUDES=-I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I./$(SRC) -I./$(BLD) -I./$(TST)
@@ -136,17 +137,21 @@ world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
 
 # build all
 all: $(BLD)/$(APP) $(BLD)/TEST_lex
+	@echo -e "$(FMT)finished building ...$(FMT_RESET)"
 
 $(BLD)/$(APP): $(OBJS) $(SRC)/def.hpp
+	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 $(BLD)/path_append: $(OBJ)/path_append.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cpp
+	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(YACC) --debug $(SRC)/pparser.yy --header=$(BLD)/pparser.tab.hpp -o $(BLD)/pparser.tab.cpp
 
 $(OBJ)/pparser.tab.o: $(OBJ)/pparser.tab.cpp $(BLD)/pparser.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
+	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -DYYDEBUG -c $< -o $@
 
 $(BLD)/find_find_substrs: $(OBJ)/find_substrs.o
@@ -156,14 +161,17 @@ $(BLD)/ast: $(OBJ)/ast.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(BLD)/lib$(APP).so: $(OBJS) $(SRC)/def.h
+	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) --shared $(OBJS) -o $(BLD)/lib$(APP).so
 	chmod 755 $(BLD)/lib$(APP).so
 
 $(BLD)/lib$(APP).a:
+	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
 	ar rvs $(BLD)/lib$(APP).a $(OBJS)
 	chmod 755 $(BLD)/lib$(APP).a
 
 $(BLD)/TEST_lex: $(TST_OBJS) $(OBJ)/main.o
+	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) -I/src -I/build  $^ -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt -I/usr/local/include/cppunit -lcppunit $(LDFLAGS) -o $@
 
 # copy header files
@@ -190,15 +198,15 @@ dist:
 	tar -czvf $(APP).tar.gz ./src ./include ./makefile ./README.md ./LICENSE ./CHANGELOG.md
 
 install:
-	#cp ./$(BLD)/$(APP) ./$(prefix)/bin/$(APP)
+	#cp $(BLD)/$(APP) ./$(prefix)/bin/$(APP)
 
 uninstall:
-	#-rm ./$(prefix)/bin/$(APP)
+	#-rm $(prefix)/bin/$(APP)
 
 clean:
 	@echo -e "$(FMT)cleaning ...$(FMT_RESET)"
-	-rm -rf ./$(OBJ)/*
-	-rm -rf ./$(BLD)/*
+	-rm -rf $(OBJ)/*
+	-rm -rf $(BLD)/*
 
 help:
 	@echo  '  all              - build all'
