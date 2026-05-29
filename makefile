@@ -64,6 +64,7 @@ LDFLAGS=$(INCLUDES) $(LIBS)
 # endif
 
 CXXFLAGS+=-DTEST_ONLY
+#CXXFLAGS+=DDEBUG1
 
 HEADERS= \
 $(SRC)/bash_color.hpp \
@@ -127,6 +128,7 @@ $(OBJ)/TEST_expr.o
 # $(SRC)/lexer.hpp $(OBJ)/lexer.o \
 # $(SRC)/driver.hpp $(OBJ)/driver.o \
 SOURCES=$(HEADERS) $(OBJS)
+
 
 all: $(BLD)/$(APP) $(BLD)/TEST_lex
 

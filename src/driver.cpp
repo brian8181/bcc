@@ -91,12 +91,17 @@ int parse_options(const int argc, char *argv[])
             cout << "Version 0.0.1" << endl;
             return 0;
         case 'c':
-            compile_flag = true;
+			compile_flag = true;
             break;
 		case 'p':
             preprocess_flag = true;
             break;
         case 'o':
+			if(output_file_flag)
+			{
+				ERROR("Only one '-o' param allowed.");
+				return 1;
+			}
             output_file_flag = true;
             g_output_file = optarg;
             break;
@@ -113,24 +118,25 @@ int parse_options(const int argc, char *argv[])
     }
 
 	const int offset = optind;
+	if(compile_flag && argc-offset > 1)
+	{
+		ERROR("Only one file can be input with '-c' option.");
+		return 1;
+	}
     // call c preprocessor
 	SYST("Starting pre-processing phase...");
 	vector<string> files;
 	for(int i = 0; (i+offset) < argc; ++i)
 	{
-		TRACE();
 		std::stringstream ss;
 		string file = fs::path(argv[i+offset]).stem().string();
-		cout << "debug: argc=" << argc << ", i=" << i << ", offset=" << offset << endl;
-		cout << "debug: " << file << endl;
 		string path = "build/";
 		path.append(file);
 		files.push_back(path);
 		ss << "cpp -E -P -I./include/ " << argv[i+offset] << " > ";
 		ss << "build/" << file << ".i";
-		cout << "debug: " << ss.str() << endl;
+		INFO(ss.str());
 		system(ss.str().c_str());
-		cout << "debug: " << ss.str() << endl;
 	}
 	SYST("Pre-processing phase completed.");
 
@@ -140,7 +146,6 @@ int parse_options(const int argc, char *argv[])
 	{
 		lexer::instance().init(files[i]);
     	lexer::instance().set_state(&PARSER);
-		TRACE();
     	yyparser.parse();
 	}
 	TRACE();

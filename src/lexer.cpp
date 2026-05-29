@@ -319,7 +319,7 @@ void lexer::print_smatch(const token_t& t, boost::smatch m)
 	suffix = suffix.size() != 0 ? ("\"" + suffix + "\"")  : FMT_FG_RED +  "null" + FMT_RESET;
 
 	INFO(FMT_FG_GREEN << "prefix" << FMT_RESET << "[ " << FMT_ITALIC  << std::right << prefix << FMT_RESET_ITALIC << " ](" << prefix.size() << ")" << FMT_RESET);
-	INFO(FMT_FG_GREEN << "match " << FMT_RESET << "[ " << FMT_ITALIC  << std::right << match  << FMT_RESET_ITALIC << " ](" << match.size()  << ")" << FMT_RESET);
+	INFO(FMT_FG_GREEN << "match " << FMT_RESET << "[ " << FMT_ITALIC  << std::right << match  << FMT_RESET_ITALIC << " ](" << match.size()  << ")" << "{: " << t.name << " :}" << FMT_RESET);
 	INFO(FMT_FG_GREEN << "suffix" << FMT_RESET  << "[ " << FMT_ITALIC << std::right << suffix << FMT_RESET_ITALIC << " ](" << suffix.size() << ")" << FMT_RESET);
 }
 
