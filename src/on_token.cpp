@@ -18,7 +18,7 @@ using std::endl;
  */
 parser::symbol_type lexer::on_token(unsigned long id, const string &match)
 {
-    switch(p_state->id)
+    switch(m_pstate->id)
     {
     case UL_PARSER:
     {

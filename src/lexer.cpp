@@ -159,18 +159,18 @@ bool lexer::init(const string& file)
  */
 void lexer::set_state( state_t* pstate )
 {
-	ATTN( "Enter set_state ~ " << p_state->id << ":" << p_state->name << " ~~> " << pstate->id << ":" << pstate->name );
-	p_state = pstate;
+	ATTN( "Enter set_state ~ " << m_pstate->id << ":" << m_pstate->name << " ~~> " << pstate->id << ":" << pstate->name );
+	m_pstate = pstate;
 	// just update for now
 	stringstream ss;
-	const unsigned long len = p_state->tokens.size();
+	const unsigned long len = m_pstate->tokens.size();
 	string e;
-	//build_search_expression(p_state->tokens, g_tokens, e);
+	//build_search_expression(m_pstate->tokens, g_tokens, e);
 	ATTN(e);
 
 	for( unsigned long i = 0; i < len; i++ )
 	{
-		token_t* ptoken = p_state->tokens[i];
+		token_t* ptoken = m_pstate->tokens[i];
 		stringstream info;
 		info << std::left << "#" << setw(2)  << i << "   "
 			<< "id:   " << std::setw( 4 ) << std::right << ptoken->id
@@ -187,7 +187,7 @@ void lexer::set_state( state_t* pstate )
 	// save expression string ...
 	m_regex_str = ss.str();
 	m_regex_str.pop_back(); // remove extra '|' i.e. "V-BAR"
-	ATTN( "Exit set_state ~ " << p_state->id << ":" << p_state->name );
+	ATTN( "Exit set_state ~ " << m_pstate->id << ":" << m_pstate->name );
 }
 
 /**
@@ -198,19 +198,19 @@ void lexer::set_state( state_t* pstate )
  * @param string& s
  * @return string&, contructed search string
  */
-string& lexer::build_search_expression(const vector<unsigned long>& tokens, map<unsigned long, token>& table, /*out*/ string& s)
+string& lexer::build_search_expression( /*out*/ string& s )
 {
+	auto tokens = m_pstate->tokens;
 	std::size_t sz = std::size(tokens);
 	assert(sz > 0);
 	// get / append first string
-	unsigned long id = tokens[0];
+	unsigned long id = tokens[0]->id;
 	stringstream ss;
 	ss << gt(id).rexp;
 	// get / append remaining strings
 	for(int i = 1; i < sz; ++i)
 	{
-		token_t token = table[tokens[i]];
-		ss << "|(" << token.rexp << ")";
+		ss << "|(" << gt(i).rexp << ")";
 		//ss << "|(?<" << token.name << ">" << token.rexp << ")";
 	}
 	// set return value
@@ -243,20 +243,8 @@ void lexer::push_include( const string& file )
  */
 parser::symbol_type lexer::get_token()
 {
-	//TRACE();
-	// if( EOFS )
-	// {
-	// 	return on_token( *gt(END_OF_FILES).id, 0 );
-	// }
-
 	if( m_buffer.empty() )
-	{
-		//EOFS = !next_file();
 		return parser::make_END_OF_FILE();  // this fucking works ...
-
-		// parser::make_YYerror();
-		// return on_token( *gt(END_OF_FILE).id, 0 );
-	}
 
 	auto rexp = boost::regex( m_regex_str, boost::regex::extended );
 	auto iter = boost::sregex_iterator( m_buffer.begin(), m_buffer.end(), rexp );
@@ -278,7 +266,7 @@ parser::symbol_type lexer::get_token()
 					return EOF;
 				}
 				// get match : by sub_match index (i)
-				token_t* token =  p_state->tokens[i - 1];
+				token_t* token =  m_pstate->tokens[i - 1];
 				print_smatch(*token,  m );
 				// set buffer to suffix
 				m_buffer = m.suffix();
@@ -306,13 +294,13 @@ void lexer::print_smatch(const token_t& t, boost::smatch m)
 	// int mw  = pw + match.size();
 	// int sw = mw + suffix.size();
 
-	prefix = prefix.size() != 0 ? ("\"" + prefix + "\"") : FMT_FG_RED + "null" + FMT_RESET;
-	match = match.size() != 0 ? ("\"" + match + "\"")  : FMT_FG_RED + "null" + FMT_RESET;
-	suffix = suffix.size() != 0 ? ("\"" + suffix + "\"")  : FMT_FG_RED +  "null" + FMT_RESET;
+	prefix = prefix.size() != 0 ? ("\"" + prefix + "\"")  : FMT_FG_RED + "null" + FMT_RESET;
+	match  = match.size()  != 0 ? ("\"" + match +  "\"")  : FMT_FG_RED + "null" + FMT_RESET;
+	suffix = suffix.size() != 0 ? ("\"" + suffix + "\"")  : FMT_FG_RED + "null" + FMT_RESET;
 
 	INFO(FMT_FG_GREEN << "prefix" << FMT_RESET << "[ " << FMT_ITALIC  << std::right << prefix << FMT_RESET_ITALIC << " ](" << prefix.size() << ")" << FMT_RESET);
 	INFO(FMT_FG_GREEN << "match " << FMT_RESET << "[ " << FMT_ITALIC  << std::right << match  << FMT_RESET_ITALIC << " ](" << match.size()  << ")" << "{: " << t.name << " :}" << FMT_RESET);
-	INFO(FMT_FG_GREEN << "suffix" << FMT_RESET  << "[ " << FMT_ITALIC << std::right << suffix << FMT_RESET_ITALIC << " ](" << suffix.size() << ")" << FMT_RESET);
+	INFO(FMT_FG_GREEN << "suffix" << FMT_RESET << "[ " << FMT_ITALIC  << std::right << suffix << FMT_RESET_ITALIC << " ](" << suffix.size() << ")" << FMT_RESET);
 }
 
 /**

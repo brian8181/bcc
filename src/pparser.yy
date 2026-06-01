@@ -197,6 +197,7 @@
 %type < std::pair<std::string, std::string> >  assign_expr
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
+%type atomic_type_specifier type_qualifier function_specifier
 %type <std::string> access_modfier type_modifier modifiers
 %type <std::string> numeric_type
 %type <std::string> lval rval value_type void_type decel_void
@@ -713,6 +714,49 @@ void_type:
     | SINGLE                                                    { INFO("intergal_type: | SINGLE"); /*$$=SINGLE;*/ }
     | DOUBLE                                                    { INFO("intergal_type: | DOUBLE"); $$="DOUBLE"; }
                                                                 ;
+// storage_class_specifier
+// 	: TYPEDEF	/* identifiers must be flagged as TYPEDEF_NAME */
+// 	| EXTERN
+// 	| STATIC
+// 	| THREAD_LOCAL
+// 	| AUTO
+// 	| REGISTER
+// 	;
+
+//     type_specifier
+// 	: VOID
+// 	| CHAR
+// 	| SHORT
+// 	| INT
+// 	| LONG
+// 	| FLOAT
+// 	| DOUBLE
+// 	| SIGNED
+// 	| UNSIGNED
+// 	| BOOL
+// 	| COMPLEX
+// 	| IMAGINARY	  	/* non-mandated extension */
+// 	| atomic_type_specifier
+// 	| struct_or_union_specifier
+// 	| enum_specifier
+// 	| TYPEDEF_NAME		/* after it has been defined as such */
+// 	;
+
+// atomic_type_specifier
+// 	: ATOMIC '(' type_name ')'
+// 	;
+
+// type_qualifier
+// 	: CONST
+// 	| RESTRICT
+// 	| VOLATILE
+// 	| ATOMIC
+// 	;
+
+// function_specifier
+// 	: INLINE
+// 	| NORETURN
+// 	;
 %%
 
 #include "table.hpp"

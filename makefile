@@ -42,7 +42,7 @@ FMT_WARN=$(FMT_ITALIC)$(FMT_YELLOW)
 FMT=$(FMT_INFO)
 
 # lib settings
-INCLUDES=-I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I./$(SRC) -I./$(BLD) -I./$(TST)
+INCLUDES=-I/usr/local/include/cppunit/ -I"/home/briank/src/boost_1_91_0" -I./$(SRC) -I./$(BLD) -I./$(TST)
 LIBS=-L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt
 
 ifdef OPTIONS
@@ -164,6 +164,11 @@ $(BLD)/path_append: $(OBJ)/path_append.o
 $(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cpp
 	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(YACC) --debug $(SRC)/pparser.yy --header=$(BLD)/pparser.tab.hpp -o $(BLD)/pparser.tab.cpp
+
+$(BLD)/parser.tab.cpp $(BLD)/parser.tab.hpp: $(SRC)/parser.yy 
+	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	$(YACC) --debug $(SRC)/parser.yy --header=$(BLD)/parser.tab.hpp -o $(BLD)/parser.tab.cpp
+
 
 $(OBJ)/pparser.tab.o: $(OBJ)/pparser.tab.cpp $(BLD)/pparser.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
 	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"

@@ -142,12 +142,10 @@ public:
 	/**
 	 * @name build_search_expression
 	 * @brief contruct a search string from tokens, denoted by id's / table
-	 * @param const vector<unsigned long>& tokens
-	 * @param const map<unsigned long, token>& table
 	 * @param string& s
 	 * @return string&, contructed search string
 	 */
-	string& build_search_expression(const vector<unsigned long>& tokens, map<unsigned long, token>& table, /*out*/ string& s);
+	string& build_search_expression(/*out*/ string& s);
 
 	/**
 	 * @name get_current_infile
@@ -266,7 +264,7 @@ private:
 	//fstream ostrm;
 	int m_line = 0;
 //	int m_current_file_idx = 0;
-	state_t* p_state = &INITIAL;
+	state_t* m_pstate = &INITIAL;
 	stringstream g_stringstream{};
 };
 
