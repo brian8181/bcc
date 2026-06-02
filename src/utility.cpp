@@ -55,44 +55,44 @@ string_ptr esc_nl(const string &s, const string &r)
 	return auto_ptr<string>(ret);
 }
 
-/**
- * @brief print color
- * @param s
- */
-void color_print(const fmt::v11::text_style &ts, fmt::v11::format_string<double> fmt, double &&args)
-{
-    /**
-     * Formats a string and prints it to stdout using ANSI escape sequences to
-     * specify text formatting.
-     *
-     * **Example**:
-     *
-     *     fmt::print(fmt::emphasis::bold | fg(fmt::color::red),
-     *                "Elapsed time: {0:.2f} seconds", 1.23);
-     */
-    fmt::print(ts, fmt, args);
-}
+// /**
+//  * @brief print color
+//  * @param s
+//  */
+// void color_print(const fmt::v11::text_style &ts, fmt::v11::format_string<double> fmt, double &&args)
+// {
+//     /**
+//      * Formats a string and prints it to stdout using ANSI escape sequences to
+//      * specify text formatting.
+//      *
+//      * **Example**:
+//      *
+//      *     fmt::print(fmt::emphasis::bold | fg(fmt::color::red),
+//      *                "Elapsed time: {0:.2f} seconds", 1.23);
+//      */
+//     fmt::print(ts, fmt, args);
+// }
 
-/**
- * @name color_fmt
- * @param s
- * @param ts
- * @return string
- */
-string *color_fmt(fmt::v11::format_string<int> fmt, int &&args)
-{
-    /**
-     * Formats `args` according to specifications in `fmt` and returns the result
-     * as a string.
-     *
-     * **Example**:
-     *
-     *     #include <fmt/format.h>
-     *     std::string message = fmt::format("The answer is {}.", 42);
-     */
-    std::string message = fmt::format(fmt, args);
-    return 0;
-}
+// /**
+//  * @name color_fmt
+//  * @param s
+//  * @param ts
+//  * @return string
+//  */
+// string *color_fmt(fmt::v11::format_string<int> fmt, int &&args)
+// {
+//     /**
+//      * Formats `args` according to specifications in `fmt` and returns the result
+//      * as a string.
+//      *
+//      * **Example**:
+//      *
+//      *     #include <fmt/format.h>
+//      *     std::string message = fmt::format("The answer is {}.", 42);
+//      */
+//     std::string message = fmt::format(fmt, args);
+//     return 0;
+// }
 
 string to_string(long n)
 {

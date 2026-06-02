@@ -622,7 +622,7 @@ assign_expr:
                                                                 ;
 
 decel_void:
-modifiers void_type lval                                       {
+    modifiers void_type lval                                       {
 																	INFO("decel_numeric: | modifiers numeric_type IDENTIFIER");
 																	_symbol_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
                                                                    	_symtab[$3] = sym;                      // add to symbol table, unassigned!
