@@ -59,7 +59,7 @@ string_ptr esc_nl(const string &s, const string &r)
  * @brief print color
  * @param s
  */
-void color_print(const fmt::v11::text_style &ts, fmt::v11::format_string<double> fmt, double &&args)
+void color_print(const fmt::text_style &ts, fmt::format_string<double> fmt, double &&args)
 {
     /**
      * Formats a string and prints it to stdout using ANSI escape sequences to
@@ -70,7 +70,7 @@ void color_print(const fmt::v11::text_style &ts, fmt::v11::format_string<double>
      *     fmt::print(fmt::emphasis::bold | fg(fmt::color::red),
      *                "Elapsed time: {0:.2f} seconds", 1.23);
      */
-    fmt::print(ts, fmt, args);
+    //fmt::print(ts, fmt, args);
 }
 
 /**
@@ -79,7 +79,7 @@ void color_print(const fmt::v11::text_style &ts, fmt::v11::format_string<double>
  * @param ts
  * @return string
  */
-string *color_fmt(fmt::v11::format_string<int> fmt, int &&args)
+string *color_fmt(fmt::format_string<int> fmt, int &&args)
 {
     /**
      * Formats `args` according to specifications in `fmt` and returns the result
