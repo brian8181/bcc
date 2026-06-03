@@ -65,13 +65,7 @@ public:
         ptr = new unsigned short(val);
     }
 
-    variant( float val ) : _name("tmp"), _type(FLOAT) 
-    {
-        ptr = new float(val);
-    }
-
-    variant( char val ) : _name("tmp"), _type(CHAR) 
-
+   variant( char val ) : _name("tmp"), _type(CHAR) 
     {
         ptr = new char(val);
     }
@@ -81,12 +75,62 @@ public:
         ptr = new unsigned char(val);
     }
 
+    variant( float val ) : _name("tmp"), _type(FLOAT) 
+    {
+        ptr = new float(val);
+    }
+
+    variant( double val ) : _name("tmp"), _type(DOUBLE) 
+    {
+        ptr = new double(val);
+    }
+
+    explicit operator int() const
+    {
+        return *int_ptr;
+    }
+
+    explicit operator unsigned int() const
+    {
+        return *uint_ptr;
+    }
+
+    explicit operator short() const
+    {
+        return *short_ptr;
+    }
+
+    explicit operator long() const
+    {
+        return *long_ptr;
+    }
+
+    explicit operator float() const
+    {
+        return *float_ptr;
+    }
+    
+    explicit operator double() const
+    {
+        return *double_ptr;
+    }
+    
+    explicit operator char() const
+    {
+        return *char_ptr;
+    }
+
+    explicit operator unsigned char() const
+    {
+        return *uchar_ptr;
+    }
+
     union
     {
         char             char_;
         char*            char_ptr;
         short            short_;
-        short*           ptr_short;
+        short*           short_ptr;
         int              int_;
         int*             int_ptr;
         long             long_;

@@ -42,7 +42,7 @@ FMT_WARN=$(FMT_ITALIC)$(FMT_YELLOW)
 FMT=$(FMT_INFO)
 
 # lib settings
-INCLUDES=-I/usr/local/include/cppunit/ -I"/home/briank/src/boost_1_91_0" -I./$(SRC) -I./$(BLD) -I./$(TST)
+INCLUDES=-I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I./$(SRC) -I./$(BLD) -I./$(TST)
 LIBS=-L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt
 
 ifdef OPTIONS
@@ -50,7 +50,7 @@ ifdef OPTIONS
 endif
 
 ifdef CLANG
-	@echo -e "$(FMT)CLANG ...$(FMT_RESET)"
+	@echo "$(FMT)CLANG ...$(FMT_RESET)"
 	CXX=clang++
 endif
 
@@ -63,13 +63,13 @@ ifndef RELEASE
 endif
 
 ifdef CYGWIN
-	@echo -e "$(FMT)CYGWIN ...$(FMT_RESET)"
+	@echo "$(FMT)CYGWIN ...$(FMT_RESET)"
 	CXXFLAGS += -DCYGWIN
 	INCLUDES += -I"/home/brian/src/boost_1_91_0"
 	LIBS += /usr/local/lib/libfmt.a -lcppunit.dll
 endif
 ifdef MSYS_UCRT
-	@echo -e "$(FMT)MSYS_UCRT ...$(FMT_RESET)"
+	@echo "$(FMT)MSYS_UCRT ...$(FMT_RESET)"
 	INCLUDES += -I/ucrt64/include/boost
 	LIBS += /usr/lib/libfmt.dll.a
 endif
@@ -119,6 +119,18 @@ $(OBJ)/symtab.o \
 #$(OBJ)/index.o
 #$(OBJ)/def.o
 
+OBJS.0.1= \
+$(OBJ)/fileio.o \
+$(OBJ)/auto_ptr.o \
+$(OBJ)/utility.o \
+$(BLD)/parser.tab.o \
+$(OBJ)/parser.o \
+$(OBJ)/lexer.o \
+$(OBJ)/on_token.o \
+$(OBJ)/driver.o \
+$(OBJ)/symtab.o \
+
+
 TST_OBJS= \
 $(OBJ)/fileio.o \
 $(OBJ)/auto_ptr.o \
@@ -152,25 +164,29 @@ SOURCES=$(HEADERS) $(OBJS)
 
 # build all
 all: $(BLD)/$(APP) #$(BLD)/TEST_lex
-	@echo -e "$(FMT)finished building ...$(FMT_RESET)"
+	@echo "$(FMT)finished building ...$(FMT_RESET)"
 
 $(BLD)/$(APP): $(OBJS) $(SRC)/def.hpp
-#@echo -e "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+#@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
-$(BLD)/path_append: $(OBJ)/path_append.o
-	$(CXX) $(CXXFLAGS) $^ -o $@
+$(BLD)/$(APP)VER2: $(OBJS.01) $(SRC)/def.hpp 
+#@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	$(CXX) $(CXXFLAGS) -DVER2 $^ $(LDFLAGS) -o $@
 
-$(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cpp
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
-	$(YACC) --debug $(SRC)/pparser.yy --header=$(BLD)/pparser.tab.hpp -o $(BLD)/pparser.tab.cpp
+# $(BLD)/path_append: $(OBJ)/path_append.o
+# 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(BLD)/parser.tab.cpp $(BLD)/parser.tab.hpp: $(SRC)/parser.yy 
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(YACC) --debug $(SRC)/parser.yy --header=$(BLD)/parser.tab.hpp -o $(BLD)/parser.tab.cpp
 
+$(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cpp
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	$(YACC) --debug $(SRC)/pparser.yy --header=$(BLD)/pparser.tab.hpp -o $(BLD)/pparser.tab.cpp
+
 $(OBJ)/pparser.tab.o: $(OBJ)/pparser.tab.cpp $(BLD)/pparser.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -DYYDEBUG -c $< -o $@
 
 $(BLD)/find_find_substrs: $(OBJ)/find_substrs.o
@@ -180,39 +196,39 @@ $(BLD)/ast: $(OBJ)/ast.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(BLD)/lib$(APP).so: $(OBJS) $(SRC)/def.h
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) --shared $(OBJS) -o $(BLD)/lib$(APP).so
 	chmod 755 $(BLD)/lib$(APP).so
 
 $(BLD)/lib$(APP).a:
-	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building -> $@ ...$(FMT_RESET)"
 	ar rvs $(BLD)/lib$(APP).a $(OBJS)
 	chmod 755 $(BLD)/lib$(APP).a
 
 $(BLD)/TEST_lex: $(TST_OBJS) $(OBJ)/main.o
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) -I/src -I/build  $^ -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt -I/usr/local/include/cppunit -lcppunit $(LDFLAGS) -o $@
 
 # copy header files
 $(BLD)/%.h : $(SRC)/%.h
-	@echo -e "$(FMT)copy $^ -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)copy $^ -> $@ ...$(FMT_RESET)"
 	cp $^ $@
 
 $(BLD)/%.hpp: $(SRC)/%.hpp
-	@echo -e "$(FMT)copy $^ -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)copy $^ -> $@ ...$(FMT_RESET)"
 	cp $^ $@
 
 # build object files
 $(OBJ)/%.o: $(SRC)/%.c $(SRC)/%.h
-	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building -> $@ ...$(FMT_RESET)"
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(SRC)/%.cpp $(SRC)/%.hpp
-	@echo -e "$(FMT)building $< -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building $< -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(TST)/%.cpp $(TST)/%.hpp # $(HEADERS)
-	@echo -e "$(FMT)building $< -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building $< -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 .PHONY: all rebuild dist install uninstall clean help
@@ -228,7 +244,7 @@ uninstall:
 	#-rm $(prefix)/bin/$(APP)
 
 clean:
-	@echo -e "$(FMT)cleaning ...$(FMT_RESET)"
+	@echo "$(FMT)cleaning ...$(FMT_RESET)"
 	-rm -rf $(OBJ)/*
 	-rm -rf $(BLD)/*
 

@@ -31,7 +31,13 @@
 #include <vector>
 #include <iomanip>
 #include <boost/regex.hpp>
+
+#ifdef VER2
+#include "parser.tab.hpp"
+#else
 #include "pparser.tab.hpp"
+#endif
+
 
 using std::list;
 using std::map;

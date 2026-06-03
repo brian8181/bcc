@@ -24,7 +24,13 @@
 #include <filesystem>
 #include "driver.hpp"
 #include "lexer.hpp"
+
+#ifdef VER2
+#include "parser.tab.hpp"
+#else
 #include "pparser.tab.hpp"
+#endif
+
 //#include "cpp.tab.hpp"
 #include "parser.hpp"
 #include "bash_color.hpp"

@@ -34,7 +34,13 @@
 #include <boost/regex.hpp>
 #include "fileio.hpp"
 #include "def.hpp"
+
+#ifdef VER2
+#include "parser.tab.hpp"
+#else
 #include "pparser.tab.hpp"
+#endif
+
 //#include "cpp.tab.hpp"
 
 

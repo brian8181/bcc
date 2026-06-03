@@ -11,7 +11,6 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-
     #include <iostream>
     #include <string>
     #include <iomanip>
@@ -35,24 +34,17 @@
     using std::map;
 
 	#define PARSER_LOG TRUE
-
     #undef INFO_COLOR
     #define INFO_COLOR FMT_FG_BLUE
 
     std::map<string, string> stab;
-
-
     struct mytype;
     struct symbol_t;
     struct modifier_t;
-
     typedef std::string arg_t;
     typedef std::vector<arg_t> args_t;
     typedef std::string param_t;
     typedef std::vector<param_t> params_t;
-
-
-
 }
 
 %code
@@ -80,7 +72,7 @@
     // declare yylex
     namespace yy
     {
-         auto yylex() _> parser::symbol_type;
+         auto yylex() -> parser::symbol_type;
     }
 
     char* STRDUP(char* s);
@@ -109,11 +101,15 @@
 
 	static int m_file_count = 0;
     void print_symtab();
-
-
-
 }
-%token void char short int long float double signed unsigned struct_or_union_specifier enum_specifier typedef_name 
+
+%token END_OF_FILES
+%token END_OF_FILE 0
+%token void char short int long float double signed unsigned auto volatile register static struct typedef 
+%token identifier integer_constant floating_constant character_constant enumeration_constant
+%token union extern const string
+%token sizeof enum if else for while do break continue goto return default switch case 
+%type struct_or_union_specifier enum_specifier typedef_name
 %type external_declaration function_definition declaration_specifier storage_class_specifier type_specifier 
 %type struct_or_union_specifier struct_or_union struct_declaration
 %type specifier_qualifier declarator pointer type_qualifier direct_declarator constant_expression conditional_expression
@@ -123,105 +119,106 @@
 %type parameter_declaration abstract_declarator direct_abstract_declarator enum_specifier enumerator_list enumerator typedef_name declaration init_declarator
 %type initializer initializer_list
 %type compound_statement statement labeled_statement selection_statement iteration_statement jump_statement
+%type<int> translation_unit
 %start translation_unit
-
-
 %%
 
-translation_unit  
-    external_declaration
-;
+translation_unit:  
+                             %empty
+                             /* empty base case */
+                            | external_declaration END_OF_FILE
+                            ;
 external_declaration:
                             function_definition
                             | declaration
-;
+                            ;
 function_definition:
                             declaration_specifier declarator declaration compound_statement
-;
+                            ;
 declaration_specifier:
                             storage_class_specifier
-                          | type_specifier
-                          | type_qualifier
-;
+                            | type_specifier
+                            | type_qualifier
+                            ;
 storage_class_specifier:
                             auto
                             | register
                             | static
                             | extern
                             | typedef
-;
+                            ;
 type_specifier:
-                    void
-                   | char
-                   | short
-                   | int
-                   | long
-                   | float
-                   | double
-                   | signed
-                   | unsigned
-                   | struct_or_union_specifier
-                   | enum_specifier
-                   | typedef_name
-;
+                            void
+                            | char
+                            | short
+                            | int
+                            | long
+                            | float
+                            | double
+                            | signed
+                            | unsigned
+                            | struct_or_union_specifier
+                            | enum_specifier
+                            | typedef_name
+                            ;
 struct_or_union_specifier:
-                                struct_or_union identifier '{' struct_declaration '}'
-                              | struct_or_union '{' struct_declaration '}'
-                              | struct_or_union identifier
-;
+                            struct_or_union identifier '{' struct_declaration '}'
+                            | struct_or_union '{' struct_declaration '}'
+                            | struct_or_union identifier
+                            ;
 struct_or_union:
-                    struct
-                    | union
-;
+                            struct
+                            | union
+                            ;
 struct_declaration:
-                        specifier_qualifier struct_declarator_list
-
+                            specifier_qualifier struct_declarator_list
+                            ;
 specifier_qualifier:
-                        type_specifier
-                        | type_qualifier
-;
+                            type_specifier
+                            | type_qualifier
+                            ;
 struct_declarator_list:
                             struct_declarator
-                           | struct_declarator_list ',' struct_declarator
-;
+                            | struct_declarator_list ',' struct_declarator
+                            ;
 
 struct_declarator:
                             declarator
                             | declarator ':' constant_expression
                             | ':' constant_expression
-;
+                            ;
 declarator:
                             pointer direct_declarator
-;
+                            ;
 pointer:
                             '*' type_qualifier pointer
-;
+                            ;
 type_qualifier:
                             const
                             | volatile
-;
+                            ;
 direct_declarator:
                             identifier
-                        | '(' declarator ')'
-                        | direct_declarator '[' constant_expression ']'
-                        | direct_declarator '(' parameter_type_list ')'
-                        | direct_declarator '(' identifier ')'
-;
+                            | '(' declarator ')'
+                            | direct_declarator '[' constant_expression ']'
+                            | direct_declarator '(' parameter_type_list ')'
+                            | direct_declarator '(' identifier ')'
+                            ;
 constant_expression:
-                        conditional_expression
-;
+                            conditional_expression
+                            ;
 conditional_expression:
-                         logical_or_expression
+                            logical_or_expression
                            | logical_or_expression '?' expression ':' conditional_expression
-;
+                            ;
 logical_or_expression:
                             logical_and_expression
-                          | logical_or_expression '|' logical_and_expression
-;
+                            | logical_or_expression '|' logical_and_expression
+                            ;
 logical_and_expression:
                             inclusive_or_expression
-                           | logical_and_expression '&' inclusive_or_expression
-;
+                            | logical_and_expression '&' inclusive_or_expression
+                            ;
 inclusive_or_expression:
                             exclusive_or_expression
                             | inclusive_or_expression '|' exclusive_or_expression
@@ -314,19 +311,19 @@ unary_operator:
                    | '_'
                    | '~'
                    | '!'
-;
+                    ;
 type_name:
             specifier_qualifier abstract_declarator
-;
+                    ;
 parameter_type_list:
                         %empty
                         | parameter_list
                         | parameter_list ',' '.'
-;
+                        ;
 parameter_list:
                      parameter_declaration
                    | parameter_list ',' parameter_declaration
-;
+                    ;
 parameter_declaration:
                             declaration_specifier declarator
                           | declaration_specifier abstract_declarator
