@@ -26,9 +26,9 @@ int main(int argc, char* argv[])
     char unsigned uc = 21;
     int i = 22;
     unsigned int ui = 55;
-    long l = -77;
-    float f = -3.14;
-    double d = 0.707;
+    long l = -77l;
+    float f = -3.14f;
+    double d = 0.707f;
 
     variant vc(c);
     variant vuc(uc);
@@ -51,8 +51,8 @@ int main(int argc, char* argv[])
     variant vuc2(21);
     variant vi2(22);
     variant vui2(55);
-    variant vl2(-77);
-    variant vf2(-3.14);
+    variant vl2(-77l);
+    variant vf2(-3.14f);    
     variant vd2(0.707);
 
     cout << (char)vc2           << endl 

@@ -24,7 +24,7 @@ BLD = $(PRJ)/build
 OBJ = $(PRJ)/$(BLD)
 SRC = $(PRJ)/src
 AST = $(PRJ)/ast
-TST = $(PRJ)/unit_test
+TST = $(SRC)/unit_test
 
 SRC_EXT=cpp
 HDR_EXT=hpp
@@ -44,6 +44,7 @@ FMT=$(FMT_INFO)
 # lib settings
 INCLUDES=-I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I./$(SRC) -I./$(BLD) -I./$(TST)
 LIBS=-L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt
+LDFLAGS=$(INCLUDES) $(LIBS)
 
 ifdef OPTIONS
 	CXXFLAGS+=-DOPTIONS
@@ -74,8 +75,6 @@ ifdef MSYS_UCRT
 	LIBS += /usr/lib/libfmt.dll.a
 endif
 
-LDFLAGS=$(INCLUDES) $(LIBS)
-
 # ifdef TRACEING
 # CXXFLAGS += -DTRACING
 # endif
@@ -91,14 +90,12 @@ $(SRC)/auto_ptr.hpp \
 $(SRC)/utility.hpp \
 $(SRC)/ast.hpp \
 $(BLD)/pparser.tab.hpp \
-$(SRC)/parser.hpp \
 $(SRC)/lexer.hpp \
 $(SRC)/on_token.hpp \
 $(SRC)/driver.hpp \
 $(SRC)/def.hpp \
 $(SRC)/table.hpp \
 $(SRC)/def.h \
-
 
 HEADER_ONLY= \
 $(BLD)/pparser.tab.hpp \
@@ -110,26 +107,22 @@ OBJS= \
 $(OBJ)/fileio.o \
 $(OBJ)/auto_ptr.o \
 $(OBJ)/utility.o \
-$(BLD)/pparser.tab.o \
-$(OBJ)/parser.o \
+$(OBJ)/pparser.tab.o \
 $(OBJ)/lexer.o \
 $(OBJ)/on_token.o \
 $(OBJ)/driver.o \
 $(OBJ)/symtab.o \
-#$(OBJ)/index.o
-#$(OBJ)/def.o
 
-OBJS.0.1= \
+
+OBJS2= \
 $(OBJ)/fileio.o \
 $(OBJ)/auto_ptr.o \
 $(OBJ)/utility.o \
-$(BLD)/parser.tab.o \
-$(OBJ)/parser.o \
+$(OBJ)/parser.tab.o \
 $(OBJ)/lexer.o \
 $(OBJ)/on_token.o \
 $(OBJ)/driver.o \
 $(OBJ)/symtab.o \
-
 
 TST_OBJS= \
 $(OBJ)/fileio.o \
@@ -138,7 +131,6 @@ $(OBJ)/utility.o \
 $(OBJ)/symtab.o \
 $(OBJ)/lexer.o \
 $(OBJ)/on_token.o \
-$(OBJ)/ast.o \
 $(OBJ)/TEST_lex.o \
 $(OBJ)/TEST_general.o \
 $(OBJ)/TEST_symbol_table.o \
@@ -151,7 +143,7 @@ $(OBJ)/TEST_expr.o
 # $(SRC)/fileio.hpp $(OBJ)/fileio.o \
 # $(SRC)/auto_ptr.hpp $(OBJ)/auto_ptr.o \
 # $(SRC)/utility.hpp $(OBJ)/utility.o \
-# $(SRC)/ast.hpp \
+# $(SRC)/ast/variant.hpp \
 # $(BLD)/cpp.tab.hpp $(BLD)/cpp.tab.o \
 # $(BLD)/pparser.tab.hpp $(BLD)/pparser.tab.o \
 # $(SRC)/parser.hpp $(OBJ)/parser.o \
@@ -159,23 +151,20 @@ $(OBJ)/TEST_expr.o
 # $(SRC)/driver.hpp $(OBJ)/driver.o \
 SOURCES=$(HEADERS) $(OBJS)
 
+# build all
+all: $(BLD)/$(APP)
+	@echo "$(FMT)finished building ...$(FMT_RESET)"
+
 # build everything
 #world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
 
-# build all
-all: $(BLD)/$(APP) #$(BLD)/TEST_lex
-	@echo "$(FMT)finished building ...$(FMT_RESET)"
-
 $(BLD)/$(APP): $(OBJS) $(SRC)/def.hpp
-#@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
-$(BLD)/$(APP)VER2: $(OBJS.01) $(SRC)/def.hpp 
-#@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+$(BLD)/$(APP)2: $(OBJS2) $(SRC)/def.hpp 
+	@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) -DVER2 $^ $(LDFLAGS) -o $@
-
-# $(BLD)/path_append: $(OBJ)/path_append.o
-# 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(BLD)/parser.tab.cpp $(BLD)/parser.tab.hpp: $(SRC)/parser.yy 
 	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
@@ -205,9 +194,12 @@ $(BLD)/lib$(APP).a:
 	ar rvs $(BLD)/lib$(APP).a $(OBJS)
 	chmod 755 $(BLD)/lib$(APP).a
 
-$(BLD)/TEST_lex: $(TST_OBJS) $(OBJ)/main.o
+$(BLD)/TEST_lex: $(TST_OBJS) $(TST)/main.o
 	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
-	$(CXX) $(CXXFLAGS) -I/src -I/build  $^ -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt -I/usr/local/include/cppunit -lcppunit $(LDFLAGS) -o $@
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
+$(BLD)/vtest: $(SRC)/variant.cpp
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 # copy header files
 $(BLD)/%.h : $(SRC)/%.h
@@ -227,7 +219,7 @@ $(OBJ)/%.o: $(SRC)/%.cpp $(SRC)/%.hpp
 	@echo "$(FMT)building $< -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $< -o $@
 
-$(OBJ)/%.o: $(TST)/%.cpp $(TST)/%.hpp # $(HEADERS)
+$(OBJ)/%.o: $(TST)/%.cpp $(TST)/%.hpp
 	@echo "$(FMT)building $< -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 

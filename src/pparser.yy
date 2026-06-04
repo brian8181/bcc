@@ -11,7 +11,6 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-
     #include <iostream>
     #include <string>
     #include <iomanip>
@@ -35,24 +34,17 @@
     using std::map;
 
 	#define PARSER_LOG TRUE
-
     #undef INFO_COLOR
     #define INFO_COLOR FMT_FG_BLUE
 
     std::map<string, string> stab;
-
-
     struct mytype;
     struct symbol_t;
     struct modifier_t;
-
     typedef std::string arg_t;
     typedef std::vector<arg_t> args_t;
     typedef std::string param_t;
     typedef std::vector<param_t> params_t;
-
-
-
 }
 
 %code
@@ -109,9 +101,6 @@
 
 	static int m_file_count = 0;
     void print_symtab();
-
-
-
 }
 
 
@@ -189,6 +178,7 @@
 %type < std::vector< std::string > > files
 %type <std::string> stmt
 %type < std::vector< std::string > > stmts
+
 /*
 %type <std::string> block
 %type < std::vector< std::string > > blocks
@@ -197,12 +187,13 @@
 %type < std::pair<std::string, std::string> >  assign_expr
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
+%type compound_statement
 %type atomic_type_specifier type_qualifier function_specifier
 %type <std::string> access_modfier type_modifier modifiers
 %type <std::string> numeric_type
 %type <std::string> lval rval value_type void_type decel_void
 %type <std::string> decel decel_numeric func_param_decels param_decels function_decel function_call
-/*%type <std::string> compiler*/
+%type <std::string> compiler
 %start compiler
 
 
@@ -211,13 +202,8 @@
  * @name complier
  */
 compiler:
-    TEST_TOKEN                                                 {
-                                                                            INFO("complier: | TEST_TOKEN=" << $1);
-                                                               }
-   | file  END_OF_FILE                                         {
-                                                                    print_symtab();
-																	INFO("compiler: files.size=" << $1.size() << " END_OF_FILES");
-
+        file  END_OF_FILE                                         {
+																	INFO("compiler: files.size=" << $1.size() << " END_OF_FILE");
 																	cout << "processed files ..." << endl;
 																	int len = $1.size();
 																	for(int i = 0; i < len; ++i)
@@ -233,28 +219,17 @@ compiler:
 																	//std::exit(0);
                                                                 }
                                                                 ;
-
-test:
-    TEST_TOKEN                                                  { INFO("test: TEST_TOKEN"); mytype t = { 42 }; $$=t; };
-
 /**
  * @name file
  * @brief input file
  * @type std::string : "file path"
  */
 file:
-	stmts
+	stmts                                                       {
+                                                                    INFO("file: stmts");
+                                                                }
 	| file stmts												{
-                                                                    INFO("file: blocks.size=" << $1.size() << " END_OF_FILE");
-
-																	// string name;
-																	// lexer::instance().get_current_infile(name);
-                                                                    // lexer::instance().set_state(&PARSER);
-
-
-                                                                    cout << FMT_FG_DARK_GREY << "*******************************************************" << FMT_RESET << endl;
-                                                                    cout << FMT_FG_DARK_GREY << "*                      End Of File                    *" << FMT_RESET << endl;
-                                                                    cout << FMT_FG_DARK_GREY << "*******************************************************" << FMT_RESET << endl;
+                                                                    INFO("file: file stmts");
                                                                 }
                                                                 ;
 /*
@@ -278,6 +253,11 @@ stmts[result]:
 																	$lhs.push_back($rhs);
 																	$result = $lhs;
 																}
+                                                                ;
+compound_statement:
+            LBRACE stmts RBRACE                                {
+
+                                                                }
                                                                 ;
 /**
  * @name stmt
@@ -347,7 +327,7 @@ stmt:
                                                                 }
     | if_expr  else_if_expr                                     {
                                                                     INFO("expr: | if_expr  else_if_expr ");
-                                                                  }
+                                                                }
     | expr QUESTION_MARK expr COLON expr                        {
                                                                     INFO("expr: | expr QUESTION_MARK expr COLON expr");
                                                                 }
@@ -355,8 +335,8 @@ stmt:
                                                                     INFO("stmt: | FOR LPAREN stmt stmt stmt RPAREN stmt");
 
                                                                 }
-    | FOR LPAREN stmt stmt stmt RPAREN LBRACKET stmts RBRACKET  {
-                                                                   INFO("stmt: | FOR LPAREN stmt stmt stmt RPAREN LBRACKET stmts RBRACKET");
+    | FOR LPAREN stmt stmt stmt RPAREN compound_statement       {
+                                                                   INFO("stmt: | FOR LPAREN stmt stmt stmt RPAREN compound_statement");
                                                                 }
     | BREAK                                                     {
                                                                     INFO("stmt: | BREAK");
@@ -367,8 +347,8 @@ stmt:
     | GOTO LABEL                                                {
                                                                     INFO("stmts | GOTO LABEL");
                                                                 }
-    | SWITCH LPAREN expr RPAREN RBRACE stmts LBRACE             {
-
+    | SWITCH LPAREN expr RPAREN compound_statement              {
+                                                                    INFO("stmts | SWITCH LPAREN expr RPAREN compound_statement");
                                                                 }
 
                                                                 ;
@@ -377,21 +357,21 @@ if_expr:
     IF LPAREN expr RPAREN stmt %prec IFX                       {
                                                                     INFO("if_stmt: | IF LPAREN expr RPAREN stmt %prec IFX");
                                                                }
-    | IF LPAREN expr RPAREN LBRACE stmts RBRACE                {
-                                                                    INFO("if_stmt: | IF LPAREN expr RPAREN stmt else_expr");
+    | IF LPAREN expr RPAREN compound_statement                 {
+                                                                    INFO("if_stmt: | IF LPAREN expr RPAREN compound_statement");
                                                                }
                                                                ;
  else_if_expr:
-    ELSEIF LPAREN expr RPAREN stmt {
+    ELSEIF LPAREN expr RPAREN stmt                              {
                                                                     INFO("else_if_stmt: | ELSEIF LPAREN expr RPAREN stmt");
                                                                 }
-    | ELSEIF LPAREN expr RPAREN LBRACE stmts RBRACE             {
-                                                                    INFO("else_if_stmt: | ELSEIF LPAREN expr RPAREN LBRACE stmts RBRACE");
+    | ELSEIF LPAREN expr RPAREN compound_statement              {
+                                                                    INFO("else_if_stmt: | ELSEIF LPAREN expr RPAREN compound_statement");
                                                                 }
-    | else_if_expr else_if_expr                                    {
+    | else_if_expr else_if_expr                                 {
                                                                     INFO("else_if_stmt: | else_if_expr else_if_expr");
                                                                 }
-   | else_if_expr else_expr                                    {
+   | else_if_expr else_expr                                     {
                                                                     INFO("else_if_stmt: | else_if_expr else_expr");
                                                                 }
                                                                 ;
@@ -399,12 +379,10 @@ if_expr:
     ELSE stmt                                                   {
                                                                     INFO("else_stmt: | ELSE stmt");
                                                                 }
-    | ELSE LBRACE stmts RBRACE                                  {
-                                                                    INFO("else_stmt: | ELSE LBRACE stmts RBRACE");
+    | ELSE compound_statement                                   {
+                                                                    INFO("else_stmt: | ELSE compound_statement");
                                                                 }
                                                                 ;
-
-
 cases:
     case                                                        {
                                                                     INFO("cases: | case")
@@ -418,7 +396,6 @@ case:
                                                                     INFO("case: CASE NUMERIC_LITERAL");
                                                                 }
                                                                 ;
-
 /**
  * @name expr
  * @brief Numerical / logical exprssions
@@ -430,31 +407,31 @@ expr[result]:
                                                                     //$result = $operand;
 																}
 
-   | NUMERIC_LITERAL                                              {
+   | NUMERIC_LITERAL                                            {
                                                                     INFO("expr: | NUMERIC_LITERAL");
                                                                     //$result = $operand;
                                                                 }
-   | expr[lhs] INC[op]                                              {
+   | expr[lhs] INC[op]                                          {
                                                                     INFO("expr: | expr INC");
                                                                     stringstream result;
                                                                     result << (std::atoi($lhs.c_str()) + 1);
                                                                     $result = result.str();
                                                                     INFO("$result=" << $result);
                                                                 }
-    | DASH expr %prec UMINUS                                     {
+    | DASH expr %prec UMINUS                                    {
                                                                     INFO("expr: | DASH expr %prec UMINUS");
                                                                     stringstream result;
                                                                     result << -std::atoi($expr.c_str());
                                                                     $result = result.str();
                                                                     INFO("$result=" << $result);
-                                                                 }
+                                                                }
     | expr[lhs] ADD[op] expr[rhs]                               {
 																	INFO("PARSER expr: | expr ADD expr");
 																	stringstream result;
                                                                     result << (std::atoi($lhs.c_str()) + std::atoi($rhs.c_str()));
                                                                     $result = result.str();
-                                                                   }
-    | expr[lhs] DASH[op] expr[rhs]                               {
+                                                                }
+    | expr[lhs] DASH[op] expr[rhs]                              {
 																	INFO("PARSER expr: | expr DASH expr");
 																	stringstream result;
                                                                     result << (std::atoi($lhs.c_str()) + -std::atoi($rhs.c_str()));
@@ -554,9 +531,9 @@ expr[result]:
  * @name function_call
  */
 function_call:
-     lval LPAREN RPAREN                                  {
+     lval LPAREN RPAREN                                         {
                                                                     INFO("function_call: IDENTIFIER LPAREN RPAREN");
-                                                        }
+                                                                }
    | lval[lhs] LPAREN params RPAREN                       		{
                                                                     INFO("function_call: IDENTIFIER[lhs] LPAREN params RPAREN");
                                                                 }
@@ -614,7 +591,7 @@ param_decels:
  * @name assign_expr
 */
 assign_expr:
-    lval ASSIGN expr                                           {
+    lval ASSIGN expr                                            {
                                                                     INFO("assign_expr: IDENTIFIER ASSIGN expr");
                                                                     std::pair<std::string, std::string> p = { $1, $3 };
                                                                     $$ = p;
@@ -622,7 +599,7 @@ assign_expr:
                                                                 ;
 
 decel_void:
-    modifiers void_type lval                                       {
+    modifiers void_type lval                                    {
 																	INFO("decel_numeric: | modifiers numeric_type IDENTIFIER");
 																	_symbol_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
                                                                    	_symtab[$3] = sym;                      // add to symbol table, unassigned!

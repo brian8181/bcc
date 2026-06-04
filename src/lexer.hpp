@@ -176,12 +176,6 @@ public:
 	}
 
 	/**
-	 * @name  push_include
-	 * @brief prepends current buffer with include contents
-	 */
-	void push_include(const string& file);
-
-	/**
 	 * @name   get_token
 	 * @return int
 	 */
@@ -221,10 +215,17 @@ public:
 	void print_smatch(const token_t& t, boost::smatch m);
 
 	/**
-	* @brief print_token
+	 * @brief print_token
+	 * 
+	 */
+	void print_token(const token* ptoken);
+
+	/**
+	* @brief print_tokens
 	*
 	*/
-	void print_token();
+	void print_tokens();
+
 
 	/**
 	 * @name  on_token

@@ -24,6 +24,9 @@
 #include <filesystem>
 #include "driver.hpp"
 #include "lexer.hpp"
+#include "bash_color.hpp"
+#include "utility.hpp"
+#include "log.hpp"
 
 #ifdef VER2
 #include "parser.tab.hpp"
@@ -31,11 +34,6 @@
 #include "pparser.tab.hpp"
 #endif
 
-//#include "cpp.tab.hpp"
-#include "parser.hpp"
-#include "bash_color.hpp"
-#include "utility.hpp"
-#include "log.hpp"
 
 using std::cerr;
 using std::cout;
