@@ -145,6 +145,9 @@
 %token REF
 %token STRUCT
 %token TYPEDEF
+%token EXTERN
+%token UNION
+%token RESTRICT
 
 %token CONST VOLATILE STATIC
 %token UNSIGNED SIGNED LONG REGISTER SHORT
@@ -154,7 +157,7 @@
 
 %token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE
 %token COMMA LBRACKET RBRACKET LBRACE RBRACE DOT PTR ASTERICK
-
+%token	ALIGNAS ALIGNOF ATOMIC GENERIC NORETURN STATIC_ASSERT THREAD_LOCAL INC_OP DEC_OP SIZEOF
 %token <std::string> IDENTIFIER
 %token <std::string> STRING_LITERAL NUMERIC_LITERAL REAL_LITERAL CHAR_LITERAL HEXADECIMAL_LITERAL OCTAL_DECIMAL_LITERAL
 %nonassoc IFX
@@ -188,10 +191,13 @@
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
 %type compound_statement
-%type atomic_type_specifier type_qualifier function_specifier
-%type <std::string> access_modfier type_modifier modifiers
+%type atomic_type_specifier type_qualifier function_specifier constant_expression enumeration_constant
+%type unary_expression unary_operator cast_expression multiplicative_expression additive_expression
+%type struct_or_union_specifier struct_or_union struct_declaration_list struct_declaration specifier_qualifier_list struct_declarator_list struct_declarator
+%type declarator
+%type <std::string> storage_class_specifier type_modifier modifiers 
 %type <std::string> numeric_type
-%type <std::string> lval rval value_type void_type decel_void
+%type <std::string> lval rval type_specifier decel_void
 %type <std::string> decel decel_numeric func_param_decels param_decels function_decel function_call
 %type <std::string> compiler
 %start compiler
@@ -259,6 +265,49 @@ compound_statement:
 
                                                                 }
                                                                 ;
+                                                                
+enumeration_constant		/* before it has been defined as such */
+	: IDENTIFIER
+	;
+
+unary_expression:
+	//: postfix_expression
+	| INC_OP unary_expression
+	| DEC_OP unary_expression
+	| unary_operator cast_expression
+	| SIZEOF unary_expression
+	//| SIZEOF '(' type_name ')'
+	//| ALIGNOF '(' type_name ')'
+	;
+
+unary_operator:
+ '&'
+	| '*'
+	| '+'
+	| '-'
+	| '~'
+	| '!'
+	;
+
+cast_expression:
+    unary_expression
+	//| '(' type_name ')' cast_expression
+	;
+
+multiplicative_expression:
+	cast_expression
+	| multiplicative_expression '*' cast_expression
+	| multiplicative_expression '/' cast_expression
+	| multiplicative_expression '%' cast_expression
+	;
+
+additive_expression:
+	multiplicative_expression
+	| additive_expression '+' multiplicative_expression
+	| additive_expression '-' multiplicative_expression
+	;
+
+
 /**
  * @name stmt
  * @brief statement
@@ -268,14 +317,13 @@ stmt:
                                                                     INFO("stmt: | expr=" << $expr << " SEMI_COLON");
                                                                     WARN("expr: not an l-side");
                                                                 }
-    | function_call SEMI_COLON                                 {
+    | function_call SEMI_COLON                                  {
                                                                     INFO("stmt: | function_call SEMI_COLON");
                                                                 }
     | decel SEMI_COLON                                          {
                                                                     INFO("stmt: | decel SEMI_COLON");
                                                                     stringstream ss;
                                                                     ss << "// " << $decel  << ";";
-                                                                    //lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON   {
@@ -287,13 +335,10 @@ stmt:
                                                                 }
     | decel ASSIGN expr SEMI_COLON                               {
                                                                     INFO("stmt: | decel ASSIGN expr SEMI_COLON");
-                                                                    // _symtab[$decel].val = new int(std::atoi($expr.c_str()));
-                                                                    // stringstream ss;
-                                                                    // ss << "// " << $decel << " = " << $expr << ";";
-                                                                    // lexer::instance().write_ostream(ss.str());
-                                                                    // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
-                                                                    // // testing lexer stream operator overload !
-                                                                    // cout << lexer::instance();
+                                                                    _symtab[$decel].val = new int(std::atoi($expr.c_str()));
+                                                                    stringstream ss;
+                                                                    ss << "// " << $decel << " = " << $expr << ";";
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     | decel ASSIGN params_list SEMI_COLON                       {
                                                                     INFO("stmt: | decel ASSIGN params_list SEMI_COLON");
@@ -599,7 +644,7 @@ assign_expr:
                                                                 ;
 
 decel_void:
-    modifiers void_type lval                                    {
+    modifiers type_specifier lval                               {
 																	INFO("decel_numeric: | modifiers numeric_type IDENTIFIER");
 																	_symbol_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
                                                                    	_symtab[$3] = sym;                      // add to symbol table, unassigned!
@@ -617,13 +662,13 @@ decel_void:
  * @brief decelration
  */
 decel:
-    modifiers value_type lval                           		{
+    modifiers type_specifier lval                           	{
 																	INFO("decel: | modifiers intregal_type IDENTIFIER");
-																		_symbol_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
-																		_symtab[$3] = sym;                      // add to symbol table, unassigned!
+																	_symbol_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
+																	_symtab[$3] = sym;                      // add to symbol table, unassigned!
 
-																		stringstream ss;
-																		ss << "type<" << "INT" << "> " << "id<" << $3 << ">";
+																	stringstream ss;
+																	ss << "type<" << "INT" << "> " << "id<" << $3 << ">";
 																	$decel = ss.str();
 
 																	stringstream ostrm;
@@ -639,7 +684,7 @@ decel:
 modifiers:
     %empty
     | modifiers type_modifier
-    | modifiers access_modfier
+    | modifiers storage_class_specifier
     ;
 /**
  * @name type_modfier
@@ -648,16 +693,7 @@ type_modifier:
     SIGNED
     | UNSIGNED
     ;
-/**
- * @name access_modifier
- * @brief access_modifier
- */
-access_modfier:
-    CONST
-    | VOLATILE
-    | STATIC
-    | REGISTER
-    ;
+
 /**
 * @name lval
 */
@@ -671,69 +707,104 @@ rval:
 	IDENTIFIER
 	| NUMERIC_LITERAL
 	;
-/**
-* @name value_type
-*/
-value_type:
-	CHAR
+
+    
+constant_expression:
+	//: conditional_expression	/* with constraints */
+	;
+
+storage_class_specifier:
+    TYPEDEF	/* identifiers must be flagged as TYPEDEF_NAME */
+	| EXTERN
+	| STATIC
+	// | THREAD_LOCAL
+	// | AUTO
+	| REGISTER
+	;
+
+type_specifier
+	: VOID
+	| CHAR
 	| SHORT
 	| INT
 	| LONG
+	| FLOAT
+	| DOUBLE
+	| SIGNED
+	| UNSIGNED
+	// | BOOL
+	// | COMPLEX
+	// | IMAGINARY	  	/* non-mandated extension */
+	// | atomic_type_specifier
+	// | struct_or_union_specifier
+	// | enum_specifier
+	// | TYPEDEF_NAME		/* after it has been defined as such */
 	;
-/**
- * @name void_type
- */
-void_type:
-    FLOAT                                                       { INFO("intergal_type: | FLOAT"); $$="FLOAT"; }
-    | CHAR                                                      { INFO("intergal_type: | CHAR");  $$="CHAR"; }
-    | STRING                                                    { INFO("intergal_type: | STRING"); /*$$=STRING;*/ }
-    | VOID                                                      { INFO("intergal_type: | VOID"); /*$$=VOID;*/ }
-    | SINGLE                                                    { INFO("intergal_type: | SINGLE"); /*$$=SINGLE;*/ }
-    | DOUBLE                                                    { INFO("intergal_type: | DOUBLE"); $$="DOUBLE"; }
-                                                                ;
-// storage_class_specifier
-// 	: TYPEDEF	/* identifiers must be flagged as TYPEDEF_NAME */
-// 	| EXTERN
-// 	| STATIC
-// 	| THREAD_LOCAL
-// 	| AUTO
-// 	| REGISTER
-// 	;
 
-//     type_specifier
-// 	: VOID
-// 	| CHAR
-// 	| SHORT
-// 	| INT
-// 	| LONG
-// 	| FLOAT
-// 	| DOUBLE
-// 	| SIGNED
-// 	| UNSIGNED
-// 	| BOOL
-// 	| COMPLEX
-// 	| IMAGINARY	  	/* non-mandated extension */
-// 	| atomic_type_specifier
-// 	| struct_or_union_specifier
-// 	| enum_specifier
-// 	| TYPEDEF_NAME		/* after it has been defined as such */
-// 	;
+struct_or_union_specifier
+	: struct_or_union '{' struct_declaration_list '}'
+	| struct_or_union IDENTIFIER '{' struct_declaration_list '}'
+	| struct_or_union IDENTIFIER
+	;
+
+struct_or_union
+	: STRUCT
+	| UNION
+	;
+struct_declaration_list
+	: struct_declaration
+	| struct_declaration_list struct_declaration
+	;
+
+struct_declaration
+	: specifier_qualifier_list ';'	/* for anonymous struct/union */
+	| specifier_qualifier_list struct_declarator_list ';'
+	| static_assert_declaration
+	;
+
+specifier_qualifier_list
+	: type_specifier specifier_qualifier_list
+	| type_specifier
+	| type_qualifier specifier_qualifier_list
+	| type_qualifier
+	;
+
+struct_declarator_list
+	: struct_declarator
+	| struct_declarator_list ',' struct_declarator
+	;
+
+struct_declarator
+	: ':' constant_expression
+	| declarator ':' constant_expression
+	| declarator
+	;
+
+static_assert_declaration
+	: STATIC_ASSERT '(' constant_expression ',' STRING_LITERAL ')' ';'
+	;
+
 
 // atomic_type_specifier
 // 	: ATOMIC '(' type_name ')'
 // 	;
 
-// type_qualifier
-// 	: CONST
-// 	| RESTRICT
-// 	| VOLATILE
-// 	| ATOMIC
-// 	;
+type_qualifier
+	: CONST
+	| RESTRICT
+	| VOLATILE
+	| ATOMIC
+	;
 
 // function_specifier
 // 	: INLINE
 // 	| NORETURN
 // 	;
+
+declarator:
+	//: pointer direct_declarator
+	//| direct_declarator
+	;
 %%
 
 #include "table.hpp"
