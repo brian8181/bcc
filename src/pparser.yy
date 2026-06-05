@@ -37,6 +37,8 @@
     #undef INFO_COLOR
     #define INFO_COLOR FMT_FG_BLUE
 
+    #define exp_info(op, lhs, rhs, result) lhs << " " << op << " " << rhs << " = " << result
+
     std::map<string, string> stab;
     struct mytype;
     struct symbol_t;
@@ -491,37 +493,40 @@ expr[result]:
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) * std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
-                                                                    INFO("$lhs $op $rhs=" << $result);
+                                                                    INFO(exp_info("*", $1, $3, $$));
 																}
     | expr[lhs] DIV[op] expr[rhs]                               {
 																	INFO("expr: expr DIV expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) / std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
-                                                                    INFO("$lhs $op $rhs=" << $result);
+                                                                    INFO(exp_info("/", $1, $3, $$));
 																}
     | expr[lhs] MOD[op] expr[rhs]                               {
 																	INFO("expr: expr MOD expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) % std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
-                                                                    INFO("$lhs $op $rhs==" << $result);
+                                                                    INFO(exp_info("%", $1, $3, $$));
 																}
     | expr[lhs] EQ[op] expr[rhs]                                {
 																	INFO(" expr: expr EQ expr");
 																	$result = (std::atoi($lhs.c_str()) == std::atoi($rhs.c_str()));
                                                                     // string r = $lhs + " " $op + " " + $rhs + " = ";
                                                                     // INFO(r << $result);
+                                                                    INFO(exp_info("==", $1, $3, $$));
 																}
     | expr[lhs] NEQ[op] expr[rhs]                               {
 																	INFO("expr: expr NEQ expr");
 																	$result = (std::atoi($lhs.c_str()) != std::atoi($rhs.c_str()));
                                                                     INFO($lhs << "-" << $rhs << "=" << $result);
+                                                                    INFO(exp_info("!=", $1, $3, $$));
 																}
     | expr[lhs] LT[op] expr[rhs]                                {
 																	INFO("expr expr LT expr");
 																	$result = (std::atoi($lhs.c_str()) < std::atoi($rhs.c_str()));
                                                                     INFO("$result=" << $result);
+                                                                    INFO(exp_info("<", $1, $3, $$));
 																}
     | expr[lhs] GT[op] expr[rhs]                                {
 																	INFO("expr: expr GT expr");
@@ -841,32 +846,41 @@ typedef struct mytype
 } mytype;
 
 
-/**
-*/
-bool get_value(const string& name, /*out*/ string& val)
-{
-    if(symbol_table.find(name) != symbol_table.end())
-    {
-        val = symbol_table[name];
-        return true;
-    }
-    INFO("symbol, (" << name << "), not found!");
-    return false;
-}
 
-/**
-*/
-bool set_value(const string& name, const string& val)
-{
-    if(symbol_table.find(name) != symbol_table.end())
-    {
-        symbol_table[name] = val;
-        INFO("symbol updated: " << name << " = " << val);
-        return true;
-    }
-    INFO("symbol, (" << name << "), not found!");
-    return false;
-}
+
+// string& get_expr_info(const string& op, const string& lhs, const string& rhs)
+// {
+//     stringstream ss;
+//     ss << lhs << " " << op << " " << rhs;
+//     return ss.str();
+// }
+
+// /**
+// */
+// bool get_value(const string& name, /*out*/ string& val)
+// {
+//     if(symbol_table.find(name) != symbol_table.end())
+//     {
+//         val = symbol_table[name];
+//         return true;
+//     }
+//     INFO("symbol, (" << name << "), not found!");
+//     return false;
+// }
+
+// /**
+// */
+// bool set_value(const string& name, const string& val)
+// {
+//     if(symbol_table.find(name) != symbol_table.end())
+//     {
+//         symbol_table[name] = val;
+//         INFO("symbol updated: " << name << " = " << val);
+//         return true;
+//     }
+//     INFO("symbol, (" << name << "), not found!");
+//     return false;
+// }
 
 /**
 */
