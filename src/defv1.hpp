@@ -357,7 +357,10 @@ constexpr unsigned long UL_PARSE_DOUBLE_QUOTE = 0x80;
 #define END_STATE() }
 inline state_t INITIAL = {};
 
+// inline map<unsigned long, token> state_token;
+// #define LEXER_STATE(name, token_name, id) state_t INITIAL = { { TEST_TOKEN, token { gt{TEST_TOKEN} }} }
 
+// LEXER_STATE(INITIAL, "INITIIAL", 42);
 
 //REGEX_DEF(INT, R"(\<int\>\s)");
 

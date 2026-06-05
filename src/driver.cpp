@@ -153,8 +153,6 @@ int parse_options(const int argc, char *argv[])
     	yyparser.parse();
 	}
 	SYST("finished.");
-    ERROR("testing");
-
 	return 0;
 }
 
