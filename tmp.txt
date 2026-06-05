@@ -1,0 +1,230 @@
+[3m[32mbuilding prequisite -> src/pparser.yy src/lexer.cpp ... 
+building -> build/pparser.tab.cpp ...[0m
+bison --debug ./src/pparser.yy --header=./build/pparser.tab.hpp -o ./build/pparser.tab.cpp
+./src/pparser.yy:608.8-13: warning: duplicated symbol name for 'params' ignored [-Wother]
+  608 | params[params]:
+      |        ^~~~~~
+./src/pparser.yy:608.8-13: warning: duplicated symbol name for 'params' ignored [-Wother]
+  608 | params[params]:
+      |        ^~~~~~
+./src/pparser.yy:172.21-27: warning: symbol 'operand' is used, but is not defined as a token and has no rules [-Wother]
+  172 | %type <std::string> operand
+      |                     ^~~~~~~
+./src/pparser.yy:175.18-21: warning: symbol 'test' is used, but is not defined as a token and has no rules [-Wother]
+  175 | %type < mytype > test;
+      |                  ^~~~
+./src/pparser.yy:176.21-25: warning: symbol 'param' is used, but is not defined as a token and has no rules [-Wother]
+  176 | %type <std::string> param
+      |                     ^~~~~
+./src/pparser.yy:178.18-21: warning: symbol 'args' is used, but is not defined as a token and has no rules; did you mean 'arg'? [-Wother]
+  178 | %type < args_t > args
+      |                  ^~~~
+      |                  arg
+./src/pparser.yy:179.17-19: warning: symbol 'arg' is used, but is not defined as a token and has no rules; did you mean 'args'? [-Wother]
+  179 | %type < arg_t > arg
+      |                 ^~~
+      |                 args
+./src/pparser.yy:181.38-42: warning: symbol 'files' is used, but is not defined as a token and has no rules [-Wother]
+  181 | %type < std::vector< std::string > > files
+      |                                      ^~~~~
+./src/pparser.yy:194.7-27: warning: symbol 'atomic_type_specifier' is used, but is not defined as a token and has no rules; did you mean 'function_specifier'? [-Wother]
+  194 | %type atomic_type_specifier type_qualifier function_specifier constan...
+      |       ^~~~~~~~~~~~~~~~~~~~~
+      |       function_specifier
+./src/pparser.yy:194.44-61: warning: symbol 'function_specifier' is used, but is not defined as a token and has no rules; did you mean 'struct_or_union_specifier'? [-Wother]
+  194 | %type atomic_type_specifier type_qualifier function_specifier constan...
+      |                                            ^~~~~~~~~~~~~~~~~~
+      |                                            struct_or_union_specifier
+./src/pparser.yy:199.21-32: warning: symbol 'numeric_type' is used, but is not defined as a token and has no rules [-Wother]
+  199 | %type <std::string> numeric_type
+      |                     ^~~~~~~~~~~~
+./src/pparser.yy:201.27-39: warning: symbol 'decel_numeric' is used, but is not defined as a token and has no rules; did you mean 'decel_void'? [-Wother]
+  201 | %type <std::string> decel decel_numeric func_param_decels param_decel...
+      |                           ^~~~~~~~~~~~~
+      |                           decel_void
+./src/pparser.yy:469.90-100: warning: misleading reference: '$expr.c_str' [-Wother]
+  469 | ...td::atoi($expr.c_str());
+      |             ^~~~~~~~~~~
+./src/pparser.yy:448.6-11: note: possibly meant: $result.c_str, hiding $expr.c_str at $$
+  448 | expr[result]:
+      |      ^~~~~~
+./src/pparser.yy:466.12-15: note: refers to: $expr at $2
+  466 |     | DASH expr %prec UMINUS                                    {
+      |            ^~~~
+./src/pparser.yy:273.18: warning: empty rule without %empty [-Wempty-rule]
+  273 | unary_expression:
+      |                  ^
+      |                  %empty
+./src/pparser.yy:685.5-10: warning: empty rule for typed nonterminal, and no action [-Wother]
+  685 |     %empty
+      |     ^~~~~~
+./src/pparser.yy:693.5-10: warning: type clash on default action: <std::string> != <> [-Wother]
+  693 |     SIGNED
+      |     ^~~~~~
+./src/pparser.yy:694.7-14: warning: type clash on default action: <std::string> != <> [-Wother]
+  694 |     | UNSIGNED
+      |       ^~~~~~~~
+./src/pparser.yy:712.21: warning: empty rule without %empty [-Wempty-rule]
+  712 | constant_expression:
+      |                     ^
+      |                     %empty
+./src/pparser.yy:717.5-11: warning: type clash on default action: <std::string> != <> [-Wother]
+  717 |     TYPEDEF	/* identifiers must be flagged as TYPEDEF_NAME */
+      |     ^~~~~~~
+./src/pparser.yy:718.11-16: warning: type clash on default action: <std::string> != <> [-Wother]
+  718 | 	| EXTERN
+      |           ^~~~~~
+./src/pparser.yy:719.11-16: warning: type clash on default action: <std::string> != <> [-Wother]
+  719 | 	| STATIC
+      |           ^~~~~~
+./src/pparser.yy:722.11-18: warning: type clash on default action: <std::string> != <> [-Wother]
+  722 | 	| REGISTER
+      |           ^~~~~~~~
+./src/pparser.yy:726.11-14: warning: type clash on default action: <std::string> != <> [-Wother]
+  726 | 	: VOID
+      |           ^~~~
+./src/pparser.yy:727.11-14: warning: type clash on default action: <std::string> != <> [-Wother]
+  727 | 	| CHAR
+      |           ^~~~
+./src/pparser.yy:728.11-15: warning: type clash on default action: <std::string> != <> [-Wother]
+  728 | 	| SHORT
+      |           ^~~~~
+./src/pparser.yy:729.11-13: warning: type clash on default action: <std::string> != <> [-Wother]
+  729 | 	| INT
+      |           ^~~
+./src/pparser.yy:730.11-14: warning: type clash on default action: <std::string> != <> [-Wother]
+  730 | 	| LONG
+      |           ^~~~
+./src/pparser.yy:731.11-15: warning: type clash on default action: <std::string> != <> [-Wother]
+  731 | 	| FLOAT
+      |           ^~~~~
+./src/pparser.yy:732.11-16: warning: type clash on default action: <std::string> != <> [-Wother]
+  732 | 	| DOUBLE
+      |           ^~~~~~
+./src/pparser.yy:733.11-16: warning: type clash on default action: <std::string> != <> [-Wother]
+  733 | 	| SIGNED
+      |           ^~~~~~
+./src/pparser.yy:734.11-18: warning: type clash on default action: <std::string> != <> [-Wother]
+  734 | 	| UNSIGNED
+      |           ^~~~~~~~
+./src/pparser.yy:804.12: warning: empty rule without %empty [-Wempty-rule]
+  804 | declarator:
+      |            ^
+      |            %empty
+./src/pparser.yy: warning: 30 nonterminals useless in grammar [-Wother]
+./src/pparser.yy: warning: 50 rules useless in grammar [-Wother]
+./src/pparser.yy:172.21-27: warning: nonterminal useless in grammar: operand [-Wother]
+  172 | %type <std::string> operand
+      |                     ^~~~~~~
+./src/pparser.yy:175.18-21: warning: nonterminal useless in grammar: test [-Wother]
+  175 | %type < mytype > test;
+      |                  ^~~~
+./src/pparser.yy:176.21-25: warning: nonterminal useless in grammar: param [-Wother]
+  176 | %type <std::string> param
+      |                     ^~~~~
+./src/pparser.yy:178.18-21: warning: nonterminal useless in grammar: args [-Wother]
+  178 | %type < args_t > args
+      |                  ^~~~
+./src/pparser.yy:179.17-19: warning: nonterminal useless in grammar: arg [-Wother]
+  179 | %type < arg_t > arg
+      |                 ^~~
+./src/pparser.yy:181.38-42: warning: nonterminal useless in grammar: files [-Wother]
+  181 | %type < std::vector< std::string > > files
+      |                                      ^~~~~
+./src/pparser.yy:194.7-27: warning: nonterminal useless in grammar: atomic_type_specifier [-Wother]
+  194 | %type atomic_type_specifier type_qualifier function_specifier constan...
+      |       ^~~~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:194.44-61: warning: nonterminal useless in grammar: function_specifier [-Wother]
+  194 | %type atomic_type_specifier type_qualifier function_specifier constan...
+      |                                            ^~~~~~~~~~~~~~~~~~
+./src/pparser.yy:199.21-32: warning: nonterminal useless in grammar: numeric_type [-Wother]
+  199 | %type <std::string> numeric_type
+      |                     ^~~~~~~~~~~~
+./src/pparser.yy:201.27-39: warning: nonterminal useless in grammar: decel_numeric [-Wother]
+  201 | %type <std::string> decel decel_numeric func_param_decels param_decel...
+      |                           ^~~~~~~~~~~~~
+./src/pparser.yy:269.1-20: warning: nonterminal useless in grammar: enumeration_constant [-Wother]
+  269 | enumeration_constant		/* before it has been defined as such...
+      | ^~~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:273.1-16: warning: nonterminal useless in grammar: unary_expression [-Wother]
+  273 | unary_expression:
+      | ^~~~~~~~~~~~~~~~
+./src/pparser.yy:283.1-14: warning: nonterminal useless in grammar: unary_operator [-Wother]
+  283 | unary_operator:
+      | ^~~~~~~~~~~~~~
+./src/pparser.yy:292.1-15: warning: nonterminal useless in grammar: cast_expression [-Wother]
+  292 | cast_expression:
+      | ^~~~~~~~~~~~~~~
+./src/pparser.yy:297.1-25: warning: nonterminal useless in grammar: multiplicative_expression [-Wother]
+  297 | multiplicative_expression:
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:304.1-19: warning: nonterminal useless in grammar: additive_expression [-Wother]
+  304 | additive_expression:
+      | ^~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:431.1-5: warning: nonterminal useless in grammar: cases [-Wother]
+  431 | cases:
+      | ^~~~~
+./src/pparser.yy:439.1-4: warning: nonterminal useless in grammar: case [-Wother]
+  439 | case:
+      | ^~~~
+./src/pparser.yy:646.1-10: warning: nonterminal useless in grammar: decel_void [-Wother]
+  646 | decel_void:
+      | ^~~~~~~~~~
+./src/pparser.yy:712.1-19: warning: nonterminal useless in grammar: constant_expression [-Wother]
+  712 | constant_expression:
+      | ^~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:744.1-25: warning: nonterminal useless in grammar: struct_or_union_specifier [-Wother]
+  744 | struct_or_union_specifier
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:750.1-15: warning: nonterminal useless in grammar: struct_or_union [-Wother]
+  750 | struct_or_union
+      | ^~~~~~~~~~~~~~~
+./src/pparser.yy:754.1-23: warning: nonterminal useless in grammar: struct_declaration_list [-Wother]
+  754 | struct_declaration_list
+      | ^~~~~~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:759.1-18: warning: nonterminal useless in grammar: struct_declaration [-Wother]
+  759 | struct_declaration
+      | ^~~~~~~~~~~~~~~~~~
+./src/pparser.yy:765.1-24: warning: nonterminal useless in grammar: specifier_qualifier_list [-Wother]
+  765 | specifier_qualifier_list
+      | ^~~~~~~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:772.1-22: warning: nonterminal useless in grammar: struct_declarator_list [-Wother]
+  772 | struct_declarator_list
+      | ^~~~~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:777.1-17: warning: nonterminal useless in grammar: struct_declarator [-Wother]
+  777 | struct_declarator
+      | ^~~~~~~~~~~~~~~~~
+./src/pparser.yy:783.1-25: warning: nonterminal useless in grammar: static_assert_declaration [-Wother]
+  783 | static_assert_declaration
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:792.1-14: warning: nonterminal useless in grammar: type_qualifier [-Wother]
+  792 | type_qualifier
+      | ^~~~~~~~~~~~~~
+./src/pparser.yy:804.1-10: warning: nonterminal useless in grammar: declarator [-Wother]
+  804 | declarator:
+      | ^~~~~~~~~~
+./src/pparser.yy: warning: 298 shift/reduce conflicts [-Wconflicts-sr]
+./src/pparser.yy: warning: 79 reduce/reduce conflicts [-Wconflicts-rr]
+./src/pparser.yy: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
+./src/pparser.yy: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+[3m[32mcopy src/bash_color.hpp -> build/bash_color.hpp ...[0m
+cp src/bash_color.hpp build/bash_color.hpp
+[3m[32mbuilding prequisite -> build/pparser.tab.cpp build/pparser.tab.hpp build/bash_color.hpp src/log.hpp ... 
+building -> build/pparser.tab.o ...[0m
+g++ -std=gnu++17 -fPIC -ggdb -DDEBUG -DWARNINGS -DTRACING -DYYDEBUG -DLEX_TEST -DTEST_ONLY -I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I././src -I././build -I././src/unit_test -DYYDEBUG -c build/pparser.tab.cpp -o build/pparser.tab.o
+[3m[32mbuilding src/lexer.cpp -> build/lexer.o ...[0m
+g++ -std=gnu++17 -fPIC -ggdb -DDEBUG -DWARNINGS -DTRACING -DYYDEBUG -DLEX_TEST -DTEST_ONLY -I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I././src -I././build -I././src/unit_test -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt -c src/lexer.cpp -o build/lexer.o
+src/lexer.cpp:8: warning: "_GNU_SOURCE" redefined
+    8 | #define _GNU_SOURCE
+      | 
+<command-line>: note: this is the location of the previous definition
+[3m[32mbuilding src/on_token.cpp -> build/on_token.o ...[0m
+g++ -std=gnu++17 -fPIC -ggdb -DDEBUG -DWARNINGS -DTRACING -DYYDEBUG -DLEX_TEST -DTEST_ONLY -I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I././src -I././build -I././src/unit_test -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt -c src/on_token.cpp -o build/on_token.o
+[3m[32mbuilding src/driver.cpp -> build/driver.o ...[0m
+g++ -std=gnu++17 -fPIC -ggdb -DDEBUG -DWARNINGS -DTRACING -DYYDEBUG -DLEX_TEST -DTEST_ONLY -I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I././src -I././build -I././src/unit_test -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt -c src/driver.cpp -o build/driver.o
+[3m[32mbuilding -> build/symtab.o ...[0m
+gcc -g -DLEX_TEST -c src/symtab.c -o build/symtab.o
+[3m[32m-building prequisite -> build/fileio.o build/auto_ptr.o build/utility.o build/pparser.tab.o build/lexer.o build/on_token.o build/driver.o build/symtab.o src/def.hpp ... 
+building -> build/bcc ...[0m
+g++ -std=gnu++17 -fPIC -ggdb -DDEBUG -DWARNINGS -DTRACING -DYYDEBUG -DLEX_TEST -DTEST_ONLY build/fileio.o build/auto_ptr.o build/utility.o build/pparser.tab.o build/lexer.o build/on_token.o build/driver.o build/symtab.o src/def.hpp -I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I././src -I././build -I././src/unit_test -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt -o build/bcc
+[3m[32mfinished building ...[0m

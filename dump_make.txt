@@ -1,0 +1,6 @@
+[3m[32mbuilding prequisite -> src/pparser.yy src/lexer.cpp ... 
+building -> build/pparser.tab.cpp ...[0m
+bison --debug ./src/pparser.yy --header=./build/pparser.tab.hpp -o ./build/pparser.tab.cpp
+[3m[32mbuilding prequisite -> src/pparser.yy src/lexer.cpp ... 
+building -> build/pparser.tab.cpp ...[0m
+bison --debug ./src/pparser.yy --header=./build/pparser.tab.hpp -o ./build/pparser.tab.cpp

@@ -1,7 +1,0 @@
-# @project:  abc
-# @file:    .gitignore
-# @date:    Wed May 27 01:43:33 PM CDT 2026
-# @version: 0.0.1
-# @brief:   git ignore file
-
-build/*

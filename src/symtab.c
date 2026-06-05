@@ -121,7 +121,7 @@ void dump_symbols(symbol_tab *stab)
     while (cur != 0)
     {
         symbol *next = cur->next;
-        printf("%s, %s, %s, %s", cur->id, cur->type_modifiers, cur->type, cur->pval);
+        printf("%s, %s, %s, %s", cur->id, cur->type_modifiers, cur->type, (char*)cur->pval);
         cur = next;
     }
 }

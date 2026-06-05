@@ -11,7 +11,6 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-
     #include <iostream>
     #include <string>
     #include <iomanip>
@@ -35,24 +34,19 @@
     using std::map;
 
 	#define PARSER_LOG TRUE
-
     #undef INFO_COLOR
     #define INFO_COLOR FMT_FG_BLUE
 
+    #define exp_info(op, lhs, rhs, result) lhs << " " << op << " " << rhs << " = " << result
+
     std::map<string, string> stab;
-
-
     struct mytype;
     struct symbol_t;
     struct modifier_t;
-
     typedef std::string arg_t;
     typedef std::vector<arg_t> args_t;
     typedef std::string param_t;
     typedef std::vector<param_t> params_t;
-
-
-
 }
 
 %code
@@ -109,9 +103,6 @@
 
 	static int m_file_count = 0;
     void print_symtab();
-
-
-
 }
 
 
@@ -156,6 +147,9 @@
 %token REF
 %token STRUCT
 %token TYPEDEF
+%token EXTERN
+%token UNION
+%token RESTRICT
 
 %token CONST VOLATILE STATIC
 %token UNSIGNED SIGNED LONG REGISTER SHORT
@@ -165,7 +159,7 @@
 
 %token BACKSLASH QUESTION_MARK COLON SEMI_COLON DOUBLE_QUOTE SINGLE_QUOTE
 %token COMMA LBRACKET RBRACKET LBRACE RBRACE DOT PTR ASTERICK
-
+%token	ALIGNAS ALIGNOF ATOMIC GENERIC NORETURN STATIC_ASSERT THREAD_LOCAL INC_OP DEC_OP SIZEOF
 %token <std::string> IDENTIFIER
 %token <std::string> STRING_LITERAL NUMERIC_LITERAL REAL_LITERAL CHAR_LITERAL HEXADECIMAL_LITERAL OCTAL_DECIMAL_LITERAL
 %nonassoc IFX
@@ -189,6 +183,7 @@
 %type < std::vector< std::string > > files
 %type <std::string> stmt
 %type < std::vector< std::string > > stmts
+
 /*
 %type <std::string> block
 %type < std::vector< std::string > > blocks
@@ -197,11 +192,16 @@
 %type < std::pair<std::string, std::string> >  assign_expr
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
-%type <std::string> access_modfier type_modifier modifiers
+%type compound_statement
+%type atomic_type_specifier type_qualifier function_specifier constant_expression enumeration_constant
+%type unary_expression unary_operator cast_expression multiplicative_expression additive_expression
+%type struct_or_union_specifier struct_or_union struct_declaration_list struct_declaration specifier_qualifier_list struct_declarator_list struct_declarator
+%type declarator
+%type <std::string> storage_class_specifier type_modifier modifiers 
 %type <std::string> numeric_type
-%type <std::string> lval rval value_type void_type decel_void
+%type <std::string> lval rval type_specifier decel_void
 %type <std::string> decel decel_numeric func_param_decels param_decels function_decel function_call
-/*%type <std::string> compiler*/
+%type <std::string> compiler
 %start compiler
 
 
@@ -210,13 +210,8 @@
  * @name complier
  */
 compiler:
-    TEST_TOKEN                                                 {
-                                                                            INFO("complier: | TEST_TOKEN=" << $1);
-                                                               }
-   | file  END_OF_FILE                                         {
-                                                                    print_symtab();
-																	INFO("compiler: files.size=" << $1.size() << " END_OF_FILES");
-
+        file  END_OF_FILE                                         {
+																	INFO("compiler: files.size=" << $1.size() << " END_OF_FILE");
 																	cout << "processed files ..." << endl;
 																	int len = $1.size();
 																	for(int i = 0; i < len; ++i)
@@ -224,7 +219,7 @@ compiler:
 																		cout << $1[i] << endl;
 																	}
 
-                                                                    cout << FMT_FG_DARK_GREY << "PARSER compiler: | file END_OF_FILE" << endl;
+                                                                    cout << FMT_FG_DARK_GREY << "compiler: file END_OF_FILE" << endl;
                                                                     cout << FMT_FG_DARK_GREY << "*********************** STOPPING **********************" << FMT_RESET << endl;
                                                                     cout << FMT_FG_DARK_GREY << "*                     Terminating.                    *" << FMT_RESET << endl;
                                                                     cout << FMT_FG_DARK_GREY << "************************* Done ************************" << FMT_RESET << endl;
@@ -232,28 +227,17 @@ compiler:
 																	//std::exit(0);
                                                                 }
                                                                 ;
-
-test:
-    TEST_TOKEN                                                  { INFO("test: TEST_TOKEN"); mytype t = { 42 }; $$=t; };
-
 /**
  * @name file
  * @brief input file
  * @type std::string : "file path"
  */
 file:
-	stmts
+	stmts                                                       {
+                                                                    INFO("file: stmts");
+                                                                }
 	| file stmts												{
-                                                                    INFO("file: blocks.size=" << $1.size() << " END_OF_FILE");
-
-																	// string name;
-																	// lexer::instance().get_current_infile(name);
-                                                                    // lexer::instance().set_state(&PARSER);
-
-
-                                                                    cout << FMT_FG_DARK_GREY << "*******************************************************" << FMT_RESET << endl;
-                                                                    cout << FMT_FG_DARK_GREY << "*                      End Of File                    *" << FMT_RESET << endl;
-                                                                    cout << FMT_FG_DARK_GREY << "*******************************************************" << FMT_RESET << endl;
+                                                                    INFO("file: file stmts");
                                                                 }
                                                                 ;
 /*
@@ -269,53 +253,98 @@ block:
 stmts[result]:
     //%empty
     stmt[lhs]                                                   {
-                                                                    INFO("stmts: | stmt");
+                                                                    INFO("stmts: stmt");
                                                                     $result.push_back($lhs);
                                                                 }
     | stmts[lhs] stmt[rhs]			                            {
-																	INFO("stmts: | stmts stmt");
+																	INFO("stmts: stmts stmt");
 																	$lhs.push_back($rhs);
 																	$result = $lhs;
 																}
                                                                 ;
+compound_statement:
+            LBRACE stmts RBRACE                                 {
+
+                                                                }
+                                                                ;
+                                                                
+enumeration_constant		/* before it has been defined as such */
+	: IDENTIFIER
+	;
+
+unary_expression:
+	//: postfix_expression
+	| INC_OP unary_expression
+	| DEC_OP unary_expression
+	| unary_operator cast_expression
+	| SIZEOF unary_expression
+	//| SIZEOF '(' type_name ')'
+	//| ALIGNOF '(' type_name ')'
+	;
+
+unary_operator:
+ '&'
+	| '*'
+	| '+'
+	| '-'
+	| '~'
+	| '!'
+	;
+
+cast_expression:
+    unary_expression
+	//| '(' type_name ')' cast_expression
+	;
+
+multiplicative_expression:
+	cast_expression
+	| multiplicative_expression '*' cast_expression
+	| multiplicative_expression '/' cast_expression
+	| multiplicative_expression '%' cast_expression
+	;
+
+additive_expression:
+	multiplicative_expression
+	| additive_expression '+' multiplicative_expression
+	| additive_expression '-' multiplicative_expression
+	;
+
+
 /**
  * @name stmt
  * @brief statement
  */
 stmt:
     expr  SEMI_COLON                                            {
-                                                                    INFO("stmt: | expr=" << $expr << " SEMI_COLON");
+                                                                    INFO("stmt: expr SEMI_COLON");
+                                                                    INFO("stmt: expr=" << $expr << " SEMI_COLON");
                                                                     WARN("expr: not an l-side");
                                                                 }
-    | function_call SEMI_COLON                                 {
-                                                                    INFO("stmt: | function_call SEMI_COLON");
+    | function_call SEMI_COLON                                  {
+                                                                    INFO("stmt: function_call SEMI_COLON");
                                                                 }
     | decel SEMI_COLON                                          {
-                                                                    INFO("stmt: | decel SEMI_COLON");
+                                                                    INFO("stmt: decel SEMI_COLON");
                                                                     stringstream ss;
                                                                     ss << "// " << $decel  << ";";
-                                                                    //lexer::instance().write_ostream(ss.str());
                                                                     INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON   {
 
-                                                                    INFO("stmt: | IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON");
+                                                                    INFO("stmt: IDENTIFIER LBRACKET NUMERIC_LITERAL RBRACKET ASSIGN expr SEMI_COLON");
                                                                 }
     | function_decel SEMI_COLON                                 {
-                                                                    INFO("stmt: | function_decel SEMI_COLON");
+                                                                    INFO("stmt: function_decel SEMI_COLON");
                                                                 }
     | decel ASSIGN expr SEMI_COLON                               {
-                                                                    INFO("stmt: | decel ASSIGN expr SEMI_COLON");
-                                                                    // _symtab[$decel].val = new int(std::atoi($expr.c_str()));
-                                                                    // stringstream ss;
-                                                                    // ss << "// " << $decel << " = " << $expr << ";";
-                                                                    // lexer::instance().write_ostream(ss.str());
-                                                                    // INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
-                                                                    // // testing lexer stream operator overload !
-                                                                    // cout << lexer::instance();
+                                                                    INFO("stmt: decel ASSIGN expr SEMI_COLON");
+                                                                    _symtab[$decel].val = new int(std::atoi($expr.c_str()));
+                                                                    stringstream ss;
+                                                                    ss << "// " << $decel << " = " << $expr << ";";
+                                                                    INFO("strm << " << FMT_FG_YELLOW << ss.str() << FMT_RESET);
                                                                 }
     | decel ASSIGN params_list SEMI_COLON                       {
-                                                                    INFO("stmt: | decel ASSIGN params_list SEMI_COLON");
+                                                                    INFO("stmt: decel ASSIGN params_list SEMI_COLON");
                                                                 }
 
     | assign_expr SEMI_COLON                                    {
@@ -341,75 +370,76 @@ stmt:
                                                                     }
                                                                 }
     | WHILE LPAREN expr RPAREN stmt                             {
-                                                                    INFO("expr: | WHILE LPAREN expr RPAREN stmt");
+                                                                    INFO("expr: WHILE LPAREN expr RPAREN stmt");
 
+                                                                }
+    | if_expr                                                   {
+                                                                    INFO("stmt: if_expr");
                                                                 }
     | if_expr  else_if_expr                                     {
-                                                                    INFO("expr: | if_expr  else_if_expr ");
-                                                                  }
+                                                                    INFO("stmt: if_expr  else_if_expr ");
+                                                                }
     | expr QUESTION_MARK expr COLON expr                        {
-                                                                    INFO("expr: | expr QUESTION_MARK expr COLON expr");
+                                                                    INFO("expr: expr QUESTION_MARK expr COLON expr");
                                                                 }
     | FOR LPAREN stmt stmt stmt RPAREN stmt                     {
-                                                                    INFO("stmt: | FOR LPAREN stmt stmt stmt RPAREN stmt");
+                                                                    INFO("stmt: FOR LPAREN stmt stmt stmt RPAREN stmt");
 
                                                                 }
-    | FOR LPAREN stmt stmt stmt RPAREN LBRACKET stmts RBRACKET  {
-                                                                   INFO("stmt: | FOR LPAREN stmt stmt stmt RPAREN LBRACKET stmts RBRACKET");
+    | FOR LPAREN stmt stmt stmt RPAREN compound_statement       {
+                                                                   INFO("stmt: FOR LPAREN stmt stmt stmt RPAREN compound_statement");
                                                                 }
     | BREAK                                                     {
-                                                                    INFO("stmt: | BREAK");
+                                                                    INFO("stmt: BREAK");
                                                                 }
     | CONTINUE                                                  {
-                                                                    INFO("stmt: | CONTINUE");
+                                                                    INFO("stmt: CONTINUE");
                                                                 }
     | GOTO LABEL                                                {
                                                                     INFO("stmts | GOTO LABEL");
                                                                 }
-    | SWITCH LPAREN expr RPAREN RBRACE stmts LBRACE             {
-
+    | SWITCH LPAREN expr RPAREN compound_statement              {
+                                                                    INFO("stmts | SWITCH LPAREN expr RPAREN compound_statement");
                                                                 }
 
                                                                 ;
 
 if_expr:
     IF LPAREN expr RPAREN stmt %prec IFX                       {
-                                                                    INFO("if_stmt: | IF LPAREN expr RPAREN stmt %prec IFX");
+                                                                    INFO("if_stmt: IF LPAREN expr RPAREN stmt %prec IFX");
                                                                }
-    | IF LPAREN expr RPAREN LBRACE stmts RBRACE                {
-                                                                    INFO("if_stmt: | IF LPAREN expr RPAREN stmt else_expr");
+    | IF LPAREN expr RPAREN compound_statement                 {
+                                                                    INFO("if_stmt: IF LPAREN expr RPAREN compound_statement");
                                                                }
                                                                ;
  else_if_expr:
-    ELSEIF LPAREN expr RPAREN stmt {
-                                                                    INFO("else_if_stmt: | ELSEIF LPAREN expr RPAREN stmt");
+    ELSEIF LPAREN expr RPAREN stmt                              {
+                                                                    INFO("else_if_stmt: ELSEIF LPAREN expr RPAREN stmt");
                                                                 }
-    | ELSEIF LPAREN expr RPAREN LBRACE stmts RBRACE             {
-                                                                    INFO("else_if_stmt: | ELSEIF LPAREN expr RPAREN LBRACE stmts RBRACE");
+    | ELSEIF LPAREN expr RPAREN compound_statement              {
+                                                                    INFO("else_if_stmt: ELSEIF LPAREN expr RPAREN compound_statement");
                                                                 }
-    | else_if_expr else_if_expr                                    {
-                                                                    INFO("else_if_stmt: | else_if_expr else_if_expr");
+    | else_if_expr else_if_expr                                 {
+                                                                    INFO("else_if_stmt: else_if_expr else_if_expr");
                                                                 }
-   | else_if_expr else_expr                                    {
-                                                                    INFO("else_if_stmt: | else_if_expr else_expr");
+   | else_if_expr else_expr                                     {
+                                                                    INFO("else_if_stmt: else_if_expr else_expr");
                                                                 }
                                                                 ;
  else_expr:
     ELSE stmt                                                   {
-                                                                    INFO("else_stmt: | ELSE stmt");
+                                                                    INFO("else_stmt: ELSE stmt");
                                                                 }
-    | ELSE LBRACE stmts RBRACE                                  {
-                                                                    INFO("else_stmt: | ELSE LBRACE stmts RBRACE");
+    | ELSE compound_statement                                   {
+                                                                    INFO("else_stmt: ELSE compound_statement");
                                                                 }
                                                                 ;
-
-
 cases:
     case                                                        {
-                                                                    INFO("cases: | case")
+                                                                    INFO("cases: case")
                                                                 }
     | cases case                                                {
-                                                                    INFO("cases: | cases case");
+                                                                    INFO("cases: cases case");
                                                                 }
                                                                 ;
 case:
@@ -417,7 +447,6 @@ case:
                                                                     INFO("case: CASE NUMERIC_LITERAL");
                                                                 }
                                                                 ;
-
 /**
  * @name expr
  * @brief Numerical / logical exprssions
@@ -425,127 +454,131 @@ case:
 expr[result]:
 	rval
 	                                                 			{
-																	INFO("expr: | rval");
+																	INFO("expr: rval" << FMT_FG_WHITE << "(" << $1 << ")" << FMT_RESET);
                                                                     //$result = $operand;
 																}
 
-   | NUMERIC_LITERAL                                              {
-                                                                    INFO("expr: | NUMERIC_LITERAL");
+   | NUMERIC_LITERAL                                            {
+                                                                    INFO("expr: NUMERIC_LITERAL" << FMT_FG_WHITE << "(" << $1 << ")" << FMT_RESET);
                                                                     //$result = $operand;
                                                                 }
-   | expr[lhs] INC[op]                                              {
-                                                                    INFO("expr: | expr INC");
+   | expr[lhs] INC[op]                                          {
+                                                                    INFO("expr: expr INC");
                                                                     stringstream result;
                                                                     result << (std::atoi($lhs.c_str()) + 1);
                                                                     $result = result.str();
                                                                     INFO("$result=" << $result);
                                                                 }
-    | DASH expr %prec UMINUS                                     {
-                                                                    INFO("expr: | DASH expr %prec UMINUS");
+    | DASH expr %prec UMINUS                                    {
+                                                                    INFO("expr: DASH expr %prec UMINUS");
                                                                     stringstream result;
                                                                     result << -std::atoi($expr.c_str());
                                                                     $result = result.str();
                                                                     INFO("$result=" << $result);
-                                                                 }
+                                                                }
     | expr[lhs] ADD[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr ADD expr");
+																	INFO("expr: expr ADD expr");
 																	stringstream result;
                                                                     result << (std::atoi($lhs.c_str()) + std::atoi($rhs.c_str()));
                                                                     $result = result.str();
-                                                                   }
-    | expr[lhs] DASH[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr DASH expr");
+                                                                }
+    | expr[lhs] DASH[op] expr[rhs]                              {
+																	INFO("expr: expr DASH expr");
 																	stringstream result;
                                                                     result << (std::atoi($lhs.c_str()) + -std::atoi($rhs.c_str()));
                                                                     $result = result.str();
                                                             	}
     | expr[lhs] MUL[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr MUL expr");
+																	INFO("expr: expr MUL expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) * std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
-                                                                    INFO("$result=" << $result);
+                                                                    INFO(exp_info("*", $1, $3, $$));
 																}
     | expr[lhs] DIV[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr DIV expr");
+																	INFO("expr: expr DIV expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) / std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
-                                                                    INFO("$result=" << $result);
+                                                                    INFO(exp_info("/", $1, $3, $$));
 																}
     | expr[lhs] MOD[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr MOD expr");
+																	INFO("expr: expr MOD expr");
 																	stringstream ss;
                                                                     ss << (std::atoi($lhs.c_str()) % std::atoi($rhs.c_str()));
                                                                     $result = ss.str();
-                                                                    INFO("$result=" << $result);
+                                                                    INFO(exp_info("%", $1, $3, $$));
 																}
     | expr[lhs] EQ[op] expr[rhs]                                {
-																	INFO("PARSER expr: | expr EQ expr");
+																	INFO(" expr: expr EQ expr");
 																	$result = (std::atoi($lhs.c_str()) == std::atoi($rhs.c_str()));
-                                                                    INFO("$result=" << $result);
+                                                                    // string r = $lhs + " " $op + " " + $rhs + " = ";
+                                                                    // INFO(r << $result);
+                                                                    INFO(exp_info("==", $1, $3, $$));
 																}
     | expr[lhs] NEQ[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr NEQ expr");
+																	INFO("expr: expr NEQ expr");
 																	$result = (std::atoi($lhs.c_str()) != std::atoi($rhs.c_str()));
-                                                                    INFO("$result=" << $result);
+                                                                    INFO($lhs << "-" << $rhs << "=" << $result);
+                                                                    INFO(exp_info("!=", $1, $3, $$));
 																}
     | expr[lhs] LT[op] expr[rhs]                                {
-																	INFO("PARSER expr: | expr LT expr");
+																	INFO("expr expr LT expr");
 																	$result = (std::atoi($lhs.c_str()) < std::atoi($rhs.c_str()));
                                                                     INFO("$result=" << $result);
+                                                                    INFO(exp_info("<", $1, $3, $$));
 																}
     | expr[lhs] GT[op] expr[rhs]                                {
-																	INFO("PARSER expr: | expr GT expr");
+																	INFO("expr: expr GT expr");
 																	$result = (std::atoi($lhs.c_str()) > std::atoi($rhs.c_str()));
                                                                     INFO("$result=" << $result);
 																}
     | expr[lhs] GEQ[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr GEQ expr ");
+																	INFO("expr: expr GEQ expr ");
 																	$result = (std::atoi($lhs.c_str()) >= std::atoi($rhs.c_str()));
 																}
     | expr[lhs] LEQ[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr LEQ expr");
+																	INFO("expr: expr LEQ expr");
 																	$result = (std::atoi($lhs.c_str()) <= std::atoi($rhs.c_str()));
 																}
     | expr[lhs] AND[op] expr[rhs]                               {
-																	INFO("PARSER expr: | expr AND expr");
+																	INFO("expr: expr AND expr");
 																	$result = (std::atoi($lhs.c_str()) && std::atoi($rhs.c_str()));
 																}
     | expr[lhs] OR[op] expr[rhs]                                {
-																	INFO("PARSER expr: | expr OR expr");
+																	INFO("expr: expr OR expr");
 																	$result = (std::atoi($lhs.c_str()) || std::atoi($rhs.c_str()));
 																}
     | NOT expr[lhs]                                             {
-																	INFO("PARSER expr: | NOT expr");
+																	INFO("expr: NOT expr");
 																	$result = !(std::atoi($lhs.c_str()));
 																}
     | expr[lhs] RSHIFT[op] expr[rhs]                            {
-																	INFO("PARSER expr: | expr RSHIFT expr");
+																	INFO("expr: expr RSHIFT expr");
 																	$result = (std::atoi($lhs.c_str()) >> std::atoi($rhs.c_str()));
 																}
     | expr[lhs] LSHIFT[op] expr[rhs]                            {
-																	INFO("PARSER expr: | expr LSHIFT expr");
+																	INFO("expr: expr LSHIFT expr");
 																	$result = (std::atoi($lhs.c_str()) << std::atoi($rhs.c_str()));
 																}
     | expr[lhs] BIT_AND[op] expr[rhs]                           {
-																	INFO("PARSER expr: | expr BIT_AND expr");
+																	INFO("expr: expr BIT_AND expr");
 																	$result = (std::atoi($lhs.c_str()) & std::atoi($rhs.c_str()));
                                                                 }
     | expr[lhs] BIT_OR[op] expr[rhs]                            {
-																	INFO("PARSER expr: | expr BIT_OR expr");
+																	INFO("expr: expr BIT_OR expr");
 																	$result = (std::atoi($lhs.c_str()) | std::atoi($rhs.c_str()));
                                                                 }
      | expr[lhs] BIT_XOR[op] expr[rhs]                          {
-																	INFO("PARSER expr: | expr BIT_XOR expr");
+																	INFO("expr: expr BIT_XOR expr");
 																	$result = (std::atoi($lhs.c_str()) ^ std::atoi($rhs.c_str()));
                                                                 }
     | BIT_NOT expr[lhs]                                         {
-																	INFO("PARSER expr: | BIT_NOT expr");
+																	INFO("expr: BIT_NOT expr");
 																	$result = ~(std::atoi($lhs.c_str()));
                                                                 }
     | LPAREN expr[exp] RPAREN                                   {
-																	INFO("PARSER expr: | LPAREN expr RPAREN");
+																	INFO("expr: LPAREN expr RPAREN");
                                                                     $result = $exp;
 																}
                                                                 ;
@@ -553,9 +586,9 @@ expr[result]:
  * @name function_call
  */
 function_call:
-     lval LPAREN RPAREN                                  {
+     lval LPAREN RPAREN                                         {
                                                                     INFO("function_call: IDENTIFIER LPAREN RPAREN");
-                                                        }
+                                                                }
    | lval[lhs] LPAREN params RPAREN                       		{
                                                                     INFO("function_call: IDENTIFIER[lhs] LPAREN params RPAREN");
                                                                 }
@@ -565,7 +598,7 @@ function_call:
  */
 function_decel:
     decel LPAREN RPAREN                                         {
-                                                                    INFO("function_decel: | decl LPAREN_FUNC RPAREN");
+                                                                    INFO("function_decel: decl LPAREN_FUNC RPAREN");
                                                                 }
     | decel func_param_decels                                   {
                                                                     INFO("function_decel: intregal_type[type] IDENTIFIER[lhs] params_decel_list");
@@ -613,7 +646,7 @@ param_decels:
  * @name assign_expr
 */
 assign_expr:
-    lval ASSIGN expr                                           {
+    lval ASSIGN expr                                            {
                                                                     INFO("assign_expr: IDENTIFIER ASSIGN expr");
                                                                     std::pair<std::string, std::string> p = { $1, $3 };
                                                                     $$ = p;
@@ -621,8 +654,8 @@ assign_expr:
                                                                 ;
 
 decel_void:
-modifiers void_type lval                                       {
-																	INFO("decel_numeric: | modifiers numeric_type IDENTIFIER");
+    modifiers type_specifier lval                               {
+																	INFO("decel_numeric: modifiers numeric_type IDENTIFIER");
 																	_symbol_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
                                                                    	_symtab[$3] = sym;                      // add to symbol table, unassigned!
 																	 stringstream ss;
@@ -639,20 +672,20 @@ modifiers void_type lval                                       {
  * @brief decelration
  */
 decel:
-    modifiers value_type lval                           		{
-																	INFO("decel: | modifiers intregal_type IDENTIFIER");
-																		_symbol_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
-																		_symtab[$3] = sym;                      // add to symbol table, unassigned!
+    modifiers type_specifier lval                           	{
+																	INFO("decel: modifiers intregal_type IDENTIFIER");
+																	_symbol_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
+																	_symtab[$3] = sym;                      // add to symbol table, unassigned!
 
-																		stringstream ss;
-																		ss << "type<" << "INT" << "> " << "id<" << $3 << ">";
+																	stringstream ss;
+																	ss << "type<" << "INT" << "> " << "id<" << $3 << ">";
 																	$decel = ss.str();
 
 																	stringstream ostrm;
 																	ostrm << "INT" << " " << $3 << ";\n";
 																}
     | decel LBRACKET rval RBRACKET                    			{
-																	INFO("decel: | decel LBRACKET NUMERIC_LITERAL RBRACKET");
+																	INFO("decel: decel LBRACKET NUMERIC_LITERAL RBRACKET");
 																}
 																;
 /**
@@ -661,7 +694,7 @@ decel:
 modifiers:
     %empty
     | modifiers type_modifier
-    | modifiers access_modfier
+    | modifiers storage_class_specifier
     ;
 /**
  * @name type_modfier
@@ -670,16 +703,7 @@ type_modifier:
     SIGNED
     | UNSIGNED
     ;
-/**
- * @name access_modifier
- * @brief access_modifier
- */
-access_modfier:
-    CONST
-    | VOLATILE
-    | STATIC
-    | REGISTER
-    ;
+
 /**
 * @name lval
 */
@@ -693,26 +717,104 @@ rval:
 	IDENTIFIER
 	| NUMERIC_LITERAL
 	;
-/**
-* @name value_type
-*/
-value_type:
-	CHAR
+
+    
+constant_expression:
+	//: conditional_expression	/* with constraints */
+	;
+
+storage_class_specifier:
+    TYPEDEF	/* identifiers must be flagged as TYPEDEF_NAME */
+	| EXTERN
+	| STATIC
+	// | THREAD_LOCAL
+	// | AUTO
+	| REGISTER
+	;
+
+type_specifier
+	: VOID
+	| CHAR
 	| SHORT
 	| INT
 	| LONG
+	| FLOAT
+	| DOUBLE
+	| SIGNED
+	| UNSIGNED
+	// | BOOL
+	// | COMPLEX
+	// | IMAGINARY	  	/* non-mandated extension */
+	// | atomic_type_specifier
+	// | struct_or_union_specifier
+	// | enum_specifier
+	// | TYPEDEF_NAME		/* after it has been defined as such */
 	;
-/**
- * @name void_type
- */
-void_type:
-    FLOAT                                                       { INFO("intergal_type: | FLOAT"); $$="FLOAT"; }
-    | CHAR                                                      { INFO("intergal_type: | CHAR");  $$="CHAR"; }
-    | STRING                                                    { INFO("intergal_type: | STRING"); /*$$=STRING;*/ }
-    | VOID                                                      { INFO("intergal_type: | VOID"); /*$$=VOID;*/ }
-    | SINGLE                                                    { INFO("intergal_type: | SINGLE"); /*$$=SINGLE;*/ }
-    | DOUBLE                                                    { INFO("intergal_type: | DOUBLE"); $$="DOUBLE"; }
-                                                                ;
+
+struct_or_union_specifier
+	: struct_or_union '{' struct_declaration_list '}'
+	| struct_or_union IDENTIFIER '{' struct_declaration_list '}'
+	| struct_or_union IDENTIFIER
+	;
+
+struct_or_union
+	: STRUCT
+	| UNION
+	;
+struct_declaration_list
+	: struct_declaration
+	| struct_declaration_list struct_declaration
+	;
+
+struct_declaration
+	: specifier_qualifier_list ';'	/* for anonymous struct/union */
+	| specifier_qualifier_list struct_declarator_list ';'
+	| static_assert_declaration
+	;
+
+specifier_qualifier_list
+	: type_specifier specifier_qualifier_list
+	| type_specifier
+	| type_qualifier specifier_qualifier_list
+	| type_qualifier
+	;
+
+struct_declarator_list
+	: struct_declarator
+	| struct_declarator_list ',' struct_declarator
+	;
+
+struct_declarator
+	: ':' constant_expression
+	| declarator ':' constant_expression
+	| declarator
+	;
+
+static_assert_declaration
+	: STATIC_ASSERT '(' constant_expression ',' STRING_LITERAL ')' ';'
+	;
+
+
+// atomic_type_specifier
+// 	: ATOMIC '(' type_name ')'
+// 	;
+
+type_qualifier
+	: CONST
+	| RESTRICT
+	| VOLATILE
+	| ATOMIC
+	;
+
+// function_specifier
+// 	: INLINE
+// 	| NORETURN
+// 	;
+
+declarator:
+	//: pointer direct_declarator
+	//| direct_declarator
+	;
 %%
 
 #include "table.hpp"
@@ -744,32 +846,41 @@ typedef struct mytype
 } mytype;
 
 
-/**
-*/
-bool get_value(const string& name, /*out*/ string& val)
-{
-    if(symbol_table.find(name) != symbol_table.end())
-    {
-        val = symbol_table[name];
-        return true;
-    }
-    INFO("symbol, (" << name << "), not found!");
-    return false;
-}
 
-/**
-*/
-bool set_value(const string& name, const string& val)
-{
-    if(symbol_table.find(name) != symbol_table.end())
-    {
-        symbol_table[name] = val;
-        INFO("symbol updated: " << name << " = " << val);
-        return true;
-    }
-    INFO("symbol, (" << name << "), not found!");
-    return false;
-}
+
+// string& get_expr_info(const string& op, const string& lhs, const string& rhs)
+// {
+//     stringstream ss;
+//     ss << lhs << " " << op << " " << rhs;
+//     return ss.str();
+// }
+
+// /**
+// */
+// bool get_value(const string& name, /*out*/ string& val)
+// {
+//     if(symbol_table.find(name) != symbol_table.end())
+//     {
+//         val = symbol_table[name];
+//         return true;
+//     }
+//     INFO("symbol, (" << name << "), not found!");
+//     return false;
+// }
+
+// /**
+// */
+// bool set_value(const string& name, const string& val)
+// {
+//     if(symbol_table.find(name) != symbol_table.end())
+//     {
+//         symbol_table[name] = val;
+//         INFO("symbol updated: " << name << " = " << val);
+//         return true;
+//     }
+//     INFO("symbol, (" << name << "), not found!");
+//     return false;
+// }
 
 /**
 */

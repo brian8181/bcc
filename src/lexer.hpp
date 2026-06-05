@@ -33,8 +33,16 @@
 #include <iomanip>
 #include <boost/regex.hpp>
 #include "fileio.hpp"
-#include "def.hpp"
+
+
+#ifdef VER2
+#include "parser.tab.hpp"
+#include "v2/def.hpp"
+#else
 #include "pparser.tab.hpp"
+#include "defv1.hpp"
+#endif
+
 //#include "cpp.tab.hpp"
 
 
@@ -142,12 +150,10 @@ public:
 	/**
 	 * @name build_search_expression
 	 * @brief contruct a search string from tokens, denoted by id's / table
-	 * @param const vector<unsigned long>& tokens
-	 * @param const map<unsigned long, token>& table
 	 * @param string& s
 	 * @return string&, contructed search string
 	 */
-	string& build_search_expression(const vector<unsigned long>& tokens, map<unsigned long, token>& table, /*out*/ string& s);
+	string& build_search_expression(/*out*/ string& s);
 
 	/**
 	 * @name get_current_infile
@@ -170,12 +176,6 @@ public:
 	{
 		name = m_ofile;
 	}
-
-	/**
-	 * @name  push_include
-	 * @brief prepends current buffer with include contents
-	 */
-	void push_include(const string& file);
 
 	/**
 	 * @name   get_token
@@ -217,10 +217,17 @@ public:
 	void print_smatch(const token_t& t, boost::smatch m);
 
 	/**
-	* @brief print_token
+	 * @brief print_token
+	 * 
+	 */
+	void print_token(const token* ptoken);
+
+	/**
+	* @brief print_tokens
 	*
 	*/
-	void print_token();
+	void print_tokens();
+
 
 	/**
 	 * @name  on_token
@@ -266,7 +273,7 @@ private:
 	//fstream ostrm;
 	int m_line = 0;
 //	int m_current_file_idx = 0;
-	state_t* p_state = &INITIAL;
+	state_t* m_pstate = &INITIAL;
 	stringstream g_stringstream{};
 };
 

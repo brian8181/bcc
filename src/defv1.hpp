@@ -31,7 +31,13 @@
 #include <vector>
 #include <iomanip>
 #include <boost/regex.hpp>
+
+#ifdef VER2
+#include "parser.tab.hpp"
+#else
 #include "pparser.tab.hpp"
+#endif
+
 
 using std::list;
 using std::map;
@@ -207,9 +213,9 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define ESC_DOUBLE_QUOTE 		 172
 #define ESC_SINGLE_QUOTE 		 173
 #define ESC_TAB 				 174
-#define VALID_CHARS				 175
+#define VALID_CHARS				 1751
 
-#define END_OF_FILE   		     175
+#define END_OF_FILE   		     1175
 #define END_OF_FILES   		     176
 #define WHITESPACE 			     177
 #define NEWLINE 				 178
@@ -351,7 +357,10 @@ constexpr unsigned long UL_PARSE_DOUBLE_QUOTE = 0x80;
 #define END_STATE() }
 inline state_t INITIAL = {};
 
+// inline map<unsigned long, token> state_token;
+// #define LEXER_STATE(name, token_name, id) state_t INITIAL = { { TEST_TOKEN, token { gt{TEST_TOKEN} }} }
 
+// LEXER_STATE(INITIAL, "INITIIAL", 42);
 
 //REGEX_DEF(INT, R"(\<int\>\s)");
 

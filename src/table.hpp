@@ -2,7 +2,15 @@
 #define __THE_TABLE_
 #include <set>
 #include <map>
-#include "def.hpp"
+
+#ifdef VER2
+#include "parser.tab.hpp"
+#include "v2/def.hpp"
+#else
+#include "pparser.tab.hpp"
+#include "defv1.hpp"
+#endif
+
 
 using std::set;
 using std::map;
@@ -61,12 +69,31 @@ typedef struct _symbol_t
 
 map<string, _symbol_t> _symtab = {{"x", {"x","int", eINT, 0}}, {"y", {"y", "int", eINT, 0}}, {"z", {"z", "int", eINT, 0}}};
 
-typedef map<string, string> symbol_table_t;
+//typedef map<string, string> _symbol_table_t;
 
 // test
-symbol_table_t symbol_table { {"global", "empty"} };
+//_symbol_table_t _symbol_table { {"global", "empty"} };
 
 // typedef set<unsigned long> squence_t;
 // sequence_t assign_numric_literal = {OPEN_BRACE, EQUALS, NUMERIC_LITERAL, CLOSE_BRACE};
+
+typedef map<string, _symbol_t> symbol_table_t;
+
+class scope 
+{
+	scope();
+	scope(scope* parent);
+	scope(const scope& s);
+	~scope();
+
+	symbol_table_t symtab;
+
+	scope& operator=(const scope&);
+	_symbol_t operator[](const string& item);
+	_symbol_t operator[](int idx);
+
+	scope* parent;
+	vector<scope*> scopes;
+};
 
 #endif
