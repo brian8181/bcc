@@ -3,8 +3,8 @@
 #include <boost/regex.hpp>
 #include "lexer.hpp"
 #include "log.hpp"
-#include "def.hpp"
-#include "on_token.hpp"
+#include "defv1.hpp"
+#include "on_tokenv1.hpp"
 
 using std::cout;
 using std::endl;

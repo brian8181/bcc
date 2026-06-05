@@ -11,6 +11,7 @@
 /**
   * @brief class terminial_expr
   */
+ template< class T >
 class terminial_expr : public abstract_expr
 {
 public:
@@ -35,6 +36,9 @@ public:
 	*/
 
 private:
+	T val;
+	variant vval;
+
 };
 
 #endif

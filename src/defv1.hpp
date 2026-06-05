@@ -213,9 +213,9 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define ESC_DOUBLE_QUOTE 		 172
 #define ESC_SINGLE_QUOTE 		 173
 #define ESC_TAB 				 174
-#define VALID_CHARS				 175
+#define VALID_CHARS				 1751
 
-#define END_OF_FILE   		     175
+#define END_OF_FILE   		     1175
 #define END_OF_FILES   		     176
 #define WHITESPACE 			     177
 #define NEWLINE 				 178

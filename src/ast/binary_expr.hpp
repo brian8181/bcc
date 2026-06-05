@@ -7,6 +7,7 @@
 #define _binary_expr_HPP_
 #include <iostream>
 #include "nonterminial_expr.hpp"
+#include "variant.hpp"
 
 /**
   * @brief class binary_expr
@@ -34,7 +35,12 @@ public:
 	  *
 	*/
 
+	// variant lhs;
+	// variant rhs;
+
 private:
+	variant lhs;
+	abstract_expr rhs;
 };
 
 #endif

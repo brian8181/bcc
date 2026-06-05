@@ -28,8 +28,18 @@
 #include "utility.hpp"
 #include "bash_color.hpp"
 #include "log.hpp"
-#include "on_token.hpp"
 namespace fs = std::filesystem;
+
+#ifdef VER2
+#include "parser.tab.hpp"
+#include "v2/def.hpp"
+#include "v2/on_token.hpp"
+#else
+#include "pparser.tab.hpp"
+#include "defv1.hpp"
+#include "on_tokenv1.hpp"
+#endif
+
 
 using std::cerr;
 using std::cout;
@@ -234,9 +244,9 @@ void lexer::print_smatch(const token_t& t, boost::smatch m)
 	string match = 	esc_nl( m.str() ).get_val();
 	string suffix = esc_nl( m.suffix() ).get_val();
 
-	prefix = prefix.size() != 0 ? ("\"" + prefix + "\"")  : FMT_FG_RED + "null" + FMT_RESET;
-	match  = match.size()  != 0 ? ("\"" + match +  "\"")  : FMT_FG_RED + "null" + FMT_RESET;
-	suffix = suffix.size() != 0 ? ("\"" + suffix + "\"")  : FMT_FG_RED + "null" + FMT_RESET;
+	prefix = prefix.size() != 0 ? ("\"" + prefix + "\"")  : FMT_FG_YELLOW + "null" + FMT_RESET;
+	match  = match.size()  != 0 ? ("\"" + match +  "\"")  : FMT_FG_YELLOW + "null" + FMT_RESET;
+	suffix = suffix.size() != 0 ? ("\"" + suffix + "\"")  : FMT_FG_YELLOW + "null" + FMT_RESET;
 
 	INFO(FMT_FG_GREEN << "prefix" << FMT_RESET << "[ " << FMT_ITALIC  << std::right << prefix << FMT_RESET_ITALIC << " ](" << prefix.size() << ")" << FMT_RESET);
 	INFO(FMT_FG_GREEN << "match " << FMT_RESET << "[ " << FMT_ITALIC  << std::right << match  << FMT_RESET_ITALIC << " ](" << match.size()  << ")" << "{: " << FMT_ITALIC << t.name << FMT_RESET << " :}");

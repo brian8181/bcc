@@ -10,8 +10,10 @@
 
 /**
   * @brief class literal
+
   */
-class literal : public terminial_expr
+template< class T >
+class literal : public terminial_expr<T>
 {
 public:
 	
@@ -35,6 +37,7 @@ public:
 	*/
 
 private:
+
 };
 
 #endif

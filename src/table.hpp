@@ -2,7 +2,15 @@
 #define __THE_TABLE_
 #include <set>
 #include <map>
-#include "def.hpp"
+
+#ifdef VER2
+#include "parser.tab.hpp"
+#include "v2/def.hpp"
+#else
+#include "pparser.tab.hpp"
+#include "defv1.hpp"
+#endif
+
 
 using std::set;
 using std::map;

@@ -33,12 +33,14 @@
 #include <iomanip>
 #include <boost/regex.hpp>
 #include "fileio.hpp"
-#include "def.hpp"
+
 
 #ifdef VER2
 #include "parser.tab.hpp"
+#include "v2/def.hpp"
 #else
 #include "pparser.tab.hpp"
+#include "defv1.hpp"
 #endif
 
 //#include "cpp.tab.hpp"

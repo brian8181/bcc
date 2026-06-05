@@ -10,7 +10,7 @@ LEX = flex
 #YACC = bison -y
 YACC = bison
 YFLAGS = -YYDEBUG
-CXXFLAGS = -std=gnu++17 -fPIC
+CXXFLAGS=-std=gnu++17 -fPIC
 CCFLAGS = -g -DLEX_TEST
 LDFLAGS =
 FLEXFLAGS = --flex
@@ -44,7 +44,11 @@ FMT=$(FMT_INFO)
 # lib settings
 INCLUDES=-I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I./$(SRC) -I./$(BLD) -I./$(TST)
 LIBS=-L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt
-LDFLAGS=$(INCLUDES) $(LIBS)
+LDFLAGS=$(INCLUDES) $(LIBS) $(INC)
+
+ifdef VER2
+	CXXFLAGS+=-DVER2
+endif
 
 ifdef OPTIONS
 	CXXFLAGS+=-DOPTIONS
@@ -109,7 +113,6 @@ $(OBJ)/auto_ptr.o \
 $(OBJ)/utility.o \
 $(OBJ)/pparser.tab.o \
 $(OBJ)/lexer.o \
-$(OBJ)/on_token.o \
 $(OBJ)/driver.o \
 $(OBJ)/symtab.o \
 
@@ -158,11 +161,11 @@ all: $(BLD)/$(APP)
 # build everything
 #world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
 
-$(BLD)/$(APP): $(OBJS) $(SRC)/def.hpp
+$(BLD)/$(APP): $(OBJS) $(SRC)/defv1.hpp $(OBJ)/on_tokenv1.o
 	@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
-$(BLD)/$(APP)2: $(OBJS2) $(SRC)/def.hpp 
+$(BLD)/$(APP)2: $(OBJS2) $(SRC)/v2/def.hpp $(OBJ)/v2/on_token.o 
 	@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) -DVER2 $^ $(LDFLAGS) -o $@
 

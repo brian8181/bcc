@@ -7,6 +7,7 @@
 #define _unary_expr_HPP_
 #include <iostream>
 #include "nonterminial_expr.hpp"
+#include "variant.hpp"
 
 /**
   * @brief class unary_expr
@@ -35,6 +36,7 @@ public:
 	*/
 
 private:
+	variant lhs;
 };
 
 #endif

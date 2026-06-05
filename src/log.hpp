@@ -67,7 +67,7 @@ void log(const std::string &msg, int line_number);
 // #endif
 
 #ifdef TEST_ONLY
-#define ATTN(str) LOG("[ATTN] ", FMT_FG_RED, str)
+#define ATTN(str) LOG("[ATTN] ", FMT_FG_LIGHT_MAGENTA, str)
 #else
 #define ATTN(str) // str
 #endif
@@ -86,17 +86,17 @@ void log(const std::string &msg, int line_number);
 #define SYST(str) LOG("[SYST] ", FMT_FG_LIGHT_GREY, str)
 #define INFO(str) LOG("[INFO] ", INFO_COLOR, str)
 #define WARN(str) LOG("[WARN] ", FMT_FG_YELLOW, str)
-#define ERROR(str) LOG("[ERROR] ", FMT_FG_RED, str)
+#define ERROR(str) LOG("[ERRO] ", FMT_FG_RED, str)
 #elif WARNINGS
 #define SYST(str) LOG("[SYST] ", FMT_FG_LIGHT_GREY, str)
 #define INFO(str) // str
 #define WARN(str) LOG("[WARN] ", FMT_FG_YELLOW, str)
-#define ERROR(str) LOG("[ERROR] ", FMT_FG_RED, str)
+#define ERROR(str) LOG("[ERRO] ", FMT_FG_RED, str)
 #else
 #define SYST(str) LOG("[SYST] ", FMT_FG_LIGHT_GREY, str)
 #define INFO(str) // str
 #define WARN(str) // str
-#define ERROR(str) LOG("[ERROR] ", FMT_FG_RED, str)
+#define ERROR(str) LOG("[ERRO] ", FMT_FG_RED, str)
 #endif
 
 #define LOGS *DEFAULT_OUT_STREAM

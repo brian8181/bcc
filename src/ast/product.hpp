@@ -35,6 +35,8 @@ public:
 	*/
 
 private:
+	//right assoc: abstract_expr * terminal
+	//left assoc: terminal * abstract_expr
 };
 
 #endif
