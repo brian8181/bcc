@@ -150,7 +150,7 @@ int parse_options(const int argc, char *argv[])
 	{
 		lexer::instance().init(files[i]);
     	lexer::instance().set_state(&PARSER);
-    	yyparser.parse();
+        yyparser.parse();
 	}
 	SYST("finished.");
 	return 0;

@@ -152,12 +152,24 @@ bool lexer::init(const string& file)
 	INFO(m_ifile);
 	m_buffer.clear();
 	read_str( m_ifile, m_buffer );
+		
+	// get path to asm template
+	string cwd = (string)fs::current_path();
+	string tmpl_file = cwd.append("/tmpl/asm.tmpl");
+	ATTN("tmpl path: " << tmpl_file);
+	// read all from asm template
+	string buf;
+	read_str(tmpl_file, buf);
 
 	// output stream
 	m_ofile = p.replace_extension("asm");
 	INFO(m_ofile);
 	m_fstream.open(m_ofile, std::ios_base::out | std::ios::trunc);
 	initalized = m_fstream.is_open();
+
+	// write asm tmpl (buf) to output stream ...
+	write_ostream(buf);
+
 	TRACE();
 	return initalized;
 }
