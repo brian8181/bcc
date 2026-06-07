@@ -30,19 +30,19 @@ inline std::stringstream STROUT;
 
 void log(const std::string &msg, int line_number);
 
-#define ITALIC(str) FMT_ITALIC << str << FMT_RESET
-#define UNDERLINE(str) FMT_UNDERLINE << str << FMT_RESET
-#define BOLD(str) FMT_BOLD << str << FMT_RESET
-#define DIM(str) FMT_DIM << str << FMT_RESET
-#define HIDDEN(str) << FMT_HIDDEN << str << FMT_RESET
-#define GREEN(str) FMT_FG_GREEN << str << FMT_RESET
-#define RED(str) FMT_FG_RED << str << FMT_RESET
-#define BLUE(str) FMT_FG_BLUE << str << FMT_RESET
-#define YELLOW(str) FMT_FG_YELLOW << str << FMT_RESET
-#define GREY(str) FMT_FG_DARK_GREY << str << FMT_RESET
-#define CYAN(str) FMT_FG_CYAN << str << FMT_RESET
-#define MAGENTA(str) FMT_FG_MAGENTA << str << FMT_RESET
-#define WHITE(str) FMT_FG_WHITE << str << FMT_RESET
+// #define ITALIC(str) FMT_ITALIC << str << FMT_RESET
+// #define UNDERLINE(str) FMT_UNDERLINE << str << FMT_RESET
+// #define BOLD(str) FMT_BOLD << str << FMT_RESET
+// #define DIM(str) FMT_DIM << str << FMT_RESET
+// #define HIDDEN(str) << FMT_HIDDEN << str << FMT_RESET
+// #define GREEN(str) FMT_FG_GREEN << str << FMT_RESET
+// #define RED(str) FMT_FG_RED << str << FMT_RESET
+// #define BLUE(str) FMT_FG_BLUE << str << FMT_RESET
+// #define YELLOW(str) FMT_FG_YELLOW << str << FMT_RESET
+// #define GREY(str) FMT_FG_DARK_GREY << str << FMT_RESET
+// #define CYAN(str) FMT_FG_CYAN << str << FMT_RESET
+// #define MAGENTA(str) FMT_FG_MAGENTA << str << FMT_RESET
+// #define WHITE(str) FMT_FG_WHITE << str << FMT_RESET
 
 #define LOGV(str) cout << "LOGV: " << "\"" << str << "\"" << str <<  endl;
 #define LOG(type, color, str) *DEFAULT_OUT_STREAM << std::left << std::setw(6) << type << FMT_ITALIC << color << str << FMT_RESET << "  ---> "\

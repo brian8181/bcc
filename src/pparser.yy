@@ -20,7 +20,6 @@
     #include "fileio.hpp"
 	#include "utility.hpp"
     #include "log.hpp"
-    #include "symtab.h"
     #include "driver.hpp"
     #include "lexer.hpp"
 	#include "bash_color.hpp"
@@ -196,14 +195,13 @@
 %type atomic_type_specifier type_qualifier function_specifier constant_expression enumeration_constant
 %type unary_expression unary_operator cast_expression multiplicative_expression additive_expression
 %type struct_or_union_specifier struct_or_union struct_declaration_list struct_declaration specifier_qualifier_list struct_declarator_list struct_declarator
-%type declarator
+%type declarator 
 %type <std::string> storage_class_specifier type_modifier modifiers 
-%type <std::string> numeric_type
+%type <std::string> numeric_type initial_value
 %type <std::string> lval rval type_specifier decel_void
-%type <std::string> decel decel_numeric func_param_decels param_decels function_decel function_call
+%type <std::string> decel decel_numeric func_param_decels decel_list function_decel function_call
 %type <std::string> compiler
 %start compiler
-
 
 %%
 /**
@@ -468,6 +466,7 @@ expr[result]:
                                                                     result << (std::atoi($lhs.c_str()) + 1);
                                                                     $result = result.str();
                                                                     INFO("$result=" << $result);
+                                                                    INFO(exp_info("", "lhs", "++", $$));
                                                                 }
     | DASH expr %prec UMINUS                                    {
                                                                     INFO("expr: DASH expr %prec UMINUS");
@@ -475,6 +474,7 @@ expr[result]:
                                                                     result << -std::atoi($expr.c_str());
                                                                     $result = result.str();
                                                                     INFO("$result=" << $result);
+                                                                    //INFO(exp_info("%", $lhs, $rhs, $$));
                                                                 }
     | expr[lhs] ADD[op] expr[rhs]                               {
 																	INFO("expr: expr ADD expr");
@@ -531,51 +531,62 @@ expr[result]:
     | expr[lhs] GT[op] expr[rhs]                                {
 																	INFO("expr: expr GT expr");
 																	$result = (std::atoi($lhs.c_str()) > std::atoi($rhs.c_str()));
-                                                                    INFO("$result=" << $result);
+                                                                    INFO(exp_info(">", $1, $3, $$));
 																}
     | expr[lhs] GEQ[op] expr[rhs]                               {
 																	INFO("expr: expr GEQ expr ");
 																	$result = (std::atoi($lhs.c_str()) >= std::atoi($rhs.c_str()));
+                                                                    INFO(exp_info(">=", $1, $3, $$));
 																}
     | expr[lhs] LEQ[op] expr[rhs]                               {
 																	INFO("expr: expr LEQ expr");
 																	$result = (std::atoi($lhs.c_str()) <= std::atoi($rhs.c_str()));
+                                                                    INFO(exp_info("<=", $1, $3, $$));
 																}
     | expr[lhs] AND[op] expr[rhs]                               {
 																	INFO("expr: expr AND expr");
 																	$result = (std::atoi($lhs.c_str()) && std::atoi($rhs.c_str()));
+                                                                    INFO(exp_info("&&", $1, $3, $$));
 																}
     | expr[lhs] OR[op] expr[rhs]                                {
 																	INFO("expr: expr OR expr");
 																	$result = (std::atoi($lhs.c_str()) || std::atoi($rhs.c_str()));
+                                                                    INFO(exp_info("||", $1, $3, $$));
 																}
     | NOT expr[lhs]                                             {
 																	INFO("expr: NOT expr");
 																	$result = !(std::atoi($lhs.c_str()));
+                                                                    INFO(exp_info("!", "!", $lhs, $$));
 																}
     | expr[lhs] RSHIFT[op] expr[rhs]                            {
 																	INFO("expr: expr RSHIFT expr");
 																	$result = (std::atoi($lhs.c_str()) >> std::atoi($rhs.c_str()));
+                                                                    INFO(exp_info(">>", $lhs, $rhs, $$));
 																}
     | expr[lhs] LSHIFT[op] expr[rhs]                            {
 																	INFO("expr: expr LSHIFT expr");
 																	$result = (std::atoi($lhs.c_str()) << std::atoi($rhs.c_str()));
+                                                                    INFO(exp_info("<<", $lhs, $rhs, $$));
 																}
     | expr[lhs] BIT_AND[op] expr[rhs]                           {
 																	INFO("expr: expr BIT_AND expr");
 																	$result = (std::atoi($lhs.c_str()) & std::atoi($rhs.c_str()));
+                                                                    INFO(exp_info("&", $lhs, $rhs, $$));
                                                                 }
     | expr[lhs] BIT_OR[op] expr[rhs]                            {
 																	INFO("expr: expr BIT_OR expr");
 																	$result = (std::atoi($lhs.c_str()) | std::atoi($rhs.c_str()));
+                                                                    INFO(exp_info("|", $lhs, $rhs, $$));
                                                                 }
      | expr[lhs] BIT_XOR[op] expr[rhs]                          {
 																	INFO("expr: expr BIT_XOR expr");
 																	$result = (std::atoi($lhs.c_str()) ^ std::atoi($rhs.c_str()));
+                                                                    INFO(exp_info("^", $lhs, $rhs, $$));
                                                                 }
     | BIT_NOT expr[lhs]                                         {
 																	INFO("expr: BIT_NOT expr");
 																	$result = ~(std::atoi($lhs.c_str()));
+                                                                    INFO(exp_info("", "~", $lhs, $$));
                                                                 }
     | LPAREN expr[exp] RPAREN                                   {
 																	INFO("expr: LPAREN expr RPAREN");
@@ -598,10 +609,13 @@ function_call:
  */
 function_decel:
     decel LPAREN RPAREN                                         {
-                                                                    INFO("function_decel: decl LPAREN_FUNC RPAREN");
+                                                                    INFO("function_decel: decl LPAREN RPAREN --> " << $decel << "()");
+                                                                    $function_decel = $decel + "()";
                                                                 }
-    | decel func_param_decels                                   {
-                                                                    INFO("function_decel: intregal_type[type] IDENTIFIER[lhs] params_decel_list");
+    | decel LPAREN decel_list RPAREN                            {
+                                                                    INFO("function_decel: decel LPAREN decel_list RPAREN --> " << $decel << "( " << $decel_list << " )");
+                                                                    $function_decel = $decel + "( " + $decel_list + " )"; 
+                                                                    //ATTN($func_decel)
                                                                 }
                                                                 ;
 /**
@@ -627,18 +641,18 @@ params[params]:
  * @name params_decel_list
  */
 func_param_decels:
-    LPAREN param_decels RPAREN                                  {
+    LPAREN decel_list RPAREN                                  {
                                                                     INFO("params_decel_list: LPAREN_FUNC params_decel RPAREN");
                                                                 }
                                                                 ;
 /**
  * @name params_decel
  */
-param_decels:
+decel_list:
 	decel                                                       {
-                                                                    INFO("params_decel: decel");
+                                                                    INFO("params_decel: decel=" << $decel);
                                                                 }
-	| param_decels COMMA decel                                  {
+	| decel_list COMMA decel                                  {
                                                                     INFO("params_decel: params_decel COMMA decel");
                                                                 }
                                                                 ;
@@ -656,8 +670,8 @@ assign_expr:
 decel_void:
     modifiers type_specifier lval                               {
 																	INFO("decel_numeric: modifiers numeric_type IDENTIFIER");
-																	_symbol_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
-                                                                   	_symtab[$3] = sym;                      // add to symbol table, unassigned!
+																	sym_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
+                                                                   	//_symtab[$3] = sym;                      // add to symbol table, unassigned!
 																	 stringstream ss;
                                                                 	ss << "type<" << "INT" << "> " << "id<" << $3 << ">";
                                                                     $$ = ss.str();
@@ -672,10 +686,10 @@ decel_void:
  * @brief decelration
  */
 decel:
-    modifiers type_specifier lval                           	{
-																	INFO("decel: modifiers intregal_type IDENTIFIER");
-																	_symbol_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
-																	_symtab[$3] = sym;                      // add to symbol table, unassigned!
+    modifiers type_specifier initial_value                    	{
+																	INFO("decel: modifiers type_specifier initial_value");
+																	sym_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
+																	//_symtab[$3] = sym;                      // add to symbol table, unassigned!
 
 																	stringstream ss;
 																	ss << "type<" << "INT" << "> " << "id<" << $3 << ">";
@@ -684,7 +698,7 @@ decel:
 																	stringstream ostrm;
 																	ostrm << "INT" << " " << $3 << ";\n";
 																}
-    | decel LBRACKET rval RBRACKET                    			{
+    | decel LBRACKET NUMERIC_LITERAL RBRACKET                   { 
 																	INFO("decel: decel LBRACKET NUMERIC_LITERAL RBRACKET");
 																}
 																;
@@ -693,29 +707,33 @@ decel:
  */
 modifiers:
     %empty
-    | modifiers type_modifier
-    | modifiers storage_class_specifier
+    | modifiers type_modifier                                   { INFO("modifiers: modifiers type_modifier"); }
+    | modifiers storage_class_specifier                         { INFO("modifiers: modifiers storage_class_specifier"); }
     ;
 /**
  * @name type_modfier
  */
 type_modifier:
-    SIGNED
-    | UNSIGNED
+    SIGNED                      { INFO("type_modifier: SIGNED"); }
+    | UNSIGNED                  { INFO("type_modifier: UNSIGNED"); }
     ;
 
+initial_value:
+        lval                    { INFO("initial_value: lval"); }
+        | rval                  { INFO("initial_value: rval"); }
+        ;
 /**
 * @name lval
 */
 lval:
-	IDENTIFIER
+	IDENTIFIER                 { INFO("lval: IDENTIFIER"); }
 	;
 /**
 * @name rval
 */
 rval:
-	IDENTIFIER
-	| NUMERIC_LITERAL
+	IDENTIFIER                { INFO("rval: IDENTIFIER"); }
+	| NUMERIC_LITERAL         { INFO("rval: NUMERIC_LITERAL"); }
 	;
 
     
@@ -725,23 +743,22 @@ constant_expression:
 
 storage_class_specifier:
     TYPEDEF	/* identifiers must be flagged as TYPEDEF_NAME */
-	| EXTERN
-	| STATIC
-	// | THREAD_LOCAL
-	// | AUTO
-	| REGISTER
+	| EXTERN                         { INFO("storage_class_specifier: EXTERN"); }
+	| STATIC                         { INFO("storage_class_specifier: STATIC"); }
+    | REGISTER                       { INFO("storage_class_specifier: REGISTER"); }
 	;
 
-type_specifier
-	: VOID
-	| CHAR
-	| SHORT
-	| INT
-	| LONG
-	| FLOAT
-	| DOUBLE
-	| SIGNED
-	| UNSIGNED
+type_specifier:
+    VOID                            { INFO("type_specfier: VOID"); }
+	| CHAR                          { INFO("type_specfier: CHAR"); }
+	| SHORT                         { INFO("type_specfier: SHORT"); }
+	| INT                           { INFO("type_specfier: INT"); }
+	| LONG                          { INFO("type_specfier: LONG"); }
+	| FLOAT                         { INFO("type_specfier: FLOAT"); }
+	| DOUBLE                        { INFO("type_specfier: DOUBLE"); }
+	// | SIGNED                        { INFO("type_specfier: SIGNED"); }
+	// | UNSIGNED                      { INFO("type_specfier: UNSIGNED"); }
+    ;
 	// | BOOL
 	// | COMPLEX
 	// | IMAGINARY	  	/* non-mandated extension */
@@ -749,7 +766,7 @@ type_specifier
 	// | struct_or_union_specifier
 	// | enum_specifier
 	// | TYPEDEF_NAME		/* after it has been defined as such */
-	;
+	
 
 struct_or_union_specifier
 	: struct_or_union '{' struct_declaration_list '}'
@@ -844,8 +861,6 @@ typedef struct mytype
 {
     int i;
 } mytype;
-
-
 
 
 // string& get_expr_info(const string& op, const string& lhs, const string& rhs)

@@ -8,7 +8,7 @@
                 "/home/brian/src/boost_1_91_0/*"
             ],
             "defines": [],
-            "compilerPath": "/usr/lib64/ccache/g++",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64",

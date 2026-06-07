@@ -1,6 +1,6 @@
 #ifndef __THE_TABLE_
 #define __THE_TABLE_
-#include <set>
+
 #include <map>
 
 #ifdef VER2
@@ -11,9 +11,6 @@
 #include "defv1.hpp"
 #endif
 
-
-using std::set;
-using std::map;
 
 constexpr const unsigned long eINT   = 0x10;
 constexpr const unsigned long eFLOAT = 0x20;
@@ -26,74 +23,41 @@ constexpr const unsigned long ePTR    = 0x800;
 constexpr const unsigned long eSTRING  = 0x1000;
 constexpr const unsigned long eVOID_PTR_FUNC = eVOID | ePTR | eFUNC;
 
-
-// enum type_t
-// {
-// 	eINT   = 0x10,
-// 	eFLOAT = 0x20,
-// 	eCHAR  = 0x40,
-// 	eVOID  = 0x80
-// };
-
-// struct id_t
-// {
-// 	string name;
-// 	etype id;
-// } typedef id_t;
-
-// id_t _types[4] = 
-// {
-// 	{"int", eINT},
-// 	{"float", eFLOAT},
-// 	{"char", eCHAR},
-// 	{"void", eVOID}
-// }
-
-//template <typename T>
-typedef struct _symbol_t
+typedef struct sym_t
 {
 	string name;
 	string stype;
 	unsigned long type;
 	void* val;
 
-	 // Declare the operator as a friend to access private members
-    friend std::ostream& operator<<(std::ostream& os, const _symbol_t& lex);
+	 // declare the operator as a friend to access private members
+    friend std::ostream& operator<<(std::ostream& os, const sym_t& lex);
+} sym_t;
 
-	// T get_val()
-	// {
-	// 	(T *)val;
-	// }
-
-} _symbol_t;
-
-map<string, _symbol_t> _symtab = {{"x", {"x","int", eINT, 0}}, {"y", {"y", "int", eINT, 0}}, {"z", {"z", "int", eINT, 0}}};
-
-//typedef map<string, string> _symbol_table_t;
-
-// test
-//_symbol_table_t _symbol_table { {"global", "empty"} };
-
-// typedef set<unsigned long> squence_t;
-// sequence_t assign_numric_literal = {OPEN_BRACE, EQUALS, NUMERIC_LITERAL, CLOSE_BRACE};
-
-typedef map<string, _symbol_t> symbol_table_t;
+typedef map<string, sym_t> symbol_table_t;
 
 class scope 
 {
-	scope();
-	scope(scope* parent);
-	scope(const scope& s);
-	~scope();
+public:
+	scope() {}
+	scope(scope* parent) {};
+	scope(const scope& s) {};
+	~scope() {};
 
 	symbol_table_t symtab;
 
-	scope& operator=(const scope&);
-	_symbol_t operator[](const string& item);
-	_symbol_t operator[](int idx);
+	scope& operator=(const scope&) {};
+	sym_t operator[](const string& item) {};
+	sym_t operator[](int idx) {};
 
+private:
 	scope* parent;
 	vector<scope*> scopes;
 };
+
+scope g_scope((scope*)0);
+// _symbol_t s = {"x","int", eINT, 0};
+// //g_scope.symtab["name"] = s;
+map<string, sym_t> _symtab = {{"x", {"x","int", eINT, 0}}, {"y", {"y", "int", eINT, 0}}, {"z", {"z", "int", eINT, 0}}};
 
 #endif

@@ -21,7 +21,7 @@ WARN=
 
 PRJ = .
 BLD = $(PRJ)/build
-OBJ = $(PRJ)/$(BLD)
+OBJ = $(BLD)
 SRC = $(PRJ)/src
 AST = $(PRJ)/ast
 TST = $(SRC)/unit_test
@@ -113,8 +113,7 @@ $(OBJ)/auto_ptr.o \
 $(OBJ)/utility.o \
 $(OBJ)/pparser.tab.o \
 $(OBJ)/lexer.o \
-$(OBJ)/driver.o \
-$(OBJ)/symtab.o \
+$(OBJ)/driver.o
 
 
 OBJS2= \
@@ -123,9 +122,7 @@ $(OBJ)/auto_ptr.o \
 $(OBJ)/utility.o \
 $(OBJ)/parser.tab.o \
 $(OBJ)/lexer.o \
-$(OBJ)/on_token.o \
-$(OBJ)/driver.o \
-$(OBJ)/symtab.o \
+$(OBJ)/driver.o
 
 TST_OBJS= \
 $(OBJ)/fileio.o \
@@ -170,12 +167,12 @@ $(BLD)/$(APP)2: $(OBJS2) $(SRC)/v2/def.hpp $(OBJ)/v2/on_token.o
 	$(CXX) $(CXXFLAGS) -DVER2 $^ $(LDFLAGS) -o $@
 
 $(BLD)/parser.tab.cpp $(BLD)/parser.tab.hpp: $(SRC)/parser.yy 
-	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
-	$(YACC) --debug $(SRC)/parser.yy --header=$(BLD)/parser.tab.hpp -o $(BLD)/parser.tab.cpp
-
-$(BLD)/parser.tab.cpp $(BLD)/parser.tab.hpp: $(SRC)/parser.yy 
 	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(YACC) --debug $(SRC)/parser.yy --header=$(BLD)/parser.tab.hpp -o $(BLD)/parser.tab.cpp
+
+$(OBJ)/parser.tab.o: $(OBJ)/parser.tab.cpp $(BLD)/parser.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -DYYDEBUG -c $< -o $@
 
 $(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cpp
 	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
@@ -229,6 +226,13 @@ $(OBJ)/%.o: $(SRC)/%.cpp $(SRC)/%.hpp
 $(OBJ)/%.o: $(TST)/%.cpp $(TST)/%.hpp
 	@echo "$(FMT)building $< -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BLD)/hello: $(SRC)/asm/hello.s
+	$(CC) -c $^ -o $(OBJ)/hello.o && ld $(OBJ)/hello.o -o $@ 
+
+$(BLD)/fib: $(SRC)/asm/fib.s
+	$(CC) -fPIE $^ -o $@
+
 
 .PHONY: all rebuild dist install uninstall clean help
 rebuild: clean all

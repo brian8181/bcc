@@ -6,6 +6,7 @@
  */
 
 #define _GNU_SOURCE
+#include "defv1.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -37,7 +38,6 @@ namespace fs = std::filesystem;
 #else
 #include "pparser.tab.hpp"
 #include "defv1.hpp"
-#include "on_tokenv1.hpp"
 #endif
 
 

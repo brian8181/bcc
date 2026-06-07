@@ -20,7 +20,6 @@
     #include "fileio.hpp"
 	#include "utility.hpp"
     #include "log.hpp"
-    #include "symtab.h"
     #include "driver.hpp"
     #include "lexer.hpp"
 	#include "bash_color.hpp"
@@ -106,19 +105,19 @@
 %token END_OF_FILES
 %token END_OF_FILE 0
 %token void char short int long float double signed unsigned auto volatile register static struct typedef 
-%token identifier integer_constant floating_constant character_constant enumeration_constant
+%token <std::string> identifier integer_constant floating_constant character_constant enumeration_constant
 %token union extern const string
 %token sizeof enum if else for while do break continue goto return default switch case 
-%type struct_or_union_specifier enum_specifier typedef_name
-%type external_declaration function_definition declaration_specifier storage_class_specifier type_specifier 
-%type struct_or_union_specifier struct_or_union struct_declaration
-%type specifier_qualifier declarator pointer type_qualifier direct_declarator constant_expression conditional_expression
-%type logical_or_expression logical_and_expression inclusive_or_expression exclusive_or_expression and_expression equality_expression 
-%type relational_expression shift_expression additive_expression multiplicative_expression cast_expression unary_expression postfix_expression
-%type primary_expression constant expression assignment_expression assignment_operator unary_operator type_name parameter_type_list parameter_list
-%type parameter_declaration abstract_declarator direct_abstract_declarator enum_specifier enumerator_list enumerator typedef_name declaration init_declarator
-%type initializer initializer_list
-%type compound_statement statement labeled_statement selection_statement iteration_statement jump_statement
+%type <std::string> struct_or_union_specifier enum_specifier typedef_name
+%type <std::string> external_declaration function_definition declaration_specifier storage_class_specifier type_specifier 
+%type <std::string> struct_or_union struct_declaration
+%type <std::string> specifier_qualifier declarator pointer type_qualifier direct_declarator constant_expression conditional_expression
+%type <std::string> logical_or_expression logical_and_expression inclusive_or_expression exclusive_or_expression and_expression equality_expression 
+%type <std::string> relational_expression shift_expression additive_expression multiplicative_expression cast_expression unary_expression postfix_expression
+%type <std::string> primary_expression constant expression assignment_expression assignment_operator unary_operator type_name parameter_type_list parameter_list
+%type <std::string> parameter_declaration abstract_declarator direct_abstract_declarator enumerator_list enumerator declaration init_declarator
+%type <std::string> initializer initializer_list
+%type <std::string> compound_statement statement labeled_statement selection_statement iteration_statement jump_statement
 %type<int> translation_unit
 %start translation_unit
 %%

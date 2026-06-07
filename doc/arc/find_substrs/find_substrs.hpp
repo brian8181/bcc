@@ -10,7 +10,7 @@ using std::vector;
 /**
  * @name FSM : finite state machine
  */
-vector<vector<int>> FSM;
+//vector<vector<int>> FSM;
 
 /**
  * @name build_fsm 

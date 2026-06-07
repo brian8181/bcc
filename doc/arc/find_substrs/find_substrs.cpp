@@ -11,7 +11,7 @@ using std::endl;
 /**
  * @name FSM : finite state machine
  */
-//vector<vector<int>> FSM;
+vector<vector<int>> FSM;
 void build_fsm(const string& s)
 {
     const char* pstr = s.c_str();
@@ -88,13 +88,14 @@ int search_str(const string& s)
 
 int main(int argc, char* argv[])
 {
-    build_fsm();
+    string s = "xyzabcdefg";
+    build_fsm(s);
     add_substr("abc");
     add_substr("bcd");
     add_substr("cde");
     add_substr("def");
 
-    string s = "xyzabcdefg";
+    
     int pos = search_str(s);
     if(pos != -1)
         printf("found substring at pos: %d\n", pos);
@@ -102,16 +103,16 @@ int main(int argc, char* argv[])
         printf("no substring found\n");
 
     int r = s.size();
-    int c = s[0];
+    int c = 256;
     printf("size: %d, char: %c\n", r, c);   
 
-    for(int i = 0; i < r; ++i)
-    {
-        for(int j = 0; j < c; ++j)
-        {
-            cout << FSM[i][j] << " ";
-        }
-        cout << endl; 
-    }
+    // for(int i = 0; i < r; ++i)
+    // {
+    //     for(int j = 0; j < c; ++j)
+    //     {
+    //         cout << FSM[i][j] << " ";
+    //     }
+    //     cout << endl; 
+    // }
 
 }

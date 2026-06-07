@@ -2,6 +2,7 @@
  * @file    def.hpp
  * @version 0.0.1
  * @date    Fri, 26 Sep 2025 17:05:10
+ * 
  */
 #ifndef _DEFINITIONS_HPP_
 #define _DEFINITIONS_HPP_
@@ -230,10 +231,12 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define R_EXCLAMATION  R"(!)"
 #define R_NUMERIC_LITERAL R"([1-9]+[0-9]*|0)"
 #define R_REAL_LITERAL R"(([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][-+]?[0-9]+)?)"
+#define R_STRING_LITERAL R"("[A-Za-z0-9*@_.~+-/ ]+")"
 #define R_VALID_ID     R"([A-Za-z_][A-Za-z0-9_]*)"
 #define R_ARRAY        R"(\$[A-Za-z_][A-Za-z0-9_]*\[[^\]]\])"
 #define R_SYMBOL       R"(\$[A-Za-z_][A-Za-z0-9_]*)"
 #define R_CONST_SYMBOL R"(#[A-Za-z_][A-Za-z0-9_]*#)"
+#define R_IDENTIFIER   R"([A-Za-z_][A-Za-z0-9_]*)"
 
 /**
  * @name g_tokens
@@ -257,9 +260,9 @@ inline map<unsigned long, token> g_tokens =
 		{NEWLINE, token{NEWLINE, "NEWLINE", S_TYPE, R"(\n)", __LINE__}},
 		{NUMERIC_LITERAL, token{NUMERIC_LITERAL, "NUMERIC_LITERAL", S_TYPE, R_NUMERIC_LITERAL, __LINE__}},
 		{REAL_LITERAL, token{REAL_LITERAL, "REAL_LITERAL", S_TYPE, R"([0-9]+\.[0-9]+)", __LINE__}},
-		{STRING_LITERAL, token{STRING_LITERAL, "STRING_LITERAL", S_TYPE, R"("[A-Za-z0-9*@_.~+-/ ]+")", __LINE__}},
+		{STRING_LITERAL, token{STRING_LITERAL, "STRING_LITERAL", S_TYPE, R_STRING_LITERAL, __LINE__}},
 		{CHAR_LITERAL, token{CHAR_LITERAL, "CHAR_LITERAL", S_TYPE, R"('.')", __LINE__}},
-		{IDENTIFIER, token{IDENTIFIER, "IDENTIFIER", S_TYPE, R"([A-Za-z_][A-Za-z0-9_]*)", __LINE__}},
+		{IDENTIFIER, token{IDENTIFIER, "IDENTIFIER", S_TYPE, R_IDENTIFIER, __LINE__}},
 		{FUNCTION, token{FUNCTION, "FUNCTION", S_TYPE, R"([A-Za-z_][A-Za-z0-9_]*)", __LINE__}},
 		{COMMENT, token{COMMENT, "COMMENT", S_TYPE, R"(\{[ ]*\*[^*}]*\*[ ]*\})", __LINE__}},
 		{DASH, token{DASH, "DASH", S_TYPE, R"([-])", __LINE__}},
@@ -359,9 +362,7 @@ inline state_t INITIAL = {};
 
 // inline map<unsigned long, token> state_token;
 // #define LEXER_STATE(name, token_name, id) state_t INITIAL = { { TEST_TOKEN, token { gt{TEST_TOKEN} }} }
-
-// LEXER_STATE(INITIAL, "INITIIAL", 42);
-
+//LEXER_STATE(INITIAL, "INITIIAL", 42);
 //REGEX_DEF(INT, R"(\<int\>\s)");
 
 /**
