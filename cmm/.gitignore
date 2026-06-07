@@ -1,0 +1,7 @@
+# @project:  cmm
+# @file:    .gitignore
+# @date:    Sat Jun  6 22:21:16 CDT 2026
+# @version: 0.0.1
+# @brief:   git ignore file
+
+build/*

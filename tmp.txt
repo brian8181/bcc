@@ -1,0 +1,5 @@
+gcc -fPIE src/asm/fib.s -o build/fib
+/usr/bin/ld: /tmp/ccvXTF1x.o: relocation R_X86_64_32S against `.text' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: failed to set dynamic section sizes: bad value
+collect2: error: ld returned 1 exit status
+make: *** [makefile:234: build/fib] Error 1

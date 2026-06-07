@@ -24,12 +24,16 @@
 #include <filesystem>
 #include "driver.hpp"
 #include "lexer.hpp"
-#include "pparser.tab.hpp"
-//#include "cpp.tab.hpp"
-#include "parser.hpp"
 #include "bash_color.hpp"
 #include "utility.hpp"
 #include "log.hpp"
+
+#ifdef VER2
+#include "parser.tab.hpp"
+#else
+#include "pparser.tab.hpp"
+#endif
+
 
 using std::cerr;
 using std::cout;
@@ -146,12 +150,9 @@ int parse_options(const int argc, char *argv[])
 	{
 		lexer::instance().init(files[i]);
     	lexer::instance().set_state(&PARSER);
-    	yyparser.parse();
+        yyparser.parse();
 	}
-	TRACE();
-
 	SYST("finished.");
-
 	return 0;
 }
 

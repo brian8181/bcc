@@ -10,15 +10,20 @@ LEX = flex
 #YACC = bison -y
 YACC = bison
 YFLAGS = -YYDEBUG
-CXXFLAGS = -std=gnu++17 -fPIC
-CCFLAGS = -g -DLEX_TEST -DDEBUG
+CXXFLAGS=-std=gnu++17 -fPIC
+CCFLAGS = -g -DLEX_TEST
 LDFLAGS =
 FLEXFLAGS = --flex
 BISONFLAGS = -y -d --html --graph
-BLD = build
-OBJ = build
-SRC = src
-AST = ast
+OPTIONS=
+DEBUG=
+WARN=
+
+PRJ = .
+BLD = $(PRJ)/build
+OBJ = $(BLD)
+SRC = $(PRJ)/src
+AST = $(PRJ)/ast
 TST = $(SRC)/unit_test
 
 SRC_EXT=cpp
@@ -39,9 +44,23 @@ FMT=$(FMT_INFO)
 # lib settings
 INCLUDES=-I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I./$(SRC) -I./$(BLD) -I./$(TST)
 LIBS=-L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt
+LDFLAGS=$(INCLUDES) $(LIBS) $(INC)
+
+ifdef VER2
+	CXXFLAGS+=-DVER2
+endif
+
+ifdef OPTIONS
+	CXXFLAGS+=-DOPTIONS
+endif
 
 ifdef CLANG
+	@echo "$(FMT)CLANG ...$(FMT_RESET)"
 	CXX=clang++
+endif
+
+ifdef WARNING
+	CXXFLAGS+=-DWARNING
 endif
 
 ifndef RELEASE
@@ -49,16 +68,16 @@ ifndef RELEASE
 endif
 
 ifdef CYGWIN
+	@echo "$(FMT)CYGWIN ...$(FMT_RESET)"
 	CXXFLAGS += -DCYGWIN
 	INCLUDES += -I"/home/brian/src/boost_1_91_0"
 	LIBS += /usr/local/lib/libfmt.a -lcppunit.dll
 endif
 ifdef MSYS_UCRT
+	@echo "$(FMT)MSYS_UCRT ...$(FMT_RESET)"
 	INCLUDES += -I/ucrt64/include/boost
 	LIBS += /usr/lib/libfmt.dll.a
 endif
-
-LDFLAGS=$(INCLUDES) $(LIBS)
 
 # ifdef TRACEING
 # CXXFLAGS += -DTRACING
@@ -75,7 +94,6 @@ $(SRC)/auto_ptr.hpp \
 $(SRC)/utility.hpp \
 $(SRC)/ast.hpp \
 $(BLD)/pparser.tab.hpp \
-$(SRC)/parser.hpp \
 $(SRC)/lexer.hpp \
 $(SRC)/on_token.hpp \
 $(SRC)/driver.hpp \
@@ -83,9 +101,7 @@ $(SRC)/def.hpp \
 $(SRC)/table.hpp \
 $(SRC)/def.h \
 
-
 HEADER_ONLY= \
-//$(BLD)/cpp.tab.hpp \
 $(BLD)/pparser.tab.hpp \
 $(SRC)/def.hpp \
 $(SRC)/log.hpp \
@@ -95,14 +111,18 @@ OBJS= \
 $(OBJ)/fileio.o \
 $(OBJ)/auto_ptr.o \
 $(OBJ)/utility.o \
-$(BLD)/pparser.tab.o \
-$(OBJ)/parser.o \
+$(OBJ)/pparser.tab.o \
 $(OBJ)/lexer.o \
-$(OBJ)/on_token.o \
-$(OBJ)/driver.o \
-$(OBJ)/symtab.o \
-#$(OBJ)/index.o
-#$(OBJ)/def.o
+$(OBJ)/driver.o
+
+
+OBJS2= \
+$(OBJ)/fileio.o \
+$(OBJ)/auto_ptr.o \
+$(OBJ)/utility.o \
+$(OBJ)/parser.tab.o \
+$(OBJ)/lexer.o \
+$(OBJ)/driver.o
 
 TST_OBJS= \
 $(OBJ)/fileio.o \
@@ -111,7 +131,6 @@ $(OBJ)/utility.o \
 $(OBJ)/symtab.o \
 $(OBJ)/lexer.o \
 $(OBJ)/on_token.o \
-$(OBJ)/ast.o \
 $(OBJ)/TEST_lex.o \
 $(OBJ)/TEST_general.o \
 $(OBJ)/TEST_symbol_table.o \
@@ -124,7 +143,7 @@ $(OBJ)/TEST_expr.o
 # $(SRC)/fileio.hpp $(OBJ)/fileio.o \
 # $(SRC)/auto_ptr.hpp $(OBJ)/auto_ptr.o \
 # $(SRC)/utility.hpp $(OBJ)/utility.o \
-# $(SRC)/ast.hpp \
+# $(SRC)/ast/variant.hpp \
 # $(BLD)/cpp.tab.hpp $(BLD)/cpp.tab.o \
 # $(BLD)/pparser.tab.hpp $(BLD)/pparser.tab.o \
 # $(SRC)/parser.hpp $(OBJ)/parser.o \
@@ -132,26 +151,35 @@ $(OBJ)/TEST_expr.o
 # $(SRC)/driver.hpp $(OBJ)/driver.o \
 SOURCES=$(HEADERS) $(OBJS)
 
-# build everything
-world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
-
 # build all
-all: $(BLD)/$(APP) $(BLD)/TEST_lex
-	@echo -e "$(FMT)finished building ...$(FMT_RESET)"
+all: $(BLD)/$(APP)
+	@echo "$(FMT)finished building ...$(FMT_RESET)"
 
-$(BLD)/$(APP): $(OBJS) $(SRC)/def.hpp
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+# build everything
+#world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
+
+$(BLD)/$(APP): $(OBJS) $(SRC)/defv1.hpp $(OBJ)/on_tokenv1.o
+	@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
-$(BLD)/path_append: $(OBJ)/path_append.o
-	$(CXX) $(CXXFLAGS) $^ -o $@
+$(BLD)/$(APP)2: $(OBJS2) $(SRC)/v2/def.hpp $(OBJ)/v2/on_token.o 
+	@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	$(CXX) $(CXXFLAGS) -DVER2 $^ $(LDFLAGS) -o $@
+
+$(BLD)/parser.tab.cpp $(BLD)/parser.tab.hpp: $(SRC)/parser.yy 
+	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	$(YACC) --debug $(SRC)/parser.yy --header=$(BLD)/parser.tab.hpp -o $(BLD)/parser.tab.cpp
+
+$(OBJ)/parser.tab.o: $(OBJ)/parser.tab.cpp $(BLD)/parser.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -DYYDEBUG -c $< -o $@
 
 $(BLD)/pparser.tab.cpp $(BLD)/pparser.tab.hpp: $(SRC)/pparser.yy $(SRC)/lexer.cpp
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(YACC) --debug $(SRC)/pparser.yy --header=$(BLD)/pparser.tab.hpp -o $(BLD)/pparser.tab.cpp
 
 $(OBJ)/pparser.tab.o: $(OBJ)/pparser.tab.cpp $(BLD)/pparser.tab.hpp $(BLD)/bash_color.hpp $(SRC)/log.hpp
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -DYYDEBUG -c $< -o $@
 
 $(BLD)/find_find_substrs: $(OBJ)/find_substrs.o
@@ -161,40 +189,50 @@ $(BLD)/ast: $(OBJ)/ast.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(BLD)/lib$(APP).so: $(OBJS) $(SRC)/def.h
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) --shared $(OBJS) -o $(BLD)/lib$(APP).so
 	chmod 755 $(BLD)/lib$(APP).so
 
 $(BLD)/lib$(APP).a:
-	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building -> $@ ...$(FMT_RESET)"
 	ar rvs $(BLD)/lib$(APP).a $(OBJS)
 	chmod 755 $(BLD)/lib$(APP).a
 
-$(BLD)/TEST_lex: $(TST_OBJS) $(OBJ)/main.o
-	@echo -e "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
-	$(CXX) $(CXXFLAGS) -I/src -I/build  $^ -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt -I/usr/local/include/cppunit -lcppunit $(LDFLAGS) -o $@
+$(BLD)/TEST_lex: $(TST_OBJS) $(TST)/main.o
+	@echo "$(FMT)building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
+$(BLD)/vtest: $(SRC)/variant.cpp
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 # copy header files
 $(BLD)/%.h : $(SRC)/%.h
-	@echo -e "$(FMT)copy $^ -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)copy $^ -> $@ ...$(FMT_RESET)"
 	cp $^ $@
 
 $(BLD)/%.hpp: $(SRC)/%.hpp
-	@echo -e "$(FMT)copy $^ -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)copy $^ -> $@ ...$(FMT_RESET)"
 	cp $^ $@
 
 # build object files
 $(OBJ)/%.o: $(SRC)/%.c $(SRC)/%.h
-	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building -> $@ ...$(FMT_RESET)"
 	$(CC) $(CCFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(SRC)/%.cpp $(SRC)/%.hpp
-	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
+	@echo "$(FMT)building $< -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $< -o $@
 
-$(OBJ)/%.o: $(TST)/%.cpp $(TST)/%.hpp # $(HEADERS)
-	@echo -e "$(FMT)building -> $@ ...$(FMT_RESET)"
+$(OBJ)/%.o: $(TST)/%.cpp $(TST)/%.hpp
+	@echo "$(FMT)building $< -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+$(BLD)/hello: $(SRC)/asm/hello.s
+	$(CC) -c $^ -o $(OBJ)/hello.o && ld $(OBJ)/hello.o -o $@ 
+
+$(BLD)/fib: $(SRC)/asm/fib.s
+	$(CC) -fPIE $^ -o $@
+
 
 .PHONY: all rebuild dist install uninstall clean help
 rebuild: clean all
@@ -209,7 +247,7 @@ uninstall:
 	#-rm $(prefix)/bin/$(APP)
 
 clean:
-	@echo -e "$(FMT)cleaning ...$(FMT_RESET)"
+	@echo "$(FMT)cleaning ...$(FMT_RESET)"
 	-rm -rf $(OBJ)/*
 	-rm -rf $(BLD)/*
 

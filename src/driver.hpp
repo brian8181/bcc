@@ -9,7 +9,13 @@
 #define YYDEBUG 1
 
 #include "fileio.hpp"
+
+#ifdef VER2
+#include "parser.tab.hpp"
+#else
 #include "pparser.tab.hpp"
+#endif
+
 
 static string g_config_file = "default.conf";
 static string g_output_dir = "./test/build";

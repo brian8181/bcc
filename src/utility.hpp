@@ -237,6 +237,21 @@ int /*__cdecl*/ randa (void);
  */
 unsigned int randc();
 
+template<int n>
+class META_FACTORIAL
+{
+public:
+    enum { RET = n * META_FACTORIAL<n-1>::RET };
+};
+
+template<>
+class META_FACTORIAL<0>
+{
+public:
+    enum { RET = 1 };
+};
+
+
 typedef string line_t;
 typedef vector<line_t> lines_t;
 typedef string field_t;

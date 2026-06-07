@@ -60,4 +60,17 @@ const string FMT_BG_LIGHT_MAGENTA = "\033[105m";
 const string FMT_BG_LIGHT_CYAN = "\033[106m";
 const string FMT_BG_WHITE = "\033[107m";
 
+#define FMT(fmt, s) FMT << s << FMT_RESET; 
+#define RED(s) FMT_FG_RED << s << FMT_RESET;
+#define YELLOW(s) FMT_FG_YELLOW << s << FMT_RESET;
+#define GREEN(s) FMT_FG_GREEN << s << FMT_RESET;
+
+// string& fmt(const string& FMT, const string& s)
+// {
+//     string out(FMT);
+//     out.append(s);
+//     out.append(FMT_RESET);
+//     return 
+//}
+
 #endif

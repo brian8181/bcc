@@ -30,19 +30,19 @@ inline std::stringstream STROUT;
 
 void log(const std::string &msg, int line_number);
 
-#define ITALIC(str) FMT_ITALIC << str << FMT_RESET
-#define UNDERLINE(str) FMT_UNDERLINE << str << FMT_RESET
-#define BOLD(str) FMT_BOLD << str << FMT_RESET
-#define DIM(str) FMT_DIM << str << FMT_RESET
-#define HIDDEN(str) << FMT_HIDDEN << str << FMT_RESET
-#define GREEN(str) FMT_FG_GREEN << str << FMT_RESET
-#define RED(str) FMT_FG_RED << str << FMT_RESET
-#define BLUE(str) FMT_FG_BLUE << str << FMT_RESET
-#define YELLOW(str) FMT_FG_YELLOW << str << FMT_RESET
-#define GREY(str) FMT_FG_DARK_GREY << str << FMT_RESET
-#define CYAN(str) FMT_FG_CYAN << str << FMT_RESET
-#define MAGENTA(str) FMT_FG_MAGENTA << str << FMT_RESET
-#define WHITE(str) FMT_FG_WHITE << str << FMT_RESET
+// #define ITALIC(str) FMT_ITALIC << str << FMT_RESET
+// #define UNDERLINE(str) FMT_UNDERLINE << str << FMT_RESET
+// #define BOLD(str) FMT_BOLD << str << FMT_RESET
+// #define DIM(str) FMT_DIM << str << FMT_RESET
+// #define HIDDEN(str) << FMT_HIDDEN << str << FMT_RESET
+// #define GREEN(str) FMT_FG_GREEN << str << FMT_RESET
+// #define RED(str) FMT_FG_RED << str << FMT_RESET
+// #define BLUE(str) FMT_FG_BLUE << str << FMT_RESET
+// #define YELLOW(str) FMT_FG_YELLOW << str << FMT_RESET
+// #define GREY(str) FMT_FG_DARK_GREY << str << FMT_RESET
+// #define CYAN(str) FMT_FG_CYAN << str << FMT_RESET
+// #define MAGENTA(str) FMT_FG_MAGENTA << str << FMT_RESET
+// #define WHITE(str) FMT_FG_WHITE << str << FMT_RESET
 
 #define LOGV(str) cout << "LOGV: " << "\"" << str << "\"" << str <<  endl;
 #define LOG(type, color, str) *DEFAULT_OUT_STREAM << std::left << std::setw(6) << type << FMT_ITALIC << color << str << FMT_RESET << "  ---> "\
@@ -67,7 +67,7 @@ void log(const std::string &msg, int line_number);
 // #endif
 
 #ifdef TEST_ONLY
-#define ATTN(str) LOG("[ATTN] ", FMT_FG_RED, str)
+#define ATTN(str) LOG("[ATTN] ", FMT_FG_LIGHT_MAGENTA, str)
 #else
 #define ATTN(str) // str
 #endif
@@ -86,17 +86,17 @@ void log(const std::string &msg, int line_number);
 #define SYST(str) LOG("[SYST] ", FMT_FG_LIGHT_GREY, str)
 #define INFO(str) LOG("[INFO] ", INFO_COLOR, str)
 #define WARN(str) LOG("[WARN] ", FMT_FG_YELLOW, str)
-#define ERROR(str) LOG("[ERROR] ", FMT_FG_RED, str)
+#define ERROR(str) LOG("[ERRO] ", FMT_FG_RED, str)
 #elif WARNINGS
 #define SYST(str) LOG("[SYST] ", FMT_FG_LIGHT_GREY, str)
 #define INFO(str) // str
 #define WARN(str) LOG("[WARN] ", FMT_FG_YELLOW, str)
-#define ERROR(str) LOG("[ERROR] ", FMT_FG_RED, str)
+#define ERROR(str) LOG("[ERRO] ", FMT_FG_RED, str)
 #else
 #define SYST(str) LOG("[SYST] ", FMT_FG_LIGHT_GREY, str)
 #define INFO(str) // str
 #define WARN(str) // str
-#define ERROR(str) LOG("[ERROR] ", FMT_FG_RED, str)
+#define ERROR(str) LOG("[ERRO] ", FMT_FG_RED, str)
 #endif
 
 #define LOGS *DEFAULT_OUT_STREAM
