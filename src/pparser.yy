@@ -130,6 +130,7 @@
 %token LSFT_EQ
 %token RSFT_EQ
 %token TENERARY
+%token TYPEDEF_NAME
 
 %token AND OR NOT
 %token BIT_AND
@@ -199,7 +200,7 @@
 %type <std::string> storage_class_specifier type_modifier modifiers 
 %type <std::string> numeric_type initial_value
 %type <std::string> lval rval type_specifier decel_void
-%type <std::string> decel decel_numeric func_param_decels decel_list function_decel function_call
+%type <std::string> decel decel_numeric func_param_decels decel_list function_decel function_call function_def
 %type <std::string> compiler
 %start compiler
 
@@ -618,6 +619,11 @@ function_decel:
                                                                     //ATTN($func_decel)
                                                                 }
                                                                 ;
+
+function_def:
+            function_decel compound_statement                 {
+                                                                    INFO("function_def: function_decel LBRACKET stmts RBRACKET");
+                                                                }
 /**
  * @name pramas_list
  */
@@ -758,15 +764,14 @@ type_specifier:
 	| DOUBLE                        { INFO("type_specfier: DOUBLE"); }
 	// | SIGNED                        { INFO("type_specfier: SIGNED"); }
 	// | UNSIGNED                      { INFO("type_specfier: UNSIGNED"); }
-    ;
-	// | BOOL
+    // | BOOL
 	// | COMPLEX
 	// | IMAGINARY	  	/* non-mandated extension */
 	// | atomic_type_specifier
 	// | struct_or_union_specifier
 	// | enum_specifier
-	// | TYPEDEF_NAME		/* after it has been defined as such */
-	
+	| TYPEDEF_NAME		/* after it has been defined as such */
+	;
 
 struct_or_union_specifier
 	: struct_or_union '{' struct_declaration_list '}'

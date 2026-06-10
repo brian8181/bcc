@@ -153,14 +153,16 @@ bool lexer::init(const string& file)
 	m_buffer.clear();
 	read_str( m_ifile, m_buffer );
 		
-	// get path to asm template
-	string cwd = (string)fs::current_path();
-	string tmpl_file = cwd.append("/tmpl/asm.tmpl");
+	// // get path to asm template
+	//fs::path dir = p.parent_path();
+	//dir.replace_filename
+	string tmpl_file = "./tmpl/asm.tmpl";
 	ATTN("tmpl path: " << tmpl_file);
+	
 	// read all from asm template
 	string buf;
 	read_str(tmpl_file, buf);
-
+	
 	// output stream
 	m_ofile = p.replace_extension("asm");
 	INFO(m_ofile);
