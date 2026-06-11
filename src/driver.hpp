@@ -16,7 +16,7 @@
 #include "pparser.tab.hpp"
 #endif
 
-static string g_config =  "./";
+static string g_templates =  "./";
 static string g_config_file = "default.conf";
 static string g_output_dir = "./test/build";
 static string g_output_file = "out.obj";

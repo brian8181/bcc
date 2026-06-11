@@ -4,7 +4,8 @@
 #include "lexer.hpp"
 #include "log.hpp"
 #include "v2/def.hpp"
-#include "v2/on_token.hpp"
+#include "on_token2.hpp"
+#include "parser.tab.hpp"
 
 using std::cout;
 using std::endl;
@@ -242,6 +243,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         }
     } // end double quote state
 }
-    cout << "UNDEFINED symbol found... id=" << id << ",  match=" << match << endl;
-    return parser::make_UNDEFINED();
+    // cout << "UNDEFINED symbol found... id=" << id << ",  match=" << match << endl;
+    // return parser::make_UNDEFINED();
+    return parser::make_LONG();
 }

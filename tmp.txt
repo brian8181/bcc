@@ -1,5 +1,61 @@
-gcc -fPIE src/asm/fib.s -o build/fib
-/usr/bin/ld: /tmp/ccvXTF1x.o: relocation R_X86_64_32S against `.text' can not be used when making a PIE object; recompile with -fPIE
-/usr/bin/ld: failed to set dynamic section sizes: bad value
-collect2: error: ld returned 1 exit status
-make: *** [makefile:234: build/fib] Error 1
+[3m[32mbuilding prequisite -> src/pparser.yy src/lexer.cpp ... 
+building -> build/pparser.tab.cpp ...[0m
+bison --debug ./src/pparser.yy --header=./build/pparser.tab.hpp -o ./build/pparser.tab.cpp
+./src/pparser.yy:637.8-13: warning: duplicated symbol name for 'params' ignored [-Wother]
+  637 | params[params]:
+      |        ^~~~~~
+./src/pparser.yy:637.8-13: warning: duplicated symbol name for 'params' ignored [-Wother]
+  637 | params[params]:
+      |        ^~~~~~
+./src/pparser.yy:174.21-27: warning: symbol 'operand' is used, but is not defined as a token and has no rules [-Wother]
+  174 | %type <std::string> operand
+      |                     ^~~~~~~
+./src/pparser.yy:177.18-21: warning: symbol 'test' is used, but is not defined as a token and has no rules [-Wother]
+  177 | %type < mytype > test;
+      |                  ^~~~
+./src/pparser.yy:178.21-25: warning: symbol 'param' is used, but is not defined as a token and has no rules [-Wother]
+  178 | %type <std::string> param
+      |                     ^~~~~
+./src/pparser.yy:180.18-21: warning: symbol 'args' is used, but is not defined as a token and has no rules; did you mean 'arg'? [-Wother]
+  180 | %type < args_t > args
+      |                  ^~~~
+      |                  arg
+./src/pparser.yy:181.17-19: warning: symbol 'arg' is used, but is not defined as a token and has no rules; did you mean 'args'? [-Wother]
+  181 | %type < arg_t > arg
+      |                 ^~~
+      |                 args
+./src/pparser.yy:183.38-42: warning: symbol 'files' is used, but is not defined as a token and has no rules [-Wother]
+  183 | %type < std::vector< std::string > > files
+      |                                      ^~~~~
+./src/pparser.yy:196.7-27: warning: symbol 'atomic_type_specifier' is used, but is not defined as a token and has no rules; did you mean 'function_specifier'? [-Wother]
+  196 | %type atomic_type_specifier type_qualifier function_specifier constan...
+      |       ^~~~~~~~~~~~~~~~~~~~~
+      |       function_specifier
+./src/pparser.yy:196.44-61: warning: symbol 'function_specifier' is used, but is not defined as a token and has no rules; did you mean 'function_def'? [-Wother]
+  196 | %type atomic_type_specifier type_qualifier function_specifier constan...
+      |                                            ^~~~~~~~~~~~~~~~~~
+      |                                            function_def
+./src/pparser.yy:196.104-125: error: symbol 'conditional_expression' is used, but is not defined as a token and has no rules
+  196 | ...constant conditional_expression
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+./src/pparser.yy:197.101-107: error: symbol 'pointer' is used, but is not defined as a token and has no rules
+  197 | ...pression pointer direct_declarator
+      |             ^~~~~~~
+./src/pparser.yy:197.109-125: error: symbol 'direct_declarator' is used, but is not defined as a token and has no rules
+  197 | ... pointer direct_declarator
+      |             ^~~~~~~~~~~~~~~~~
+./src/pparser.yy:201.21-32: warning: symbol 'numeric_type' is used, but is not defined as a token and has no rules [-Wother]
+  201 | %type <std::string> numeric_type initial_value
+      |                     ^~~~~~~~~~~~
+./src/pparser.yy:201.34-46: warning: symbol 'initial_value' is used, but is not defined as a token and has no rules [-Wother]
+  201 | %type <std::string> numeric_type initial_value
+      |                                  ^~~~~~~~~~~~~
+./src/pparser.yy:203.27-39: warning: symbol 'decel_numeric' is used, but is not defined as a token and has no rules; did you mean 'decel_void'? [-Wother]
+  203 | %type <std::string> decel decel_numeric func_param_decels decel_list ...
+      |                           ^~~~~~~~~~~~~
+      |                           decel_void
+./src/pparser.yy:203.99-110: warning: symbol 'function_def' is used, but is not defined as a token and has no rules; did you mean 'function_specifier'? [-Wother]
+  203 | ...ion_call function_def
+      |             ^~~~~~~~~~~~
+      |             function_specifier
+make: *** [makefile:179: build/pparser.tab.cpp] Error 1

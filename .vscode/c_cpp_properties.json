@@ -3,7 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
+                "${workspaceFolder}/",
+                "${workspaceFolder}//build/",
                 "/usr/local/include/cppunit/*",
                 "/home/brian/src/boost_1_91_0/*"
             ],

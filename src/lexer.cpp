@@ -155,8 +155,9 @@ bool lexer::init(const string& file)
 		
 	// // get path to asm template
 	//fs::path dir = p.parent_path();
-	//dir.replace_filename
-	string tmpl_file = "./tmpl/asm.tmpl";
+	//dir.replace_filenam
+	string tmpl_file = g_templates;
+	tmpl_file.append("tmpl/asm.tmpl");
 	ATTN("tmpl path: " << tmpl_file);
 	
 	// read all from asm template

@@ -51,7 +51,7 @@
 	namespace yy
 	{
 		// print a list of strings
-		auto operator<<(std::ostream& o, const std::vector<std::string>& ss) _> std::ostream&
+		auto operator<<(std::ostream& o, const std::vector<std::string>& ss) -> std::ostream&
 		{
 			o << '{';
 			const char *sep = "";
@@ -102,12 +102,13 @@
     void print_symtab();
 }
 
+%token SKIP_TOKEN
 %token END_OF_FILES
 %token END_OF_FILE 0
-%token void char short int long float double signed unsigned auto volatile register static struct typedef 
+%token VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED AUTO VOLATILE REGISTER STATIC STRUCT TYPEDEF 
 %token <std::string> identifier integer_constant floating_constant character_constant enumeration_constant
-%token union extern const string
-%token sizeof enum if else for while do break continue goto return default switch case 
+%token UNION EXTERN CONST STRING
+%token SIZEOF ENUM IF ELSE FOR WHILE DO BREAK CONTINUE GOTO RETURN DEFAULT SWITCH CASE 
 %type <std::string> struct_or_union_specifier enum_specifier typedef_name
 %type <std::string> external_declaration function_definition declaration_specifier storage_class_specifier type_specifier 
 %type <std::string> struct_or_union struct_declaration
@@ -141,22 +142,22 @@ declaration_specifier:
                             | type_qualifier
                             ;
 storage_class_specifier:
-                            auto
-                            | register
-                            | static
-                            | extern
-                            | typedef
+                            AUTO
+                            | REGISTER
+                            | STATIC
+                            | EXTERN
+                            | TYPEDEF
                             ;
 type_specifier:
-                            void
-                            | char
-                            | short
-                            | int
-                            | long
-                            | float
-                            | double
-                            | signed
-                            | unsigned
+                            VOID
+                            | CHAR
+                            | SHORT
+                            | INT
+                            | LONG
+                            | FLOAT
+                            | DOUBLE
+                            | SIGNED
+                            | UNSIGNED
                             | struct_or_union_specifier
                             | enum_specifier
                             | typedef_name
@@ -167,8 +168,8 @@ struct_or_union_specifier:
                             | struct_or_union identifier
                             ;
 struct_or_union:
-                            struct
-                            | union
+                            STRUCT
+                            | UNION
                             ;
 struct_declaration:
                             specifier_qualifier struct_declarator_list
@@ -194,8 +195,8 @@ pointer:
                             '*' type_qualifier pointer
                             ;
 type_qualifier:
-                            const
-                            | volatile
+                            CONST
+                            | VOLATILE
                             ;
 direct_declarator:
                             identifier
@@ -268,8 +269,8 @@ unary_expression:
                      | '+' unary_expression
                      | '_' unary_expression
                      | unary_operator cast_expression
-                     | sizeof unary_expression
-                     | sizeof type_name
+                     | SIZEOF unary_expression
+                     | SIZEOF type_name
 ;
 postfix_expression:
             primary_expression
@@ -283,7 +284,7 @@ postfix_expression:
 primary_expression:
                         identifier
                        | constant
-                       | string
+                       | STRING
                        | '(' expression ')'
 ;
 constant:
@@ -340,9 +341,9 @@ direct_abstract_declarator:
                                | direct_abstract_declarator '(' parameter_type_list ')'
 ;
 enum_specifier:
-                                 enum identifier '{' enumerator_list '}'
-                                | enum '{' enumerator_list '}'
-                                | enum identifier
+                                 ENUM identifier '{' enumerator_list '}'
+                                | ENUM '{' enumerator_list '}'
+                                | ENUM identifier
 ;
 enumerator_list:
                      enumerator
@@ -385,28 +386,28 @@ statement:
 ;
 labeled_statement:
             identifier ':' statement
-                      | case constant_expression ':' statement
-                      | default ':' statement
+                      | CASE constant_expression ':' statement
+                      | DEFAULT ':' statement
 ;
 expression_statement:
             %empty
             | expression ';'
 ;
 selection_statement:
-                        if '(' expression ')' statement
-                        | if '(' expression ')' statement else statement
-                        | switch '(' expression ')' statement
+                        IF '(' expression ')' statement
+                        | IF '(' expression ')' statement ELSE statement
+                        | SWITCH '(' expression ')' statement
                         ;
 iteration_statement:
-                         while '(' expression ')' statement
-                        | do statement while '(' expression ')' ';'
-                        | for '(' expression ';' expression ';' expression ')' statement
+                         WHILE '(' expression ')' statement
+                        | DO statement WHILE '(' expression ')' ';'
+                        | FOR '(' expression ';' expression ';' expression ')' statement
                         ;
 jump_statement:
-                        goto identifier ';'
-                        | continue ';'
-                        | break ';'
-                        | return expression ';'
+                        GOTO identifier ';'
+                        | CONTINUE ';'
+                        | BREAK ';'
+                        | RETURN expression ';'
                         ;
 
 %%

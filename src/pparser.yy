@@ -193,8 +193,8 @@
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
 %type compound_statement
-%type atomic_type_specifier type_qualifier function_specifier constant_expression enumeration_constant
-%type unary_expression unary_operator cast_expression multiplicative_expression additive_expression
+%type atomic_type_specifier type_qualifier function_specifier constant_expression enumeration_constant conditional_expression
+%type unary_expression unary_operator cast_expression multiplicative_expression additive_expression pointer direct_declarator
 %type struct_or_union_specifier struct_or_union struct_declaration_list struct_declaration specifier_qualifier_list struct_declarator_list struct_declarator
 %type declarator 
 %type <std::string> storage_class_specifier type_modifier modifiers 
@@ -319,6 +319,9 @@ stmt:
                                                                     INFO("stmt: expr=" << $expr << " SEMI_COLON");
                                                                     WARN("expr: not an l-side");
                                                                 }
+    | function_decel compound_statement                         {
+                                                                     INFO("stmt: function_decel compound_statement"); 
+                                                                }                                                              
     | function_call SEMI_COLON                                  {
                                                                     INFO("stmt: function_call SEMI_COLON");
                                                                 }
@@ -598,10 +601,10 @@ expr[result]:
  * @name function_call
  */
 function_call:
-     lval LPAREN RPAREN                                         {
+     IDENTIFIER LPAREN RPAREN                                         {
                                                                     INFO("function_call: IDENTIFIER LPAREN RPAREN");
                                                                 }
-   | lval[lhs] LPAREN params RPAREN                       		{
+   | IDENTIFIER[lhs] LPAREN params RPAREN                       		{
                                                                     INFO("function_call: IDENTIFIER[lhs] LPAREN params RPAREN");
                                                                 }
                                                                 ;
@@ -620,10 +623,6 @@ function_decel:
                                                                 }
                                                                 ;
 
-function_def:
-            function_decel compound_statement                 {
-                                                                    INFO("function_def: function_decel LBRACKET stmts RBRACKET");
-                                                                }
 /**
  * @name pramas_list
  */
@@ -666,7 +665,7 @@ decel_list:
  * @name assign_expr
 */
 assign_expr:
-    lval ASSIGN expr                                            {
+    IDENTIFIER ASSIGN expr                                            {
                                                                     INFO("assign_expr: IDENTIFIER ASSIGN expr");
                                                                     std::pair<std::string, std::string> p = { $1, $3 };
                                                                     $$ = p;
@@ -674,7 +673,7 @@ assign_expr:
                                                                 ;
 
 decel_void:
-    modifiers type_specifier lval                               {
+    modifiers type_specifier IDENTIFIER                               {
 																	INFO("decel_numeric: modifiers numeric_type IDENTIFIER");
 																	sym_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
                                                                    	//_symtab[$3] = sym;                      // add to symbol table, unassigned!
@@ -692,8 +691,8 @@ decel_void:
  * @brief decelration
  */
 decel:
-    modifiers type_specifier initial_value                    	{
-																	INFO("decel: modifiers type_specifier initial_value");
+    modifiers type_specifier IDENTIFIER                    	{
+																	INFO("decel: modifiers type_specifier IDENTIFIER");
 																	sym_t sym = { $3, $2, eINT, 0 }; // new symbol, unassigned!
 																	//_symtab[$3] = sym;                      // add to symbol table, unassigned!
 
@@ -704,6 +703,9 @@ decel:
 																	stringstream ostrm;
 																	ostrm << "INT" << " " << $3 << ";\n";
 																}
+    |  modifiers type_specifier struct_or_union IDENTIFIER                    	{
+																	INFO("decel: modifiers type_specifier IDENTIFIER");
+                                                                }
     | decel LBRACKET NUMERIC_LITERAL RBRACKET                   { 
 																	INFO("decel: decel LBRACKET NUMERIC_LITERAL RBRACKET");
 																}
@@ -724,12 +726,12 @@ type_modifier:
     | UNSIGNED                  { INFO("type_modifier: UNSIGNED"); }
     ;
 
-initial_value:
-        lval                    { INFO("initial_value: lval"); }
-        | rval                  { INFO("initial_value: rval"); }
-        ;
+// initial_value:
+//         IDENTIFIER                    { INFO("initial_value: IDENTIFIER"); }
+//         | rval                  { INFO("initial_value: rval"); }
+//         ;
 /**
-* @name lval
+* @name IDENTIFIER
 */
 lval:
 	IDENTIFIER                 { INFO("lval: IDENTIFIER"); }
@@ -744,7 +746,7 @@ rval:
 
     
 constant_expression:
-	//: conditional_expression	/* with constraints */
+	conditional_expression	/* with constraints */
 	;
 
 storage_class_specifier:
@@ -768,52 +770,52 @@ type_specifier:
 	// | COMPLEX
 	// | IMAGINARY	  	/* non-mandated extension */
 	// | atomic_type_specifier
-	// | struct_or_union_specifier
+	| struct_or_union_specifier
 	// | enum_specifier
 	| TYPEDEF_NAME		/* after it has been defined as such */
 	;
 
-struct_or_union_specifier
-	: struct_or_union '{' struct_declaration_list '}'
+struct_or_union_specifier:
+     struct_or_union '{' struct_declaration_list '}'
 	| struct_or_union IDENTIFIER '{' struct_declaration_list '}'
 	| struct_or_union IDENTIFIER
 	;
 
-struct_or_union
-	: STRUCT
-	| UNION
+struct_or_union:
+    STRUCT                             { INFO("struct_or_union: STRUCT"); }
+	| UNION                             { INFO("struct_or_union: UNION"); }
 	;
-struct_declaration_list
-	: struct_declaration
+struct_declaration_list:
+     struct_declaration
 	| struct_declaration_list struct_declaration
 	;
 
-struct_declaration
-	: specifier_qualifier_list ';'	/* for anonymous struct/union */
+struct_declaration:
+ specifier_qualifier_list ';'	/* for anonymous struct/union */
 	| specifier_qualifier_list struct_declarator_list ';'
 	| static_assert_declaration
 	;
 
-specifier_qualifier_list
-	: type_specifier specifier_qualifier_list
+specifier_qualifier_list:
+     type_specifier specifier_qualifier_list
 	| type_specifier
 	| type_qualifier specifier_qualifier_list
 	| type_qualifier
 	;
 
-struct_declarator_list
-	: struct_declarator
+struct_declarator_list:
+     struct_declarator
 	| struct_declarator_list ',' struct_declarator
 	;
 
-struct_declarator
-	: ':' constant_expression
+struct_declarator:
+     ':' constant_expression
 	| declarator ':' constant_expression
 	| declarator
 	;
 
-static_assert_declaration
-	: STATIC_ASSERT '(' constant_expression ',' STRING_LITERAL ')' ';'
+static_assert_declaration:
+ STATIC_ASSERT '(' constant_expression ',' STRING_LITERAL ')' ';'
 	;
 
 
@@ -821,8 +823,8 @@ static_assert_declaration
 // 	: ATOMIC '(' type_name ')'
 // 	;
 
-type_qualifier
-	: CONST
+type_qualifier:
+     CONST
 	| RESTRICT
 	| VOLATILE
 	| ATOMIC
@@ -834,8 +836,8 @@ type_qualifier
 // 	;
 
 declarator:
-	//: pointer direct_declarator
-	//| direct_declarator
+    pointer direct_declarator
+	| direct_declarator
 	;
 %%
 
