@@ -10,6 +10,11 @@ print_five:
 	# Step 3: Run your binary
 	./print_five
 
+test: test.asm
+	nasm -f elf64 test.asm -o build/test.o
+	ld build/test.o -o build/test
+
 clean:
 	rm hw.o hw
 	rm print_five.o print_five
+	rm -rf build/*

@@ -37,7 +37,7 @@
 
 #ifdef VER2
 #include "parser.tab.hpp"
-#include "v2/def.hpp"
+#include "def2.hpp"
 #else
 #include "pparser.tab.hpp"
 #include "defv1.hpp"

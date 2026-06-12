@@ -30,6 +30,41 @@ using std::vector;
 
 constexpr int ASCII_OFFSET = 48;
 
+unsigned long min = 0;
+unsigned long max = 99'99'99'99'99'99'99'99'99;
+string smax = "999999999999999999"; // one digit
+unsigned long digits[100]; // 18*digits bas ten digits
+
+//typedef big_digit unsigned long
+
+void big_to_ascii(unsigned long* p, int len)
+{
+    std::stringstream ss;
+    for(int i = 0; i < len; ++i)
+    {
+        ss << p[i];
+    }
+    ss << std::endl;
+}
+
+void big_to_ulong(const string& s, unsigned long** pp)
+{
+    int SIZE = 18;
+    int len = s.size() / SIZE;
+    int pad = s.size() % SIZE;
+    *pp = new unsigned long[len];
+
+    string digit = s.substr(0,pad);
+    **pp = std::atoll(digit.c_str());
+   
+    for(int i = 0; i < len; ++i)
+    {
+        string digit = s.substr(SIZE*i, SIZE);
+        **pp = std::atoll(digit.c_str());
+    }
+ 
+}
+
 /**
  * @name esc_nl
  * @brief replace newlines with c (".")

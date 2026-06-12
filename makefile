@@ -162,7 +162,7 @@ $(BLD)/$(APP): $(OBJS) $(SRC)/defv1.hpp $(OBJ)/on_token1.o
 	@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
-$(BLD)/$(APP)2: $(OBJS2) $(SRC)/v2/def.hpp $(OBJ)/on_token2.o 
+$(BLD)/$(APP)2: $(OBJS2) $(SRC)/def2.hpp $(OBJ)/on_token2.o 
 	@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) -DVER2 $^ $(LDFLAGS) -o $@
 

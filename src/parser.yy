@@ -106,9 +106,10 @@
 %token END_OF_FILES
 %token END_OF_FILE 0
 %token VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED AUTO VOLATILE REGISTER STATIC STRUCT TYPEDEF 
-%token <std::string> identifier integer_constant floating_constant character_constant enumeration_constant
+%token <std::string> integer_constant floating_constant character_constant enumeration_constant
 %token UNION EXTERN CONST STRING
-%token SIZEOF ENUM IF ELSE FOR WHILE DO BREAK CONTINUE GOTO RETURN DEFAULT SWITCH CASE 
+%token SIZEOF ENUM IF ELSE FOR WHILE DO BREAK CONTINUE GOTO RETURN DEFAULT SWITCH CASE LPAREN RPAREN LBRACKET RBRACKET
+%token <std::string> IDENTIFIER
 %type <std::string> struct_or_union_specifier enum_specifier typedef_name
 %type <std::string> external_declaration function_definition declaration_specifier storage_class_specifier type_specifier 
 %type <std::string> struct_or_union struct_declaration
@@ -148,7 +149,7 @@ storage_class_specifier:
                             | EXTERN
                             | TYPEDEF
                             ;
-ype_specifier
+type_specifier
 	: VOID
 	| CHAR
 	| SHORT
@@ -158,18 +159,18 @@ ype_specifier
 	| DOUBLE
 	| SIGNED
 	| UNSIGNED
-	| BOOL
-	| COMPLEX
-	| IMAGINARY	  	/* non-mandated extension */
-	| atomic_type_specifier
+	// | BOOL
+	// | COMPLEX
+	// | IMAGINARY	  	/* non-mandated extension */
+	//| atomic_type_specifier
 	| struct_or_union_specifier
 	| enum_specifier
-	| TYPEDEF_NAME		/* after it has been defined as such */
+	//| TYPEDEF_NAME		/* after it has been defined as such */
 	;
 struct_or_union_specifier:
-                            struct_or_union identifier '{' struct_declaration '}'
+                            struct_or_union IDENTIFIER '{' struct_declaration '}'
                             | struct_or_union '{' struct_declaration '}'
-                            | struct_or_union identifier
+                            | struct_or_union IDENTIFIER
                             ;
 struct_or_union:
                             STRUCT
@@ -203,11 +204,11 @@ type_qualifier:
                             | VOLATILE
                             ;
 direct_declarator:
-                            identifier
+                            IDENTIFIER
                             | '(' declarator ')'
-                            | direct_declarator '[' constant_expression ']'
-                            | direct_declarator '(' parameter_type_list ')'
-                            | direct_declarator '(' identifier ')'
+                            | direct_declarator LBRACKET constant_expression RBRACKET
+                            | direct_declarator LPAREN parameter_type_list RPAREN
+                            | direct_declarator LPAREN IDENTIFIER RPAREN
                             ;
 constant_expression:
                             conditional_expression
@@ -280,13 +281,13 @@ postfix_expression:
             primary_expression
                        | postfix_expression '[' expression ']'
                        | postfix_expression '(' assignment_expression ')'
-                       | postfix_expression '.' identifier
-                       | postfix_expression '>' identifier
+                       | postfix_expression '.' IDENTIFIER
+                       | postfix_expression '>' IDENTIFIER
                        | postfix_expression '+'
                        | postfix_expression '_'
 ;
 primary_expression:
-                        identifier
+                        IDENTIFIER
                        | constant
                        | STRING
                        | '(' expression ')'
@@ -358,11 +359,11 @@ enumerator_list:
 ;
 
 enumerator:
-                identifier
-               | identifier '=' constant_expression
+                IDENTIFIER
+               | IDENTIFIER '=' constant_expression
 ;
 typedef_name:
-            identifier
+            IDENTIFIER
 ;
 declaration:
              declaration_specifier init_declarator
@@ -392,7 +393,7 @@ statement:
               | jump_statement
 ;
 labeled_statement:
-            identifier ':' statement
+            IDENTIFIER ':' statement
                       | CASE constant_expression ':' statement
                       | DEFAULT ':' statement
 ;
@@ -411,7 +412,7 @@ iteration_statement:
                         | FOR '(' expression ';' expression ';' expression ')' statement
                         ;
 jump_statement:
-                        GOTO identifier ';'
+                        GOTO IDENTIFIER ';'
                         | CONTINUE ';'
                         | BREAK ';'
                         | RETURN expression ';'

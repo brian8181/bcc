@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <regex>
+#include <sstream>
 #include "auto_ptr.hpp"
 
 using std::map;
@@ -12,6 +13,7 @@ using std::regex;
 using std::smatch;
 using std::string;
 using std::vector;
+
 
 
 // constexpr int ASCII_OFFSET = 48;

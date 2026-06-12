@@ -319,11 +319,12 @@ stmt:
                                                                     INFO("stmt: expr=" << $expr << " SEMI_COLON");
                                                                     WARN("expr: not an l-side");
                                                                 }
+    | compound_statement                                        { INFO("stmt: compound statement"); }
     | function_decel compound_statement                         {
                                                                      INFO("stmt: function_decel compound_statement"); 
                                                                 }                                                              
     | function_call SEMI_COLON                                  {
-                                                                    INFO("stmt: function_call SEMI_COLON");
+                                                                    INFO("stmt: function_call SEMI_COLON"); 
                                                                 }
     | decel SEMI_COLON                                          {
                                                                     INFO("stmt: decel SEMI_COLON");
@@ -776,9 +777,9 @@ type_specifier:
 	;
 
 struct_or_union_specifier:
-     struct_or_union '{' struct_declaration_list '}'
-	| struct_or_union IDENTIFIER '{' struct_declaration_list '}'
-	| struct_or_union IDENTIFIER
+    struct_or_union IDENTIFIER LBRACE RBRACE                                { ATTN("struct_or_union_specifier: IDENTIFIER LBRACE RBRACE"); }                                                            
+   	| struct_or_union IDENTIFIER LBRACE struct_declaration_list RBRACE   { INFO("struct_or_union_specifier: IDENTIFIER"); }
+	| struct_or_union IDENTIFIER                                   { INFO("struct_or_union_specifier: IDENTIFIER"); }
 	;
 
 struct_or_union:
