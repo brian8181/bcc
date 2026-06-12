@@ -105,7 +105,7 @@
 }
 
 
-%token SKIP_TOKEN UNDEFINED
+%token SKIP_TOKEN UNDEFINED conditional_expression pointer direct_declarator
 %token <std::string> TEST_TOKEN
 %token PRINT
 %token END_OF_FILES
@@ -193,7 +193,7 @@
 %type <std::string> expr
 /* %type <std::string> access_modfiers */
 %type compound_statement
-%type atomic_type_specifier type_qualifier function_specifier constant_expression enumeration_constant conditional_expression
+%type atomic_type_specifier type_qualifier function_specifier constant_expression enumeration_constant 
 %type unary_expression unary_operator cast_expression multiplicative_expression additive_expression pointer direct_declarator
 %type struct_or_union_specifier struct_or_union struct_declaration_list struct_declaration specifier_qualifier_list struct_declarator_list struct_declarator
 %type declarator 

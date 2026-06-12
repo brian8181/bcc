@@ -148,20 +148,24 @@ storage_class_specifier:
                             | EXTERN
                             | TYPEDEF
                             ;
-type_specifier:
-                            VOID
-                            | CHAR
-                            | SHORT
-                            | INT
-                            | LONG
-                            | FLOAT
-                            | DOUBLE
-                            | SIGNED
-                            | UNSIGNED
-                            | struct_or_union_specifier
-                            | enum_specifier
-                            | typedef_name
-                            ;
+ype_specifier
+	: VOID
+	| CHAR
+	| SHORT
+	| INT
+	| LONG
+	| FLOAT
+	| DOUBLE
+	| SIGNED
+	| UNSIGNED
+	| BOOL
+	| COMPLEX
+	| IMAGINARY	  	/* non-mandated extension */
+	| atomic_type_specifier
+	| struct_or_union_specifier
+	| enum_specifier
+	| TYPEDEF_NAME		/* after it has been defined as such */
+	;
 struct_or_union_specifier:
                             struct_or_union identifier '{' struct_declaration '}'
                             | struct_or_union '{' struct_declaration '}'
@@ -341,10 +345,13 @@ direct_abstract_declarator:
                                | direct_abstract_declarator '(' parameter_type_list ')'
 ;
 enum_specifier:
-                                 ENUM identifier '{' enumerator_list '}'
-                                | ENUM '{' enumerator_list '}'
-                                | ENUM identifier
-;
+     ENUM '{' enumerator_list '}'
+	| ENUM '{' enumerator_list ',' '}'
+	| ENUM IDENTIFIER '{' enumerator_list '}'
+	| ENUM IDENTIFIER '{' enumerator_list ',' '}'
+	| ENUM IDENTIFIER
+	;
+
 enumerator_list:
                      enumerator
                     | enumerator_list ',' enumerator

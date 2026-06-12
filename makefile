@@ -95,7 +95,7 @@ $(SRC)/utility.hpp \
 $(SRC)/ast.hpp \
 $(BLD)/pparser.tab.hpp \
 $(SRC)/lexer.hpp \
-$(SRC)/on_token.hpp \
+$(SRC)/on_token1.hpp \
 $(SRC)/driver.hpp \
 $(SRC)/def.hpp \
 $(SRC)/table.hpp \
@@ -158,7 +158,7 @@ all: $(BLD)/$(APP)
 # build everything
 #world: $(BLD)/$(APP) $(BLD)/TEST_lex $(BLD)/lib$(APP).a
 
-$(BLD)/$(APP): $(OBJS) $(SRC)/defv1.hpp $(OBJ)/on_tokenv1.o
+$(BLD)/$(APP): $(OBJS) $(SRC)/defv1.hpp $(OBJ)/on_token1.o
 	@echo "$(FMT)$(RELEASE)-building prequisite -> $^ ... \nbuilding -> $@ ...$(FMT_RESET)"
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
