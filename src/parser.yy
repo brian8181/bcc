@@ -126,6 +126,7 @@
 
 translation_unit:  
                              %empty
+                             | type_qualifier                   { INFO("translation_unit: type_qualifier"); }
                              /* empty base case */
                             | external_declaration END_OF_FILE
                             ;

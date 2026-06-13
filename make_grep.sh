@@ -1,10 +1,10 @@
 #!/bin/bash
 
-LINE='\1'
-COLUMN='\2'
-ERROR='\3'
-WARNING='\4'
-CC_MSG='\7'
+LINE='\2'
+COLUMN='\3'
+ERROR='\4'
+WARNING='\5'
+CC_MSG='\8'
 
 source "$HOME/bin/color.sh"
 MSG="$FMT_FG_YELLOW $LINE : $COLUMN : $FMT_FG_RED $ERROR $FMT_FG_YELLOW $WARNING $FMT_RESET : $CC_MSG"

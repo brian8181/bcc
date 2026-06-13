@@ -34,8 +34,8 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
         //     return parser::make_STRING();
         // case SHORT:
         //     return parser::make_SHORT();
-        // case INT:
-        //     return parser::make_INT();
+        case INT:
+            return parser::make_INT();
         // case LONG:
         //     return parser::make_LONG();
         // case SINGLE:

@@ -225,7 +225,6 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define TEST_TOKEN          	 181
 #define S_TYPE "string"
 
-
 // regex
 #define R_TILDE 	   R"(~)"
 #define R_EXCLAMATION  R"(!)"
@@ -238,12 +237,115 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define R_CONST_SYMBOL R"(#[A-Za-z_][A-Za-z0-9_]*#)"
 #define R_IDENTIFIER   R"([A-Za-z_][A-Za-z0-9_]*)"
 
+#define MTOK(id, expr) {id, token{id, #id, S_TYPE, expr, __LINE__} }
+inline map<unsigned long, token> g_tokens2 =
+{
+	MTOK(TEST_TOKEN, R"(@@@)"),
+	MTOK(PRINT, R"(PRINT)"),
+	MTOK(DOUBLE_QUOTE, R"(")"),
+	MTOK(SINGLE_QUOTE, R"(')"),
+	MTOK(ESC_SEQ, R"(\\[^\n])"),
+	MTOK(ESC_NLINE, R"([^\\\n])"),
+	MTOK(ESC_BACKSLASH, R"(\\\\)"),
+	MTOK(ESC_NEWLINE, R"(\\\n)"),
+	MTOK(ESC_DOUBLE_QUOTE, R"(\\\")"),
+	MTOK(ESC_SINGLE_QUOTE, R"(\\\')"),
+	MTOK(ESC_TAB, R"(\\\t)"),
+	MTOK(VALID_CHARS, R"([[:punct:][:alnum:]])"),
+	MTOK(WHITESPACE, R"([ \t\r])"),
+	MTOK(NEWLINE, R"(\n)"),
+	MTOK(NUMERIC_LITERAL, R_NUMERIC_LITERAL),
+	MTOK(REAL_LITERAL, R"([0-9]+\.[0-9]+)"),
+	MTOK(STRING_LITERAL, R_STRING_LITERAL),
+	MTOK(CHAR_LITERAL, R"('.')"),
+	MTOK(IDENTIFIER, R_IDENTIFIER),
+	MTOK(FUNCTION, R"([A-Za-z_][A-Za-z0-9_]*)"),
+	MTOK(COMMENT, R"(\{[ ]*\*[^*}]*\*[ ]*\})"),
+	MTOK(DASH, R"([-])"),
+	MTOK(ADD, R"([+])"),
+	MTOK(MUL, R"([*])"),
+	MTOK(PTR, R"([*])"),
+	MTOK(DEREF, R"([*])"),
+	MTOK(DIV, R"([/])"),
+	MTOK(MOD, R"([%])"),
+	MTOK(ASSIGN, R"(=)"),
+	MTOK(ADD_EQ, R"(\+=)"),
+	MTOK(SUB_EQ, R"(\-=)"),
+	MTOK(MUL_EQ, R"(\*=)"),
+	MTOK(DIV_EQ, R"(\\=)"),
+	MTOK(MOD_EQ, R"(%=)"),
+	MTOK(AND_EQ, R"(&=)"),
+	MTOK(OR_EQ, R"(\|=)"),
+	MTOK(XOR_EQ, R"(\^=)"),
+	MTOK(NOT_EQ, R"(\~=)"),
+	MTOK(LSFT_EQ, R"(<<=)"),
+	MTOK(RSFT_EQ, R"(>>=)"),
+	MTOK(LPAREN, "[(]"),
+	MTOK(RPAREN, "[)]"),
+	MTOK(LBRACKET, R"(\[)"),
+	MTOK(RBRACKET, R"(\])"),
+	MTOK(LBRACE, R"([{])"),
+	MTOK(RBRACE, R"([}])"),
+	MTOK(BACKSLASH, R"([\])"),
+	MTOK(COLON, R"([:])"),
+	MTOK(SEMI_COLON, R"([;])"),
+	MTOK(QUESTION_MARK, R"([?])"),
+	MTOK(COMMA, R"([)"),
+	MTOK(DOT, R"(\.)"),
+	MTOK(EQ, R"(==)"),
+	MTOK(INC, R"(\+\+)"),
+	MTOK(NEQ, R"(!=)"),
+	MTOK(LT, R"([<])"),
+	MTOK(GT, R"([>])"),
+	MTOK(GEQ, R"(>=)"),
+	MTOK(LEQ, R"(<=)"),
+	MTOK(AND, R"(&&)"),
+	MTOK(OR, R"(\|\|)"),
+	MTOK(NOT, R"([!])"),
+	MTOK(BIT_AND, R"(&)"),
+	MTOK(BIT_OR, R"([|])"),
+	MTOK(BIT_NOT, R"([~])"),
+	MTOK(BIT_XOR, R"(^)"),
+	MTOK(LSHIFT, R"([<]{2})"),
+	MTOK(RSHIFT, R"([>]{2})"),
+	MTOK(LSFT, R"(<<)"),
+	MTOK(RSFT, R"(>>)"),
+	MTOK(IF, R"(if)"),
+	MTOK(ELSE, R"(else)"),
+	MTOK(ELSEIF, R"(elseif)"),
+	MTOK(DO, R"(do)"),
+	MTOK(WHILE, R"(while)"),
+	MTOK(FOR, R"(for)"),
+	MTOK(RETURN, R"(return)"),
+	MTOK(BREAK, R"(break)"),
+	MTOK(CONTINUE, R"(continue)"),
+	MTOK(SWITCH, R"(switch)"),
+	MTOK(CASE, R"(case)"),
+	MTOK(DEFAULT, R"(default)"),
+	MTOK(GOTO, R"(goto)"),
+	MTOK(LABEL, R"(^[A-Za-z]\w*:)"),
+	MTOK(STRING, R"(\s*\<STRING\>\s+)"),
+	MTOK(INT, R"(\s*\<int\>\s+)"),
+	MTOK(FLOAT, R"(\s*\<float\>\s+)"),
+	MTOK(CHAR, R"(\s*\<char\>\s+)"),
+	MTOK(VOID, R"(\s*\<void\>\s+)"),
+	MTOK(STRUCT, R"(\s*\<struct\>\s+)"),
+	MTOK(TYPEDEF, R"(\s*\<tyedef\>\s+)"),
+	MTOK(STATIC, R"(\s*\<static\>\s+)"),
+	MTOK(REGISTER, R"(\s*\<register\>\s+)"),
+	MTOK(VOLATILE, R"(\s*\<volatile\>\s+)"),
+	MTOK(CONST, R"(\s*\<const\>\s+)"),
+	MTOK(UNSIGNED, R"(\s*\<unsigned\>\s+)"),
+	MTOK(SIGNED, R"(\s*\<signed\>\s+)")
+};
+
 /**
  * @name g_tokens
  * @brief global token vector - all tokens
  */
 inline map<unsigned long, token> g_tokens =
 	{
+		
 		{TEST_TOKEN, token{TEST_TOKEN, "TEST_TOKEN", S_TYPE, R"(@@@)", __LINE__}},
 		{PRINT, token{PRINT, "PRINT", S_TYPE, R"(PRINT)", __LINE__}},
 		{DOUBLE_QUOTE, token{DOUBLE_QUOTE, "DOUBLE_QUOTE", S_TYPE, R"(")", __LINE__}},
@@ -350,7 +452,7 @@ constexpr unsigned long UL_INITIAL = 0x10;
 constexpr unsigned long UL_PARSER = 0x40;
 constexpr unsigned long UL_PARSE_DOUBLE_QUOTE = 0x80;
 
-#define TOK(n, r) token(n, #n, S_TYPE, R"(#pargma)", __LINE__ )
+#define MTOK(n, r) token(n, #n, S_TYPE, R"(#pargma)", __LINE__ )
 
 #define gt(n) &g_tokens[n]
 #define RE
@@ -359,6 +461,8 @@ constexpr unsigned long UL_PARSE_DOUBLE_QUOTE = 0x80;
 #define BEG_STATE(s) inline state_t s = inline state_t s = { 	UL_##s, #s, {
 #define END_STATE() }
 inline state_t INITIAL = {};
+
+
 
 // inline map<unsigned long, token> state_token;
 // #define LEXER_STATE(name, token_name, id) state_t INITIAL = { { TEST_TOKEN, token { gt{TEST_TOKEN} }} }
