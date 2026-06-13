@@ -199,7 +199,7 @@ src/lexer.cpp:8: warning: "_GNU_SOURCE" redefined
 g++ -std=gnu++17 -fPIC -ggdb -DDEBUG -DWARNINGS -DTRACING -DYYDEBUG -DLEX_TEST -DTEST_ONLY -I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I././src -I././build -I././src/unit_test -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt  -c src/driver.cpp -o build/driver.o
 [3m[32mbuilding src/on_token1.cpp -> build/on_token1.o ...[0m
 g++ -std=gnu++17 -fPIC -ggdb -DDEBUG -DWARNINGS -DTRACING -DYYDEBUG -DLEX_TEST -DTEST_ONLY -I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I././src -I././build -I././src/unit_test -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt  -c src/on_token1.cpp -o build/on_token1.o
-[3m[32m-building prequisite -> build/fileio.o build/auto_ptr.o build/utility.o build/pparser.tab.o build/lexer.o build/driver.o src/defv1.hpp build/on_token1.o ... 
+[3m[32m-building prequisite -> build/fileio.o build/auto_ptr.o build/utility.o build/pparser.tab.o build/lexer.o build/driver.o src/def1.hpp build/on_token1.o ... 
 building -> build/bcc ...[0m
-g++ -std=gnu++17 -fPIC -ggdb -DDEBUG -DWARNINGS -DTRACING -DYYDEBUG -DLEX_TEST -DTEST_ONLY build/fileio.o build/auto_ptr.o build/utility.o build/pparser.tab.o build/lexer.o build/driver.o src/defv1.hpp build/on_token1.o -I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I././src -I././build -I././src/unit_test -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt  -o build/bcc
+g++ -std=gnu++17 -fPIC -ggdb -DDEBUG -DWARNINGS -DTRACING -DYYDEBUG -DLEX_TEST -DTEST_ONLY build/fileio.o build/auto_ptr.o build/utility.o build/pparser.tab.o build/lexer.o build/driver.o src/def1.hpp build/on_token1.o -I/usr/local/include/cppunit/ -I"/home/brian/src/boost_1_91_0" -I././src -I././build -I././src/unit_test -L/usr/lib -L/usr/lib64 -L/usr/local/lib -L/usr/local/lib64 -lfmt  -o build/bcc
 [3m[32mfinished building ...[0m
