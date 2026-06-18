@@ -214,7 +214,7 @@ public:
 	 * @brief print token to stdout
 	 * @param token_match m
 	 */
-	void print_smatch(const token_t& t, boost::smatch m);
+	void print_smatch(const parser::token::token_kind_type& t, boost::smatch m);
 
 	/**
 	 * @brief print_token

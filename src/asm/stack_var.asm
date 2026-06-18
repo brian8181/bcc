@@ -1,7 +1,8 @@
 section .text
-global main
+    global _start
 
-main:
+
+_start:
     ; 1. Setup Stack Frame
     push rbp            ; Save the old base pointer
     mov rbp, rsp        ; Set up a new base pointer frame

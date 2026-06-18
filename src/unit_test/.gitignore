@@ -1,0 +1,7 @@
+# @project:  apm
+# @file:    .gitignore
+# @date:    Wed Jun 17 14:07:21 CDT 2026
+# @version: 0.0.1
+# @brief:   git ignore file
+
+build/*

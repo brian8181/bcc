@@ -152,9 +152,9 @@ bool lexer::init(const string& file)
 	m_buffer.clear();
 	read_str( m_ifile, m_buffer );
 		
-	// // get path to asm template
-	//fs::path dir = p.parent_path();
-	//dir.replace_filenam
+	// get path to asm template
+	// fs::path dir = p.parent_path();
+	// dir.replace_filenam
 	string tmpl_file = g_templates;
 	tmpl_file.append("tmpl/asm.tmpl");
 	ATTN("tmpl path: " << tmpl_file);
@@ -190,10 +190,11 @@ void lexer::set_state( state_t* pstate )
 	stringstream ss;
 	const unsigned long len = tokens.size();
 	// get / append first string
-	ss << "(" << tokens[0]->rexp << ")";
+	//g_tokens[token[0]].
+	todo//ss << "(" << tokens[0]->rexp << ")";
 	for( unsigned long i = 1; i < len; i++ )
 	{
-		ss << "|(" << tokens[i]->rexp << ")";
+	todo//	ss << "|(" << tokens[i]->rexp << ")";
 	}
 	// save expression string ...
 	m_regex_str = ss.str();
@@ -232,11 +233,13 @@ parser::symbol_type lexer::get_token()
 						return EOF;
 					}
 					// get match : by sub_match index (i)
-					token_t* token =  m_pstate->tokens[i - 1];
-					print_smatch(*token,  m );
+					//token_t* token =  m_pstate->tokens[i - 1];
+					parser::token::token_kind_type token =  m_pstate->tokens[i - 1];
+					print_smatch(token,  m );
 					// set buffer to suffix
 					m_buffer = m.suffix();
-					return on_token( token->id, match );
+					//return on_token( token->id, match );
+					return parser::symbol_type (token);
 				}
 			}
 			return parser::make_YYerror(); // no sub match?, should not happen
@@ -252,7 +255,7 @@ parser::symbol_type lexer::get_token()
  * @brief print token to stdout
  * @param token_match m
  */
-void lexer::print_smatch(const token_t& t, boost::smatch m)
+void lexer::print_smatch(const parser::token::token_kind_type& t, boost::smatch m)
 {
 	string prefix = esc_nl( m.prefix() ).get_val();
 	string match = 	esc_nl( m.str() ).get_val();
@@ -263,7 +266,7 @@ void lexer::print_smatch(const token_t& t, boost::smatch m)
 	suffix = suffix.size() != 0 ? ("\"" + suffix + "\"")  : FMT_FG_YELLOW + "null" + FMT_RESET;
 
 	INFO(FMT_FG_GREEN << "prefix" << FMT_RESET << "[ " << FMT_ITALIC  << std::right << prefix << FMT_RESET_ITALIC << " ](" << prefix.size() << ")" << FMT_RESET);
-	INFO(FMT_FG_GREEN << "match " << FMT_RESET << "[ " << FMT_ITALIC  << std::right << match  << FMT_RESET_ITALIC << " ](" << match.size()  << ")" << "{: " << FMT_ITALIC << t.name << FMT_RESET << " :}");
+	INFO(FMT_FG_GREEN << "match " << FMT_RESET << "[ " << FMT_ITALIC  << std::right << match  << FMT_RESET_ITALIC << " ](" << match.size()  << ")" << "{: " << FMT_ITALIC << t << FMT_RESET << " :}");
 	INFO(FMT_FG_GREEN << "suffix" << FMT_RESET << "[ " << FMT_ITALIC  << std::right << suffix << FMT_RESET_ITALIC << " ](" << suffix.size() << ")" << FMT_RESET);
 }
 
@@ -288,16 +291,17 @@ void lexer::print_tokens()
 	// get / append remaining strings
 	for(int i = 1; i < sz; ++i)
 	{
-		token* ptoken = tokens[i];
-		stringstream info;
-		info << std::left << "#" << setw(2)  << i << "   "
-			 << "id:   " << std::setw( 4 ) << std::right << ptoken->id
-			 << "    ~    " << std::right << "idx: " << std::setw( 3 ) << std::left << ptoken->index
-			 << "    ~    " << std::left << "name: " << std::setw( 18 ) << std::left << ptoken->name
-			 << "    ~    " << std::left << "type: " << std::setw( 10 ) << ptoken->stype
-			 << "    ~    " << std::left << "regex: " << std::left << std::setw( 44 ) << ptoken->rexp << std::right;
-		cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
-			 << info.str() << FMT_RESET << endl;
+		// parser::token::token_kind_type token = tokens[i];
+		
+		// stringstream info;
+		// info << std::left << "#" << setw(2)  << i << "   "
+		// 	 << "id:   " << std::setw( 4 ) << std::right << ptoken->id
+		// 	 << "    ~    " << std::right << "idx: " << std::setw( 3 ) << std::left << ptoken->index
+		// 	 << "    ~    " << std::left << "name: " << std::setw( 18 ) << std::left << ptoken->name
+		// 	 << "    ~    " << std::left << "type: " << std::setw( 10 ) << ptoken->stype
+		// 	 << "    ~    " << std::left << "regex: " << std::left << std::setw( 44 ) << ptoken->rexp << std::right;
+		// cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
+		// 	 << info.str() << FMT_RESET << endl;
 	}
 }
 

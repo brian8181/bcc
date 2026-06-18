@@ -18,16 +18,19 @@ using std::endl;
  */
 parser::symbol_type lexer::on_token(unsigned long id, const string &match)
 {
+    //return parser::symbol_type (id);
+
     switch(m_pstate->id)
     {
     case UL_PARSER:
     {
         switch (id)
         {
-        case TEST_TOKEN:
+        case parser::token::TEST_TOKEN:
+            return parser::symbol_type (parser::token::TEST_TOKEN);
             return parser::make_TEST_TOKEN(match);
-        case DOUBLE_QUOTE:
-            set_state(&PARSE_DOUBLE_QUOTE);
+        case parser::token::DOUBLE_QUOTE:
+            //set_state(&PARSE_DOUBLE_QUOTE);
             return get_token();
         case STRING:
             return parser::make_STRING();
@@ -101,7 +104,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
             return parser::make_BACKSLASH();
         case DOT:
             return parser::make_DOT();
-        case SINGLE_QUOTE:
+        case parser::token::SINGLE_QUOTE:
             return parser::make_SINGLE_QUOTE();
 
         case FOR:
@@ -225,7 +228,7 @@ parser::symbol_type lexer::on_token(unsigned long id, const string &match)
                 static string str;
                 str += match;
                 return get_token();
-            case DOUBLE_QUOTE:
+            case parser::token::DOUBLE_QUOTE:
                 set_state( &PARSER );
                 return parser::make_STRING_LITERAL(str);
             case ESC_BACKSLASH:

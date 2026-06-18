@@ -1,0 +1,21 @@
+     1                                  section .data
+     2 00000000 48656C6C6F2C20576F-         msg db "Hello, World!", 10      ; 10 represents the newline character (\n)
+     2 00000009 726C64210A         
+     3                                      msg_len equ $ - msg             ; Calculates the length of the string dynamically
+     4                                  
+     5                                  section .text
+     6                                      global _start                   ; Export the entry point for the linker
+     7                                  
+     8                                  _start:
+     9                                      ; System Call to write to stdout
+    10 00000000 B801000000                  mov rax, 1                      ; sys_write system call number
+    11 00000005 BF01000000                  mov rdi, 1                      ; File descriptor 1: stdout
+    12 0000000A 48BE-                       mov rsi, msg                    ; Pointer to our message string
+    12 0000000C [0000000000000000] 
+    13 00000014 BA0E000000                  mov rdx, msg_len                ; Length of our message string
+    14 00000019 0F05                        syscall                         ; Trigger the Linux kernel
+    15                                  
+    16                                      ; System Call to exit the program
+    17 0000001B B83C000000                  mov rax, 60                     ; sys_exit system call number
+    18 00000020 4831FF                      xor rdi, rdi                    ; Return status code 0 (success)
+    19 00000023 0F05                        syscall                         ; Trigger the Linux kernel

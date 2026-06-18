@@ -1,0 +1,25 @@
+     1                                  section .text
+     2                                      global _start
+     3                                  
+     4                                  
+     5                                  _start:
+     6                                      ; 1. Setup Stack Frame
+     7 00000000 55                          push rbp            ; Save the old base pointer
+     8 00000001 4889E5                      mov rbp, rsp        ; Set up a new base pointer frame
+     9                                  
+    10                                      ; 2. C equivalent: int x = 5;
+    11                                      ;push 5                  ; 'x' is now stored at [rbp - 8] push qword 5 ; push qword 5; 
+    12 00000004 6A05                        push qword 5 
+    13                                  
+    14                                      ; 3. Access 'x' from the stack and add 10 to it
+    15 00000006 488B45F8                    mov rax, [rbp - 8]      ; Move the value (5) from stack to register RAX
+    16 0000000A 4883C00A                    add rax, 10             ; RAX is now 15
+    17                                  
+    18                                      ; 4. Clean up the stack variable
+    19 0000000E 4883C408                    add rsp, 8              ; "Pop" the variable away by resetting RSP 
+    20                                                              ; (Or just use 'leave' below)
+    21                                  
+    22                                      ; 5. Restore Frame and Return
+    23 00000012 4889EC                      mov rsp, rbp
+    24 00000015 5D                          pop rbp
+    25 00000016 C3                          ret                     ; Returns RAX (15) to the OS

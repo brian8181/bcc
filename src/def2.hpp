@@ -126,8 +126,8 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define COMMA 				     163
 #define COLON 				     164
 #define SEMI_COLON 			     165
-#define DOUBLE_QUOTE 			 166
-#define SINGLE_QUOTE 			 167
+// #define DOUBLE_QUOTE 			 166
+// #define SINGLE_QUOTE 			 167
 
 #define BIT_AND 				 100
 #define BIT_NOT 				 101
@@ -216,7 +216,7 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
 #define NEWLINE 				 178
 #define SKIP_TOK 				 179
 #define UNDEFINED 			     180
-#define TEST_TOKEN          	 181
+//#define TEST_TOKEN          	 181
 #define S_TYPE "string"
 
 
@@ -236,10 +236,10 @@ inline auto SKIP_TOKEN = yysymbol( yytoken::SKIP_TOKEN ).kind();
  */
 inline map<unsigned long, token> g_tokens =
 	{
-		{TEST_TOKEN, token{TEST_TOKEN, "TEST_TOKEN", S_TYPE, R"(@@@)", __LINE__}},
+		{parser::token::TEST_TOKEN, token{parser::token::TEST_TOKEN, "TEST_TOKEN", S_TYPE, R"(@@@)", __LINE__}},
 		{PRINT, token{PRINT, "PRINT", S_TYPE, R"(PRINT)", __LINE__}},
-		{DOUBLE_QUOTE, token{DOUBLE_QUOTE, "DOUBLE_QUOTE", S_TYPE, R"(")", __LINE__}},
-		{SINGLE_QUOTE, token{SINGLE_QUOTE, "SINGLE_QUOTE", S_TYPE, R"(')", __LINE__}},
+		{parser::token::DOUBLE_QUOTE, token{parser::token::DOUBLE_QUOTE, "DOUBLE_QUOTE", S_TYPE, R"(")", __LINE__}},
+		{parser::token::SINGLE_QUOTE, token{parser::token::SINGLE_QUOTE, "SINGLE_QUOTE", S_TYPE, R"(')", __LINE__}},
 		{ESC_SEQ, token{ESC_SEQ, "ESC_SEQ", S_TYPE, R"(\\[^\n])", __LINE__}},
 		{ESC_NLINE, token{ESC_NLINE, "ESC_NLINE", S_TYPE, R"([^\\\n])", __LINE__}},
 		{ESC_BACKSLASH, token{ESC_BACKSLASH, "ESC_BACKSLASH", S_TYPE, R"(\\\\)", __LINE__}},
@@ -359,7 +359,7 @@ inline state_t INITIAL = {};
 /**
  * @brief state_t states
  */
-inline state_t PARSER = { UL_PARSER, "PARSER", {	 				gt(TEST_TOKEN), gt(PRINT), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID), gt(UNSIGNED), gt(SIGNED), gt(CONST), gt(STATIC), gt(REGISTER), gt(VOLATILE), gt(STRUCT), gt(TYPEDEF),
+inline state_t PARSER = { UL_PARSER, "PARSER", {	 				gt(parser::token::TEST_TOKEN), gt(PRINT), gt(INT), gt(FLOAT), gt(CHAR), gt(VOID), gt(UNSIGNED), gt(SIGNED), gt(CONST), gt(STATIC), gt(REGISTER), gt(VOLATILE), gt(STRUCT), gt(TYPEDEF),
 																	gt(IF), gt(ELSE), gt(WHILE), gt(DO), gt(FOR), gt(RETURN), gt(BREAK), gt(CONTINUE), gt(SWITCH), gt(CASE), gt(DEFAULT), gt(GOTO), gt(LABEL),
 																	gt(SEMI_COLON), gt(ASSIGN),
 																	gt(NEWLINE), gt(WHITESPACE),
@@ -368,7 +368,7 @@ inline state_t PARSER = { UL_PARSER, "PARSER", {	 				gt(TEST_TOKEN), gt(PRINT),
 																	gt(MUL), gt(DIV), gt(DASH), gt(ADD), gt(MOD), gt(LBRACKET), gt(RBRACKET), gt(LPAREN), gt(RPAREN), gt(LBRACE), gt(RBRACE),
 																	gt(OR), gt(AND), gt(NOT), gt(BIT_OR), gt(BIT_AND), gt(BIT_NOT), gt(RSHIFT), gt(LSHIFT), gt(COMMA),
 																	gt(STRUCT), gt(TYPEDEF), gt(PTR),
-																	gt(CHAR_LITERAL), gt(NUMERIC_LITERAL), gt(REAL_LITERAL), gt(IDENTIFIER), gt(DOUBLE_QUOTE) } };
+																	gt(CHAR_LITERAL), gt(NUMERIC_LITERAL), gt(REAL_LITERAL), gt(IDENTIFIER), gt(parser::token::DOUBLE_QUOTE) } };
 
 inline state_t PARSE_DOUBLE_QUOTE = { UL_PARSE_DOUBLE_QUOTE, "DOUBLE_QUOTE", { gt(VALID_CHARS), gt(ESC_BACKSLASH), gt(ESC_NEWLINE), gt(ESC_DOUBLE_QUOTE), gt(ESC_SINGLE_QUOTE), gt(ESC_TAB	) } };
 
