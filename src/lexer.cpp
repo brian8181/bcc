@@ -37,6 +37,7 @@ namespace fs = std::filesystem;
 #else
 #include "pparser.tab.hpp"
 #include "def1.hpp"
+#include "on_token1.hpp"
 #endif
 
 
@@ -190,11 +191,10 @@ void lexer::set_state( state_t* pstate )
 	stringstream ss;
 	const unsigned long len = tokens.size();
 	// get / append first string
-	//g_tokens[token[0]].
-	todo//ss << "(" << tokens[0]->rexp << ")";
+	ss << "(" << tokens[0] << ")";
 	for( unsigned long i = 1; i < len; i++ )
 	{
-	todo//	ss << "|(" << tokens[i]->rexp << ")";
+		ss << "|(" << tokens[i] << ")";
 	}
 	// save expression string ...
 	m_regex_str = ss.str();
@@ -235,10 +235,11 @@ parser::symbol_type lexer::get_token()
 					// get match : by sub_match index (i)
 					//token_t* token =  m_pstate->tokens[i - 1];
 					parser::token::token_kind_type token =  m_pstate->tokens[i - 1];
-					print_smatch(token,  m );
+					print_smatch( token,  m );
 					// set buffer to suffix
 					m_buffer = m.suffix();
-					//return on_token( token->id, match );
+					// todo
+					on_token( 0, match );
 					return parser::symbol_type (token);
 				}
 			}
@@ -291,17 +292,17 @@ void lexer::print_tokens()
 	// get / append remaining strings
 	for(int i = 1; i < sz; ++i)
 	{
-		// parser::token::token_kind_type token = tokens[i];
+		parser::token::token_kind_type token = tokens[i];
 		
-		// stringstream info;
-		// info << std::left << "#" << setw(2)  << i << "   "
-		// 	 << "id:   " << std::setw( 4 ) << std::right << ptoken->id
+		stringstream info;
+		info << std::left << "#" << setw(2)  << i << "   "
+		<< "id:   " << std::setw( 4 ) << std::right << token;
 		// 	 << "    ~    " << std::right << "idx: " << std::setw( 3 ) << std::left << ptoken->index
-		// 	 << "    ~    " << std::left << "name: " << std::setw( 18 ) << std::left << ptoken->name
+		//	 << "    ~    " << std::left << "name: " << std::setw( 18 ) << std::left << ptoken->name
 		// 	 << "    ~    " << std::left << "type: " << std::setw( 10 ) << ptoken->stype
 		// 	 << "    ~    " << std::left << "regex: " << std::left << std::setw( 44 ) << ptoken->rexp << std::right;
-		// cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
-		// 	 << info.str() << FMT_RESET << endl;
+		cout << ( ( i % 2 ) ? FMT_BG_BLACK : FMT_BG_DARK_GREY ) << FMT_FG_LIGHT_YELLOW
+		<< info.str() << FMT_RESET << endl;
 	}
 }
 

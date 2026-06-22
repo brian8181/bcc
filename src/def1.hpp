@@ -77,6 +77,7 @@ typedef struct token_t
 	string stype;
 	string rexp;
 	unsigned long index;
+	parser::token::token_kind_type yytok;
 } token_t;
 
 typedef struct state_t
